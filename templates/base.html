@@ -1,0 +1,40 @@
+<!doctype html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="!">
+    <meta name="author" content="Seongtaek Lim">
+    <meta name="description" content="Word to RI">
+    <meta name="apple-mobile-web-app-title" content="Word to RI">
+    <meta name="application-name" content="Word to RI">
+    <meta name="theme-color" content="#ffffff">
+
+    <title>Word to RI</title>
+
+    <!-- <link rel="apple-touch-icon" sizes="180x180" href="/static/img/icons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/static/img/icons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/static/img/icons/favicon-16x16.png">
+    <link rel="manifest" href="/static/img/icons/manifest.json">
+    <link rel="mask-icon" href="/static/img/icons/safari-pinned-tab.svg" color="#008cba"> -->
+    <link rel="stylesheet" href="/static/css/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/css/style.css">
+
+    <!--[if lt IE 9]>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+
+    {% include "partials/navbar.html" with active=active %}
+
+    {% block content %}
+    {% endblock content %}
+  </body>
+
+  <script src="/static/js/jquery/jquery-3.3.1.min.js"></script>
+  <script src="/static/js/bootstrap/bootstrap.min.js"></script>
+</html>
