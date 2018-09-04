@@ -1,0 +1,52 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container">
+    <a class="navbar-brand" href="/">Word to RI</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#wordtori-navbar" aria-controls="wordtori-navbar" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="wordtori-navbar">
+      <ul class="navbar-nav ml-auto">
+        
+        {% if active == "speak" or not active %}
+          <li class="nav-item active">
+        {% else %}
+          <li class="nav-item">
+        {% endif %}
+          <a class="nav-link" href="/speak">Speak</a>
+        </li>
+
+        {% if active == "why" or not active %}
+          <li class="nav-item active">
+        {% else %}
+          <li class="nav-item">
+        {% endif %}
+          <a class="nav-link" href="/why">Why</a>
+        </li>
+
+        {% if active == "how" or not active %}
+          <li class="nav-item active">
+        {% else %}
+          <li class="nav-item">
+        {% endif %}
+          <a class="nav-link" href="/how">How</a>
+        </li>
+
+        {% if active == "groundrules" or not active %}
+          <li class="nav-item active">
+        {% else %}
+          <li class="nav-item">
+        {% endif %}
+          <a class="nav-link" href="/groundrules">Ground Rules</a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" href="#" style="background-color: #1A1A1A; color: #FFFFFF; text-align: center;">Submit</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/admin" style="border: #1A1A1A solid 2px; text-align: center;" target="_blank">Admin</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
