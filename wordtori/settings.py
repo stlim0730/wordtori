@@ -42,8 +42,8 @@ INSTALLED_APPS = [
     'rest_framework',
 
     # Local apps
-    'pages',
-    'api'
+    'pages.apps.PagesConfig',
+    'api.apps.ApiConfig'
 ]
 
 MIDDLEWARE = [
