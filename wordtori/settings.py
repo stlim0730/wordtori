@@ -38,7 +38,12 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    'pages'
+    # Third-party apps
+    'rest_framework',
+
+    # Local apps
+    'pages',
+    'api'
 ]
 
 MIDDLEWARE = [
@@ -108,6 +113,21 @@ USE_L10N = True
 
 USE_TZ = True
 
+REST_FRAMEWORK = {
+  'DEFAULT_RENDERER_CLASSES': (
+    'rest_framework.renderers.JSONRenderer',
+  ),
+  'DEFAULT_PARSER_CLASSES': (
+    'rest_framework.parsers.JSONParser',
+  ),
+  # 'DEFAULT_AUTHENTICATION_CLASSES': (
+  #   'rest_framework.authentication.SessionAuthentication',
+  # ),
+  # 'DEFAULT_PERMISSION_CLASSES': (
+  #   'rest_framework.permissions.IsAuthenticated',
+  # )
+}
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
@@ -120,7 +140,7 @@ STATIC_URL = '/static/'
 
 # Extra places for collectstatic to find static files.
 STATICFILES_DIRS = (
-  os.path.join(PROJECT_ROOT, 'static'),
+  # os.path.join(PROJECT_ROOT, 'static'),
 )
 
 # Media files (Hexo)

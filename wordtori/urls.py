@@ -15,9 +15,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from django.conf.urls import url
+from django.conf.urls import url, include
 from pages import views
-from django.views.generic import TemplateView
 
 urlpatterns = [
   path('admin/', admin.site.urls),
@@ -26,4 +25,5 @@ urlpatterns = [
   url(r'^why$', views.why, name='why'),
   url(r'^how$', views.how, name='how'),
   url(r'^groundrules$', views.groundrules, name='groundrules'),
+  url(r'^api/', include('api.urls')),
 ]
