@@ -2,20 +2,20 @@ from django.db import models
 
 class Submission(models.Model):
   MEDIA_TYPE_CHOICES = (
-    ('Image', 'image'),
-    ('Audio', 'audio'),
-    ('Video', 'video'),
-    ('SoundCloud', 'soundcloud'),
-    ('YouTube', 'youtube')
+    ('image', 'Image'),
+    ('audio', 'Audio'),
+    ('video', 'Video'),
+    ('soundcloud', 'Soundcloud'),
+    ('youtube', 'Youtube')
   )
   
   # Required fields
   name = models.CharField(max_length=100)
 
   # Optional fields
-  blobContent = models.BinaryField(null=True)
-  url = models.URLField(max_length=300, null=True)
-  description = models.TextField(null=True)
+  blobContent = models.BinaryField(null=True, blank=True)
+  url = models.URLField(max_length=300, null=True, blank=True)
+  description = models.TextField(null=True, blank=True)
   # TODO: tags = None
 
   # Generated fields
