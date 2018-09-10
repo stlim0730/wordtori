@@ -1,6 +1,7 @@
 from rest_framework.decorators import api_view, parser_classes
 from rest_framework.parsers import JSONParser, FormParser, MultiPartParser
 from rest_framework.response import Response
+from django.contrib import messages
 from .forms import SubmissionForm
 from .models import Submission
 from django.shortcuts import render, redirect
@@ -19,10 +20,8 @@ def upload(request):
   if submissionMode == 'upload':
     if not file:
       # File size limit exceeded
-      context = {
-        'active': 'submit',
-        'form': SubmissionForm()
-      }
+      context = { 'active': 'submit', 'form': SubmissionForm() }
+      messages.add_message(request, messages.ERROR, 'Submission failed! Please check your file (upto 200MB).')
       return render(request, 'submit.html', context=context)
     blobContent = file.read()
     mimeType = file.content_type
@@ -35,10 +34,8 @@ def upload(request):
       mediaType=mediaType
     )
     submission.save()
-    context = {
-      'active': 'submit',
-      'form': SubmissionForm()
-    }
+    messages.add_message(request, messages.SUCCESS, 'Successfully submitted!')
+    context = { 'active': 'submit', 'form': SubmissionForm() }
     return render(request, 'submit.html', context=context)
   elif submissionMode == 'link':
     pass
