@@ -15,7 +15,15 @@ class SubmissionForm(forms.ModelForm):
       }
     )
   )
-  # blobContent = models.BinaryField(null=True)
+  file = forms.FileField(
+    required=False,
+    widget=forms.ClearableFileInput(
+      attrs={
+        'class': 'form-control',
+        'accept': 'audio/*,video/*,image/*'
+      }
+    )
+  )
   url = forms.URLField(
     max_length=300, required=False,
     widget=forms.URLInput(
@@ -34,4 +42,3 @@ class SubmissionForm(forms.ModelForm):
       }
     )
   )
-  # MEDIA_TYPE_CHOICES

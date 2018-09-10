@@ -7,7 +7,7 @@
       <h2 class="padding-bottom-20">
         Submit Your Word
       </h2>
-      <form id="submission-form" action="/api/media/upload" method="post">
+      <form id="submission-form" action="/api/media/upload" method="post" enctype="multipart/form-data">
         <fieldset>
           {% csrf_token %}
           {{ form.non_field_errors }}
@@ -32,8 +32,11 @@
           </ul>
           <div class="tab-content">
             <div class="tab-pane fade active show submit-content-tab-pane" id="upload">
-              <input type="file" name="file" id="file-input" accept="audio/*,video/*,image/*" />
-              <label id="file-input-label" for="file-input" class="btn btn-outline-primary btn-block">Choose a File</label>
+              <!-- <input type="file" name="file" id="file-input" accept="audio/*,video/*,image/*" />
+              <label id="file-input-label" for="file-input" class="btn btn-outline-primary btn-block">Choose a File</label> -->
+              {{ form.file.errors }}
+              {{ form.file }}
+              <label id="file-input-label" for="{{ form.file.id_for_label }}" class="btn btn-outline-primary btn-block">Choose a File</label>
             </div>
             <div class="tab-pane fade submit-content-tab-pane" id="link">
               <div class="form-group">
@@ -54,6 +57,7 @@
 
         </fieldset>
 
+        <input type="hidden" name="submissionMode" id="submissionMode" value="upload" />
         <input type="submit" value="Submit" class="btn btn-primary btn-block" />
       </form>
     </div>
@@ -61,33 +65,46 @@
 </div>
 
 <script>
-  var submissionMode = 'upload';
-
   $('.nav.nav-tabs li.nav-item a:not(.disabled)').click(function(e) {
     submissionMode = $(this).text().trim().toLowerCase();
-    console.log(submissionMode);
+    $('#submissionMode').val(submissionMode);
   });
 
-  $('#file-input').change(function(e) {
+  $('input[type=file]').change(function(e) {
     var file = $(this)[0].files[0];
     var label = $('#file-input-label');
+    var valid = true;
+    // console.log(file);
+    // TODO: Size check
+    if(file.size > 200 * 1024 * 1024) {
+      valid = false;
+    }
+
     if(!file) {
       label.removeClass('btn-outline-info');
+      label.removeClass('btn-outline-danger');
       label.addClass('btn-outline-primary');
       return;
     }
 
-    var fileNameAbbr = file.name.substring(0, 25);
+    var fileNameAbbr = file.name.substring(0, 20);
     if(fileNameAbbr != file.name) {
       fileNameAbbr += '...';
     }
+
+    if(!valid) {
+      label.text(fileNameAbbr + ' is too large (over 200MB).');
+      label.removeClass('btn-outline-info');
+      label.removeClass('btn-outline-primary');
+      label.addClass('btn-outline-danger');
+      $(this).val(null);
+      return;
+    }
+
     label.text(fileNameAbbr);
     label.removeClass('btn-outline-primary');
+    label.removeClass('btn-outline-danger');
     label.addClass('btn-outline-info');
-  });
-
-  $('#submission-form').submit(function(e) {
-    console.log(submissionMode);
   });
 
 </script>

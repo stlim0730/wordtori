@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .forms import SubmissionForm
+from api.forms import SubmissionForm
 
 def speak(request):
   context = {
