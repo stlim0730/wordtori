@@ -5,8 +5,8 @@ class Submission(models.Model):
     ('image', 'Image'),
     ('audio', 'Audio'),
     ('video', 'Video'),
-    ('soundcloud', 'Soundcloud'),
-    ('youtube', 'Youtube')
+    ('soundcloud', 'SoundCloud'),
+    ('youtube', 'YouTube')
   )
   
   # Required fields
@@ -23,15 +23,5 @@ class Submission(models.Model):
   submissionDate = models.DateField(auto_now_add=True)
   mimeType = models.CharField(max_length=len('video/webm'), null=True, blank=True, default='')
   mediaType = models.CharField(max_length=len('soundcloud'), choices=MEDIA_TYPE_CHOICES)
-  embed = models.TextField(null=True, blank=True, default='')
+  mediaHash = models.CharField(max_length=30, null=True, blank=True, default='')
   published = models.BooleanField(default=False)
-
-# SoundCloud Embed format
-# <iframe width="100%"
-# height="300" scrolling="no" frameborder="no" allow="autoplay"
-# src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/461240991&color=%23ff5500&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=true"></iframe>
-
-# YouTube Embed format
-# <iframe width="560" height="315"
-# src="https://www.youtube.com/embed/bSwga3LYLVg"
-# frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
