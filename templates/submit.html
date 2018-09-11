@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+  <div class="row">
+    <div class="col-md-8 offset-md-2 padding-top-40 padding-bottom-40">
+      <h2 class="padding-bottom-20">
+        Submit Your Word
+      </h2>
+      <form id="submission-form" action="/api/media/upload" method="post" enctype="multipart/form-data">
+        <fieldset>
+          {% csrf_token %}
+          {{ form.non_field_errors }}
+          
+          <div class="form-group">
+            {{ form.name.errors }}
+            <label for="{{ form.name.id_for_label }}">Your Name</label>
+            {{ form.name }}
+          </div>
+
+          <label for="content-tabs">Content</label>
+          <ul class="nav nav-tabs" id="content-tabs">
+            <li class="nav-item">
+              <a class="nav-link active show" data-toggle="tab" href="#upload">Upload</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" data-toggle="tab" href="#link">Link</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link disabled" href="#record" title="Not supported yet">Record</a>
+            </li>
+          </ul>
+          <div class="tab-content">
+            <div class="tab-pane fade active show submit-content-tab-pane" id="upload">
+              <!-- <input type="file" name="file" id="file-input" accept="audio/*,video/*,image/*" />
+              <label id="file-input-label" for="file-input" class="btn btn-outline-primary btn-block">Choose a File</label> -->
+              {{ form.file.errors }}
+              {{ form.file }}
+              <label id="file-input-label" for="{{ form.file.id_for_label }}" class="btn btn-outline-primary btn-block">Choose a File</label>
+            </div>
+            <div class="tab-pane fade submit-content-tab-pane" id="link">
+              <div class="form-group">
+                {{ form.url.errors }}
+                {{ form.url }}
+              </div>
+            </div>
+            <div class="tab-pane fade submit-content-tab-pane" id="record">
+              <p>Etsy mixtape wayfarers, ethical wes anderson tofu before they sold out mcsweeney's organic lomo retro fanny pack lo-fi farm-to-table readymade. Messenger bag gentrify pitchfork tattooed craft beer, iphone skateboard locavore carles etsy salvia banksy hoodie helvetica. DIY synth PBR banksy irony. Leggings gentrify squid 8-bit cred pitchfork.</p>
+            </div>
+          </div>
+
+          <div class="form-group">
+            {{ form.description.errors }}
+            <label for="{{ form.description.id_for_label }}">Description</label>
+            {{ form.description }}
+          </div>
+
+        </fieldset>
+
+        <input type="hidden" name="submissionMode" id="submissionMode" value="upload" />
+        <input type="submit" value="Submit" class="btn btn-primary btn-block" />
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+  $('.nav.nav-tabs li.nav-item a:not(.disabled)').click(function(e) {
+    submissionMode = $(this).text().trim().toLowerCase();
+    $('#submissionMode').val(submissionMode);
+  });
+
+  $('input[type=file]').change(function(e) {
+    var file = $(this)[0].files[0];
+    var label = $('#file-input-label');
+    var valid = true;
+    // console.log(file);
+    // TODO: Size check
+    if(file.size > 200 * 1024 * 1024) {
+      valid = false;
+    }
+
+    if(!file) {
+      label.removeClass('btn-outline-info');
+      label.removeClass('btn-outline-danger');
+      label.addClass('btn-outline-primary');
+      return;
+    }
+
+    var fileNameAbbr = file.name.substring(0, 20);
+    if(fileNameAbbr != file.name) {
+      fileNameAbbr += '...';
+    }
+
+    if(!valid) {
+      label.text(fileNameAbbr + ' is too large (over 200MB).');
+      label.removeClass('btn-outline-info');
+      label.removeClass('btn-outline-primary');
+      label.addClass('btn-outline-danger');
+      $(this).val(null);
+      return;
+    }
+
+    label.text(fileNameAbbr);
+    label.removeClass('btn-outline-primary');
+    label.removeClass('btn-outline-danger');
+    label.addClass('btn-outline-info');
+  });
+
+</script>
+{% endblock content %}

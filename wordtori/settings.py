@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 
 import os
+from django.contrib.messages import constants as messages
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -42,8 +43,8 @@ INSTALLED_APPS = [
     'rest_framework',
 
     # Local apps
-    'pages',
-    'api'
+    'pages.apps.PagesConfig',
+    'api.apps.ApiConfig'
 ]
 
 MIDDLEWARE = [
@@ -75,6 +76,10 @@ TEMPLATES = [
         },
     },
 ]
+
+MESSAGE_TAGS = {
+  messages.ERROR: 'danger'
+}
 
 WSGI_APPLICATION = 'wordtori.wsgi.application'
 

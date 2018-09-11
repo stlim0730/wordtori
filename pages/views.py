@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from api.forms import SubmissionForm
 
 def speak(request):
   context = {
@@ -23,4 +24,10 @@ def groundrules(request):
     'active': 'groundrules'
   }
   return render(request, 'groundrules.html', context)
-  
+
+def submit(request):
+  context = {
+    'active': 'submit',
+    'form': SubmissionForm()
+  }
+  return render(request, 'submit.html', context)

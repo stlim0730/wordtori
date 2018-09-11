@@ -1,53 +1,86 @@
 from rest_framework.decorators import api_view, parser_classes
 from rest_framework.parsers import JSONParser, FormParser, MultiPartParser
 from rest_framework.response import Response
-# from django.shortcuts import render
+from django.contrib import messages
+from .forms import SubmissionForm
+from .models import Submission
+from django.shortcuts import render, redirect
+import re
+import urllib.request
 
 # Create your views here.
 @api_view(['POST'])
 @parser_classes((FormParser, MultiPartParser, ))
 def upload(request):
-  # """
-  # Currently supports uploading one file
-  # """
-  # repositoryFullName = request.data['repository'] # Full name means :owner/:repo_name
-  # branch = request.data['branch']
-  # path = request.data['path']
-  # file = request.data['files']
-  # username = request.session['username'].split('@')[0]
-  # userBasePathStr = os.path.join(settings.MEDIA_ROOT, 'repos', repositoryFullName, branch, username)
-  # # TODO
-  # uploadedFilePath = pathlib.Path(userBasePathStr) / path / file.name
-  # fileContent = file.read()
-  # with open(str(uploadedFilePath), 'wb') as fo:
-  #   fo.write(fileContent)
-  # newFile = {}
-  # newFile['path'] = str(uploadedFilePath)
-  # newFile['path'] = newFile['path'].replace(userBasePathStr, '')
-  # newFile['path'] = newFile['path'][1:] # To remove the leading /
-  # newFile['name'] = os.path.basename(newFile['path'])
-  # newFile['nodes'] = []
-  # newFile['added'] = True
-  # newFile['modified'] = False
-  # newFile['sha'] = None
-  # newFile['url'] = None
-  # newFile['type'] = 'blob'
-  # newFile['mode'] = '100644'
-  # # To match encoding / decoding scheme to blobs through GitHub API
-  # newFile['originalContent'] = base64.b64encode(fileContent).decode('utf-8')
-  # # The if block below didn't work for uploaded text files
-  # #   (worked for existing text, binary, and uploaded binary, though)
-  # # if _isBinary((newFile['name'])):
-  # #   newFile['originalContent'] = base64.b64encode(fileContent).decode('utf-8')
-  # # else:
-  # #   newFile['originalContent'] = fileContent.decode('utf-8')
-  # newFile['size'] = os.stat(str(uploadedFilePath)).st_size
-  # return Response({
-  #   'res': uploadedFilePath.exists(),
-  #   'createdFiles': [newFile],
-  #   'size': newFile['size']
-  # })
-  return Response({
-    'res': 'drf working',
-    'data': request.data
-  })
+  name = request.data['name']
+  submissionMode = request.data['submissionMode']
+  file = None
+  if 'file' in request.FILES:
+    file = request.FILES['file']
+  url = request.data['url']
+  description = request.data['description']
+  if submissionMode == 'upload':
+    if not file:
+      # File size limit exceeded or File not attached
+      context = { 'active': 'submit', 'form': SubmissionForm() }
+      messages.add_message(request, messages.ERROR, 'Submission failed! Please check the attachment (upto 200MB).')
+      return render(request, 'submit.html', context=context)
+    blobContent = file.read()
+    mimeType = file.content_type
+    mediaType = mimeType.split('/')[0]
+    submission = Submission(
+      name=name,
+      blobContent=blobContent,
+      description=description,
+      mimeType=mimeType,
+      mediaType=mediaType
+    )
+    submission.save()
+  elif submissionMode == 'link':
+    # YouTube Link format: https://youtu.be/bSwga3LYLVg
+    # SoundCloud Link format: https://soundcloud.com/user-28036692/thom-heyer
+    # SoundCloud track id found in meta tag content="soundcloud://sounds:458282508"
+    youTubeRegex = r'^https://youtu\.be/\w+$'
+    soundCloudRegex = r'^https://soundcloud\.com/.+/.+$'
+    mediaType = None
+    mediaHash = None
+    if re.match(youTubeRegex, url):
+      mediaType = 'youtube'
+      mediaHash = url.split('/')[-1]
+    elif re.match(soundCloudRegex, url):
+      scRes = urllib.request.urlopen(url)
+      if scRes.status == 200:
+        scCont = scRes.read().decode('utf-8')
+        match = re.search(r'content=\"soundcloud://sounds:([0-9]+)\"', scCont)
+        if match:
+          mediaType = 'soundcloud'
+          mediaHash = match.group(1)
+        else:
+          # The SoundCloud page is not reachable
+          context = { 'active': 'submit', 'form': SubmissionForm() }
+          messages.add_message(request, messages.ERROR, 'Submission failed! Couldn\'t identify the content.')
+          return render(request, 'submit.html', context=context)
+      else:
+        # The SoundCloud page is not reachable
+        context = { 'active': 'submit', 'form': SubmissionForm() }
+        messages.add_message(request, messages.ERROR, 'Submission failed! The page doesn\'t exist.')
+        return render(request, 'submit.html', context=context)
+    else:
+      # URL submission doesn't match the expected formats
+      context = { 'active': 'submit', 'form': SubmissionForm() }
+      messages.add_message(request, messages.ERROR, 'Submission failed! Please check the URL (Links from SoundCloud or YouTube are accepted).')
+      return render(request, 'submit.html', context=context)
+    submission = Submission(
+      name=name,
+      url=url,
+      description=description,
+      mediaHash=mediaHash,
+      mediaType=mediaType
+    )
+    submission.save()
+  elif submissionMode == 'record':
+    pass
+  # Success
+  messages.add_message(request, messages.SUCCESS, 'Successfully submitted! Your submission will be reviewed by the moderator.')
+  context = { 'active': 'submit', 'form': SubmissionForm() }
+  return render(request, 'submit.html', context=context)
