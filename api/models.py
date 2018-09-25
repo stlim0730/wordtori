@@ -1,4 +1,6 @@
 from django.db import models
+from django.core.validators import MinValueValidator, MaxValueValidator
+import datetime
 
 class Submission(models.Model):
   MEDIA_TYPE_CHOICES = (
@@ -8,14 +10,27 @@ class Submission(models.Model):
     ('soundcloud', 'SoundCloud'),
     ('youtube', 'YouTube')
   )
-  
+
+  YEAR_VALIDATORS = [
+    MinValueValidator(1900),
+    MaxValueValidator(datetime.datetime.now().year)
+  ]
+
   # Required fields
   name = models.CharField(max_length=100)
+  yearsInNeighborhoodFrom = models.IntegerField(validators=YEAR_VALIDATORS)
+  yearsInNeighborhoodTo = models.IntegerField(validators=YEAR_VALIDATORS, null=True, blank=True)
+  birthYear = models.IntegerField(validators=YEAR_VALIDATORS)
+  placeOfBirth = models.CharField(max_length=100)
+  occupations = models.CharField(max_length=200)
+  image = models.ImageField()
+  consented = models.BooleanField(default=False)
 
   # Optional fields
   blobContent = models.BinaryField(null=True, blank=True, max_length=200 * 1024 * 1024)
   url = models.URLField(max_length=300, null=True, blank=True)
   description = models.TextField(null=True, blank=True)
+  note = models.TextField(null=True, blank=True)
   # TODO: tags = None
 
   # Generated fields

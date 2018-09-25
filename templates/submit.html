@@ -12,12 +12,56 @@
           {% csrf_token %}
           {{ form.non_field_errors }}
           
+          <!-- name -->
           <div class="form-group">
             {{ form.name.errors }}
             <label for="{{ form.name.id_for_label }}">Your Name</label>
             {{ form.name }}
           </div>
 
+          <!-- yearsInNeighborhoodFrom / yearsInNeighborhoodFrom -->
+          <div class="form-group">
+            {{ form.yearsInNeighborhoodFrom.errors }}
+            {{ form.yearsInNeighborhoodTo.errors }}
+            <label for="{{ form.yearsInNeighborhoodFrom.id_for_label }}">Years In Neighborhood</label>
+            <div class="form-inline">
+              {{ form.yearsInNeighborhoodFrom }}
+              {{ form.yearsInNeighborhoodTo }}
+            </div>
+          </div>
+
+          <!-- birthYear -->
+          <div class="form-group">
+            {{ form.birthYear.errors }}
+            <label for="{{ form.birthYear.id_for_label }}">Year of Birth</label>
+            {{ form.birthYear }}
+          </div>
+
+          <!-- placeOfBirth -->
+          <div class="form-group">
+            {{ form.placeOfBirth.errors }}
+            <label for="{{ form.placeOfBirth.id_for_label }}">Place of Birth</label>
+            {{ form.placeOfBirth }}
+          </div>
+
+          <!-- occupations -->
+          <div class="form-group">
+            {{ form.occupations.errors }}
+            <label for="{{ form.occupations.id_for_label }}">Occupations</label>
+            {{ form.occupations }}
+          </div>
+
+          <!-- image -->
+          <div class="form-group">
+            <label>Photo of You</label>
+            {{ form.image.errors }}
+            {{ form.image }}
+            <label id="image-input-label" for="{{ form.image.id_for_label }}" class="btn btn-outline-primary btn-block">
+              Choose a Photo
+            </label>
+          </div>
+          
+          <!-- file / url -->
           <label for="content-tabs">Content</label>
           <ul class="nav nav-tabs" id="content-tabs">
             <li class="nav-item">
@@ -27,7 +71,7 @@
               <a class="nav-link" data-toggle="tab" href="#link">Link</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link disabled" href="#record" title="Not supported yet">Record</a>
+              <a class="nav-link disabled" href="#record" title="Under construction">Record</a>
             </li>
           </ul>
           <div class="tab-content">
@@ -36,7 +80,9 @@
               <label id="file-input-label" for="file-input" class="btn btn-outline-primary btn-block">Choose a File</label> -->
               {{ form.file.errors }}
               {{ form.file }}
-              <label id="file-input-label" for="{{ form.file.id_for_label }}" class="btn btn-outline-primary btn-block">Choose a File</label>
+              <label id="file-input-label" for="{{ form.file.id_for_label }}" class="btn btn-outline-primary btn-block">
+                Choose a File
+              </label>
             </div>
             <div class="tab-pane fade submit-content-tab-pane" id="link">
               <div class="form-group">
@@ -49,34 +95,63 @@
             </div>
           </div>
 
+          <!-- description -->
           <div class="form-group">
             {{ form.description.errors }}
             <label for="{{ form.description.id_for_label }}">Description</label>
             {{ form.description }}
           </div>
 
+          <!-- note -->
+          <div class="form-group">
+            {{ form.note.errors }}
+            <label for="{{ form.note.id_for_label }}">Note to Moderator</label>
+            {{ form.note }}
+          </div>
+
+          <!-- consented -->
+          <div class="form-group">
+            <label>Consent for Release of Information</label>
+            <div class="card bg-light mb-2">
+              <div class="card-body">
+                <p class="card-text">
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                </p>
+              </div>
+            </div>
+            <div class="custom-control custom-checkbox consent-set">
+              {{ form.consented }}
+              <label class="custom-control-label" for="{{ form.consented.id_for_label }}">
+                <strong>I agree to submit the information I provide.</strong>
+              </label>
+            </div>
+
+          </div>
+
         </fieldset>
 
         <input type="hidden" name="submissionMode" id="submissionMode" value="upload" />
-        <input type="submit" value="Submit" class="btn btn-primary btn-block" />
+        <input type="submit" value="Submit" class="btn btn-primary btn-block" disabled />
       </form>
     </div>
   </div>
 </div>
 
 <script>
+  // submissionMode
   $('.nav.nav-tabs li.nav-item a:not(.disabled)').click(function(e) {
     submissionMode = $(this).text().trim().toLowerCase();
     $('#submissionMode').val(submissionMode);
   });
 
+  // Size check for file inputs: image / file
   $('input[type=file]').change(function(e) {
     var file = $(this)[0].files[0];
-    var label = $('#file-input-label');
+    var label = $(this).next('label');
     var valid = true;
-    // console.log(file);
-    // TODO: Size check
-    if(file.size > 200 * 1024 * 1024) {
+    var limit = $(this).data('limit');
+
+    if(file.size > limit * 1024 * 1024) {
       valid = false;
     }
 
@@ -93,7 +168,7 @@
     }
 
     if(!valid) {
-      label.text(fileNameAbbr + ' is too large (over 200MB).');
+      label.text(fileNameAbbr + ' is too large (over ' + limit + 'MB).');
       label.removeClass('btn-outline-info');
       label.removeClass('btn-outline-primary');
       label.addClass('btn-outline-danger');
@@ -105,6 +180,18 @@
     label.removeClass('btn-outline-primary');
     label.removeClass('btn-outline-danger');
     label.addClass('btn-outline-info');
+  });
+
+  // consented
+  $('.consent-set').children('input[type=checkbox]').change(function(e) {
+    var consented = $(this).prop('checked');
+    var submitButton = $('input[type=submit]');
+    if(consented) {
+      submitButton.prop('disabled', false);
+    }
+    else {
+      submitButton.prop('disabled', true);
+    }
   });
 
 </script>
