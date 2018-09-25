@@ -12,6 +12,11 @@ import urllib.request
 @api_view(['POST'])
 @parser_classes((FormParser, MultiPartParser, ))
 def upload(request):
+  if request.data['consented'] != 'on':
+    context = { 'active': 'submit', 'form': SubmissionForm() }
+    messages.add_message(request, messages.ERROR, 'Submission failed! Please check the consent form.')
+    return render(request, 'submit.html', context=context)
+  consented = True
   name = request.data['name']
   submissionMode = request.data['submissionMode']
   file = None
@@ -19,6 +24,14 @@ def upload(request):
     file = request.FILES['file']
   url = request.data['url']
   description = request.data['description']
+  yearsInNeighborhoodFrom = request.data['yearsInNeighborhoodFrom']
+  yearsInNeighborhoodTo = request.data['yearsInNeighborhoodTo']
+  yearOfBirth = request.data['yearOfBirth']
+  placeOfBirth = request.data['placeOfBirth']
+  occupations = request.data['occupations']
+  photo = request.FILES['photo'].read()
+  photoMimeType = request.FILES['photo'].content_type
+  note = request.data['note']
   if submissionMode == 'upload':
     if not file:
       # File size limit exceeded or File not attached
@@ -29,11 +42,22 @@ def upload(request):
     mimeType = file.content_type
     mediaType = mimeType.split('/')[0]
     submission = Submission(
+      consented=consented,
       name=name,
+      # Uploaded
       blobContent=blobContent,
-      description=description,
       mimeType=mimeType,
-      mediaType=mediaType
+      # Uploaded
+      description=description,
+      mediaType=mediaType,
+      photo=photo,
+      photoMimeType=photoMimeType,
+      yearsInNeighborhoodFrom=yearsInNeighborhoodFrom,
+      yearsInNeighborhoodTo=yearsInNeighborhoodTo,
+      yearOfBirth=yearOfBirth,
+      placeOfBirth=placeOfBirth,
+      occupations=occupations,
+      note=note
     )
     submission.save()
   elif submissionMode == 'link':
@@ -71,11 +95,22 @@ def upload(request):
       messages.add_message(request, messages.ERROR, 'Submission failed! Please check the URL (Links from SoundCloud or YouTube are accepted).')
       return render(request, 'submit.html', context=context)
     submission = Submission(
+      consented=consented,
       name=name,
+      # Linked
       url=url,
-      description=description,
       mediaHash=mediaHash,
-      mediaType=mediaType
+      # Linked
+      description=description,
+      mediaType=mediaType,
+      photo=photo,
+      photoMimeType=photoMimeType,
+      yearsInNeighborhoodFrom=yearsInNeighborhoodFrom,
+      yearsInNeighborhoodTo=yearsInNeighborhoodTo,
+      yearOfBirth=yearOfBirth,
+      placeOfBirth=placeOfBirth,
+      occupations=occupations,
+      note=note
     )
     submission.save()
   elif submissionMode == 'record':

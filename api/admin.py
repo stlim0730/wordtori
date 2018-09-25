@@ -9,9 +9,23 @@ from django.conf import settings
 class SubmissionAdmin(admin.ModelAdmin):
   model = Submission
   list_display = ('submissionId', 'published', 'name', 'submissionDate', 'mediaType')
-  readonly_fields = ['url', 'mimeType', 'mediaType', 'mediaHash', 'preview']
+  readonly_fields = ['photoReview', 'mimeType', 'mediaType', 'mediaHash', 'review', 'consented', 'submissionDate']
 
-  def preview(self, obj):
+  def photoReview(self, obj):
+    photoFileExt = obj.photoMimeType.split('/')[-1]
+    photoFileName = '{id}_{name}.{ext}'.format(
+      id = obj.submissionId,
+      name = obj.name,
+      ext = photoFileExt
+    )
+    photoFilePath = os.path.join(settings.MEDIA_ROOT, photoFileName)
+    with open(photoFilePath, 'wb') as fo:
+      fo.write(obj.photo)
+      return mark_safe('\
+        <img src="/media/{fileName}" style="max-width: 500px" />'.format(fileName = photoFileName)
+      )
+
+  def review(self, obj):
     if obj.mimeType and obj.blobContent:
       # Uploaded media
       tempFileExt = obj.mimeType.split('/')[-1]

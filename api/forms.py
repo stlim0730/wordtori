@@ -31,7 +31,7 @@ class SubmissionForm(forms.ModelForm):
       }
     )
   )
-  birthYear = forms.IntegerField(
+  yearOfBirth = forms.IntegerField(
     widget=forms.NumberInput(
       attrs={
         'class': 'form-control'
@@ -54,7 +54,7 @@ class SubmissionForm(forms.ModelForm):
       }
     )
   )
-  image = forms.ImageField(
+  photo = forms.ImageField(
     widget=forms.ClearableFileInput(
       attrs={
         'class': 'form-control',

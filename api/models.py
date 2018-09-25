@@ -19,11 +19,11 @@ class Submission(models.Model):
   # Required fields
   name = models.CharField(max_length=100)
   yearsInNeighborhoodFrom = models.IntegerField(validators=YEAR_VALIDATORS)
-  yearsInNeighborhoodTo = models.IntegerField(validators=YEAR_VALIDATORS, null=True, blank=True)
-  birthYear = models.IntegerField(validators=YEAR_VALIDATORS)
+  yearsInNeighborhoodTo = models.IntegerField(validators=YEAR_VALIDATORS)
+  yearOfBirth = models.IntegerField(validators=YEAR_VALIDATORS)
   placeOfBirth = models.CharField(max_length=100)
   occupations = models.CharField(max_length=200)
-  image = models.ImageField()
+  photo = models.BinaryField(max_length=5 * 1024 * 1024)
   consented = models.BooleanField(default=False)
 
   # Optional fields
@@ -36,6 +36,7 @@ class Submission(models.Model):
   # Generated fields
   submissionId = models.AutoField(primary_key=True)
   submissionDate = models.DateField(auto_now_add=True)
+  photoMimeType = models.CharField(max_length=len('image/jpeg'))
   mimeType = models.CharField(max_length=len('video/webm'), null=True, blank=True, default='')
   mediaType = models.CharField(max_length=len('soundcloud'), choices=MEDIA_TYPE_CHOICES)
   mediaHash = models.CharField(max_length=30, null=True, blank=True, default='')

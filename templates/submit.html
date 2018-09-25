@@ -30,11 +30,11 @@
             </div>
           </div>
 
-          <!-- birthYear -->
+          <!-- yearOfBirth -->
           <div class="form-group">
-            {{ form.birthYear.errors }}
-            <label for="{{ form.birthYear.id_for_label }}">Year of Birth</label>
-            {{ form.birthYear }}
+            {{ form.yearOfBirth.errors }}
+            <label for="{{ form.yearOfBirth.id_for_label }}">Year of Birth</label>
+            {{ form.yearOfBirth }}
           </div>
 
           <!-- placeOfBirth -->
@@ -51,16 +51,16 @@
             {{ form.occupations }}
           </div>
 
-          <!-- image -->
+          <!-- photo -->
           <div class="form-group">
             <label>Photo of You</label>
-            {{ form.image.errors }}
-            {{ form.image }}
-            <label id="image-input-label" for="{{ form.image.id_for_label }}" class="btn btn-outline-primary btn-block">
+            {{ form.photo.errors }}
+            {{ form.photo }}
+            <label id="photo-input-label" for="{{ form.photo.id_for_label }}" class="btn btn-outline-primary btn-block">
               Choose a Photo
             </label>
           </div>
-          
+
           <!-- file / url -->
           <label for="content-tabs">Content</label>
           <ul class="nav nav-tabs" id="content-tabs">
@@ -144,7 +144,7 @@
     $('#submissionMode').val(submissionMode);
   });
 
-  // Size check for file inputs: image / file
+  // Size check for file inputs: photo / file
   $('input[type=file]').change(function(e) {
     var file = $(this)[0].files[0];
     var label = $(this).next('label');
