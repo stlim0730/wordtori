@@ -1,11 +1,20 @@
 from django.shortcuts import render
 from django.db import models
 from api.forms import SubmissionForm
-from api.models import Category
+from api.models import Submission, Category
 
-def see(request):
+def categories(request):
   context = {
-    'active': 'see'
+    'active': 'see',
+    'categories': Category.objects.filter(hidden=False)
+  }
+  return render(request, 'categories.html', context)
+
+def see(request, slug):
+  context = {
+    'active': 'see',
+    'category': Category.objects.filter(slug=slug)[0],
+    'submissions': Submission.objects.filter(category__slug=slug, published=True, consented=True)
   }
   return render(request, 'see.html', context)
 

@@ -15,3 +15,4 @@ input[type=file] {
   position: absolute;
   z-index: -1;
 }
+.hover-card:hover { background-color: #F7F7F7; }
