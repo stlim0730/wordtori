@@ -3,7 +3,7 @@ from rest_framework.parsers import JSONParser, FormParser, MultiPartParser
 from rest_framework.response import Response
 from django.contrib import messages
 from .forms import SubmissionForm
-from .models import Submission
+from .models import Submission, Category
 from django.shortcuts import render, redirect
 import re
 import urllib.request
@@ -12,10 +12,11 @@ import urllib.request
 @api_view(['POST'])
 @parser_classes((FormParser, MultiPartParser, ))
 def upload(request):
+  # For reseponse
+  context = { 'active': 'speak', 'form': SubmissionForm(), 'categories': Category.objects.filter(hidden=False) }
   if request.data['consented'] != 'on':
-    context = { 'active': 'submit', 'form': SubmissionForm() }
     messages.add_message(request, messages.ERROR, 'Submission failed! Please check the consent form.')
-    return render(request, 'submit.html', context=context)
+    return render(request, 'speak.html', context=context)
   consented = True
   name = request.data['name']
   submissionMode = request.data['submissionMode']
@@ -30,14 +31,14 @@ def upload(request):
   placeOfBirth = request.data['placeOfBirth']
   occupations = request.data['occupations']
   photo = request.FILES['photo'].read()
+  categoryId = request.data['categoryId']
   photoMimeType = request.FILES['photo'].content_type
   note = request.data['note']
   if submissionMode == 'upload':
     if not file:
       # File size limit exceeded or File not attached
-      context = { 'active': 'submit', 'form': SubmissionForm() }
       messages.add_message(request, messages.ERROR, 'Submission failed! Please check the attachment (upto 200MB).')
-      return render(request, 'submit.html', context=context)
+      return render(request, 'speak.html', context=context)
     blobContent = file.read()
     mimeType = file.content_type
     mediaType = mimeType.split('/')[0]
@@ -52,6 +53,7 @@ def upload(request):
       mediaType=mediaType,
       photo=photo,
       photoMimeType=photoMimeType,
+      category=Category.objects.filter(categoryId=categoryId)[0],
       yearsInNeighborhoodFrom=yearsInNeighborhoodFrom,
       yearsInNeighborhoodTo=yearsInNeighborhoodTo,
       yearOfBirth=yearOfBirth,
@@ -81,19 +83,16 @@ def upload(request):
           mediaHash = match.group(1)
         else:
           # The SoundCloud page is not reachable
-          context = { 'active': 'submit', 'form': SubmissionForm() }
           messages.add_message(request, messages.ERROR, 'Submission failed! Couldn\'t identify the content.')
-          return render(request, 'submit.html', context=context)
+          return render(request, 'speak.html', context=context)
       else:
         # The SoundCloud page is not reachable
-        context = { 'active': 'submit', 'form': SubmissionForm() }
         messages.add_message(request, messages.ERROR, 'Submission failed! The page doesn\'t exist.')
-        return render(request, 'submit.html', context=context)
+        return render(request, 'speak.html', context=context)
     else:
       # URL submission doesn't match the expected formats
-      context = { 'active': 'submit', 'form': SubmissionForm() }
       messages.add_message(request, messages.ERROR, 'Submission failed! Please check the URL (Links from SoundCloud or YouTube are accepted).')
-      return render(request, 'submit.html', context=context)
+      return render(request, 'speak.html', context=context)
     submission = Submission(
       consented=consented,
       name=name,
@@ -105,6 +104,7 @@ def upload(request):
       mediaType=mediaType,
       photo=photo,
       photoMimeType=photoMimeType,
+      category=Category.objects.filter(categoryId=categoryId)[0],
       yearsInNeighborhoodFrom=yearsInNeighborhoodFrom,
       yearsInNeighborhoodTo=yearsInNeighborhoodTo,
       yearOfBirth=yearOfBirth,
@@ -117,5 +117,4 @@ def upload(request):
     pass
   # Success
   messages.add_message(request, messages.SUCCESS, 'Successfully submitted! Your submission will be reviewed by the moderator.')
-  context = { 'active': 'submit', 'form': SubmissionForm() }
-  return render(request, 'submit.html', context=context)
+  return render(request, 'speak.html', context=context)

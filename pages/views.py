@@ -1,11 +1,13 @@
 from django.shortcuts import render
+from django.db import models
 from api.forms import SubmissionForm
+from api.models import Category
 
-def speak(request):
+def see(request):
   context = {
-    'active': 'speak'
+    'active': 'see'
   }
-  return render(request, 'speak.html', context)
+  return render(request, 'see.html', context)
 
 def why(request):
   context = {
@@ -25,9 +27,10 @@ def groundrules(request):
   }
   return render(request, 'groundrules.html', context)
 
-def submit(request):
+def speak(request):
   context = {
-    'active': 'submit',
+    'active': 'speak',
+    'categories': Category.objects.filter(hidden=False),
     'form': SubmissionForm()
   }
-  return render(request, 'submit.html', context)
+  return render(request, 'speak.html', context)

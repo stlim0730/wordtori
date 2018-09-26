@@ -20,11 +20,11 @@ from pages import views
 
 urlpatterns = [
   path('admin/', admin.site.urls),
-  url(r'^$', views.speak, name='speak'),
-  url(r'^speak$', views.speak, name='speak'),
+  url(r'^$', views.see, name='see'),
+  url(r'^see$', views.see, name='see'),
   url(r'^why$', views.why, name='why'),
   url(r'^how$', views.how, name='how'),
   url(r'^groundrules$', views.groundrules, name='groundrules'),
-  url(r'^submit$', views.submit, name='submit'),
+  url(r'^speak$', views.speak, name='speak'),
   url(r'^api/', include('api.urls')),
 ]

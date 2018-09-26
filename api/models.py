@@ -1,6 +1,7 @@
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
 import datetime
+# from slugify import slugify
 
 class Submission(models.Model):
   MEDIA_TYPE_CHOICES = (
@@ -24,6 +25,7 @@ class Submission(models.Model):
   placeOfBirth = models.CharField(max_length=100)
   occupations = models.CharField(max_length=200)
   photo = models.BinaryField(max_length=5 * 1024 * 1024)
+  category= models.ForeignKey('Category', on_delete=models.CASCADE)
   consented = models.BooleanField(default=False)
 
   # Optional fields
@@ -41,3 +43,16 @@ class Submission(models.Model):
   mediaType = models.CharField(max_length=len('soundcloud'), choices=MEDIA_TYPE_CHOICES)
   mediaHash = models.CharField(max_length=30, null=True, blank=True, default='')
   published = models.BooleanField(default=False)
+
+class Category(models.Model):
+  class Meta:
+    verbose_name_plural = 'categories'
+
+  categoryId = models.AutoField(primary_key=True)
+  name = models.CharField(max_length=100)
+  slug = models.SlugField(max_length=100, unique=True)
+  hidden = models.BooleanField(default=False)
+
+  def __str__(self):
+    return self.name
+

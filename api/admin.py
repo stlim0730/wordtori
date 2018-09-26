@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.utils.safestring import mark_safe
-from .models import Submission
+from .models import Submission, Category
 import base64
 import tempfile
 import os
@@ -8,7 +8,7 @@ from django.conf import settings
 
 class SubmissionAdmin(admin.ModelAdmin):
   model = Submission
-  list_display = ('submissionId', 'published', 'name', 'submissionDate', 'mediaType')
+  list_display = ['submissionId', 'published', 'name', 'category', 'submissionDate', 'mediaType']
   readonly_fields = ['photoReview', 'mimeType', 'mediaType', 'mediaHash', 'review', 'consented', 'submissionDate']
 
   def photoReview(self, obj):
@@ -55,4 +55,9 @@ class SubmissionAdmin(admin.ModelAdmin):
         </iframe>'.format(hash = obj.mediaHash)
       )
 
+class CategoryAdmin(admin.ModelAdmin):
+  model = Category
+  list_display = ('categoryId', 'name', 'slug', 'hidden')
+
 admin.site.register(Submission, SubmissionAdmin)
+admin.site.register(Category, CategoryAdmin)

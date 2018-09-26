@@ -8,12 +8,12 @@
     <div class="collapse navbar-collapse" id="wordtori-navbar">
       <ul class="navbar-nav ml-auto">
         
-        {% if active == "speak" or not active %}
+        {% if active == "see" or not active %}
           <li class="nav-item active">
         {% else %}
           <li class="nav-item">
         {% endif %}
-          <a class="nav-link" href="/speak">Speak</a>
+          <a class="nav-link" href="/see">See</a>
         </li>
 
         {% if active == "why" or not active %}
@@ -41,7 +41,7 @@
         </li>
 
         <li class="nav-item">
-          <a class="nav-link" href="/submit" style="background-color: #1A1A1A; color: #FFFFFF; text-align: center;">Submit</a>
+          <a class="nav-link" href="/speak" style="background-color: #1A1A1A; color: #FFFFFF; text-align: center;">Speak</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="/admin" style="border: #1A1A1A solid 2px; text-align: center;" target="_blank">Admin</a>
