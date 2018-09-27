@@ -5,17 +5,18 @@ import base64
 import tempfile
 import os
 from django.conf import settings
+from slugify import slugify
 
 class SubmissionAdmin(admin.ModelAdmin):
   model = Submission
   list_display = ['submissionId', 'published', 'name', 'category', 'submissionDate', 'mediaType']
-  readonly_fields = ['photoReview', 'mimeType', 'mediaType', 'mediaHash', 'review', 'consented', 'submissionDate']
+  readonly_fields = ['photoReview', 'photoMimeType', 'mimeType', 'mediaType', 'mediaHash', 'review', 'consented', 'submissionDate']
 
   def photoReview(self, obj):
     photoFileExt = obj.photoMimeType.split('/')[-1]
     photoFileName = '{id}_{name}.{ext}'.format(
       id = obj.submissionId,
-      name = obj.name,
+      name = slugify(obj.name),
       ext = photoFileExt
     )
     photoFilePath = os.path.join(settings.MEDIA_ROOT, photoFileName)

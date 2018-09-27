@@ -97,3 +97,8 @@ sudo service nginx restart
 # Daemonize uWSGI module
 # 
 cd /$PROJECT_NAME && sudo uwsgi --daemonize /var/log/uwsgi-daemon.log --socket :8001 --module $PROJECT_NAME.wsgi --touch-reload=/$PROJECT_NAME/reload.ini
+
+# 
+# Prepopulate the database
+# 
+cd /$PROJECT_NAME && python3 manage.py prepopulate

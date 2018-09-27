@@ -19,12 +19,12 @@ class Submission(models.Model):
 
   # Required fields
   name = models.CharField(max_length=100)
-  yearsInNeighborhoodFrom = models.IntegerField(validators=YEAR_VALIDATORS)
-  yearsInNeighborhoodTo = models.IntegerField(validators=YEAR_VALIDATORS)
-  yearOfBirth = models.IntegerField(validators=YEAR_VALIDATORS)
-  placeOfBirth = models.CharField(max_length=100)
-  occupations = models.CharField(max_length=200)
-  photo = models.BinaryField(max_length=5 * 1024 * 1024)
+  yearsInNeighborhoodFrom = models.IntegerField(validators=YEAR_VALIDATORS, null=True)
+  yearsInNeighborhoodTo = models.IntegerField(validators=YEAR_VALIDATORS, null=True)
+  yearOfBirth = models.IntegerField(validators=YEAR_VALIDATORS, null=True)
+  placeOfBirth = models.CharField(max_length=100, null=True)
+  occupations = models.CharField(max_length=200, null=True)
+  photo = models.BinaryField(max_length=5 * 1024 * 1024, null=True)
   category= models.ForeignKey('Category', on_delete=models.CASCADE)
   consented = models.BooleanField(default=False)
 
@@ -37,8 +37,8 @@ class Submission(models.Model):
 
   # Generated fields
   submissionId = models.AutoField(primary_key=True)
-  submissionDate = models.DateField(auto_now_add=True)
-  photoMimeType = models.CharField(max_length=len('image/jpeg'))
+  submissionDate = models.DateField(default=datetime.datetime.now())
+  photoMimeType = models.CharField(max_length=len('image/jpeg'), null=True)
   mimeType = models.CharField(max_length=len('video/webm'), null=True, blank=True, default='')
   mediaType = models.CharField(max_length=len('soundcloud'), choices=MEDIA_TYPE_CHOICES)
   mediaHash = models.CharField(max_length=30, null=True, blank=True, default='')
