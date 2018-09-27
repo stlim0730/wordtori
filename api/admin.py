@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.utils.safestring import mark_safe
-from .models import Submission, Category
+from .models import Submission, Category, AdminEmail
 import base64
 import tempfile
 import os
@@ -62,3 +62,4 @@ class CategoryAdmin(admin.ModelAdmin):
 
 admin.site.register(Submission, SubmissionAdmin)
 admin.site.register(Category, CategoryAdmin)
+admin.site.register(AdminEmail)

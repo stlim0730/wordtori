@@ -56,3 +56,7 @@ class Category(models.Model):
   def __str__(self):
     return self.name
 
+class AdminEmail(models.Model):
+  adminEmailId = models.AutoField(primary_key=True)
+  email = models.EmailField()
+  

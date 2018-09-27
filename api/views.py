@@ -2,8 +2,9 @@ from rest_framework.decorators import api_view, parser_classes
 from rest_framework.parsers import JSONParser, FormParser, MultiPartParser
 from rest_framework.response import Response
 from django.contrib import messages
+from django.core.mail import send_mail
 from .forms import SubmissionForm
-from .models import Submission, Category
+from .models import Submission, Category, AdminEmail
 from django.shortcuts import render, redirect
 import re
 import urllib.request
@@ -117,4 +118,13 @@ def upload(request):
     pass
   # Success
   messages.add_message(request, messages.SUCCESS, 'Successfully submitted! Your submission will be reviewed by the moderator.')
+  adminEmails = [ae.email for ae in AdminEmail.objects.all()]
+  if len(adminEmails) > 0:
+    send_mail(
+      'New Submission on WordToRI',
+      'There is a new submission by {} on WordToRI. Review and publish the submission if it\'s appropriate.'.format(name),
+      'no-reply@wordtori.com',
+      adminEmails,
+      fail_silently=True,
+    )
   return render(request, 'speak.html', context=context)
