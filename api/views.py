@@ -118,11 +118,11 @@ def upload(request):
     pass
   # Success
   messages.add_message(request, messages.SUCCESS, 'Successfully submitted! Your submission will be reviewed by the moderator.')
-  adminEmails = AdminEmail.objects.all()
+  adminEmails = [ae.email for ae in AdminEmail.objects.all()]
   if len(adminEmails) > 0:
     send_mail(
       'New Submission on WordToRI',
-      'There is a new submission on WordToRI. Review and publish it if it\'s appropriate.',
+      'There is a new submission by {} on WordToRI. Review and publish the submission if it\'s appropriate.'.format(name),
       'no-reply@wordtori.com',
       adminEmails,
       fail_silently=True,
