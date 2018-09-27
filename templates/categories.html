@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+  <div class="row">
+    <div class="col padding-top-40 padding-bottom-20">
+      <h2 class="padding-bottom-20">Categories</h2>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    {% for category in categories %}
+      {% include "partials/category.html" with category=category %}
+    {% endfor %}
+  </div>
+</div>
+{% endblock content %}

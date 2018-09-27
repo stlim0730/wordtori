@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+  <div class="row">
+    <div class="col padding-top-40 padding-bottom-20">
+      <h2 class="padding-bottom-20">{{category.name}}</h2>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    {% for submission in submissions %}
+      {% include "partials/submission.html" with submission=submission %}
+    {% endfor %}
+  </div>
+</div>
+{% endblock content %}
