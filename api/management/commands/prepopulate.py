@@ -1,7 +1,9 @@
 import os
 import sys
 from datetime import datetime
+from django.conf import settings
 from django.core.management import BaseCommand
+from django.db import connection, transaction, router
 from api.models import Submission, Category
 import json
 import base64
@@ -30,6 +32,7 @@ class Command(BaseCommand):
     if len(Category.objects.all()) < 1:
       print('No categories found.')
       sys.exit(1)
+    self.updateAutoIncrement('api', Category, 'categoryId', cnt + 1)
 
     # Submission
     filePath = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'submissions.json')
@@ -68,3 +71,19 @@ class Command(BaseCommand):
       )
       cnt += 1
     print('{cnt} submission objects were created.'.format(cnt=cnt))
+    self.updateAutoIncrement('api', Submission, 'submissionId', cnt + 1)
+
+# api_category_categoryId_seq
+# api_submission_submissionId_seq
+
+  def updateAutoIncrement(self, app, model, idField, value):
+    cursor = connection.cursor()
+    _router = settings.DATABASES[router.db_for_write(model)]['NAME']
+    alter_str = "ALTER sequence \"{app}_{model}_{idField}_seq\" RESTART WITH {value}".format(
+      app='api', model=model.__name__.lower(), idField=idField, value=value
+    )
+    # alter_str = "ALTER table {}.{} 'AUTO_INCREMENT'={}".format(
+    #   _router, model._meta.db_table, value
+    # )
+    cursor.execute(alter_str)
+    # transaction.commit_unless_managed()
