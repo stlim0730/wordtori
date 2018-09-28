@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.db import models
 from api.forms import SubmissionForm
 from api.models import Submission, Category
+import base64
 
 def categories(request):
   context = {
@@ -11,10 +12,13 @@ def categories(request):
   return render(request, 'categories.html', context)
 
 def see(request, slug):
+  submissions = Submission.objects.filter(category__slug=slug, published=True, consented=True)
+  for submission in submissions:
+    submission.photo = base64.b64encode(submission.photo).decode('utf-8')
   context = {
     'active': 'see',
     'category': Category.objects.filter(slug=slug)[0],
-    'submissions': Submission.objects.filter(category__slug=slug, published=True, consented=True)
+    'submissions': submissions
   }
   return render(request, 'see.html', context)
 
