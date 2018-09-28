@@ -1,6 +1,8 @@
 {% extends "base.html" %}
 
 {% block content %}
+<script src="/static/js/jquerypopupoverlay/jquery.popupoverlay.js"></script>
+
 <div class="container">
   <div class="row">
     <div class="col-6 padding-top-40 padding-bottom-20">
@@ -15,8 +17,51 @@
 <div class="container">
   <div class="row">
     {% for submission in submissions %}
-      {% include "partials/submission.html" with submission=submission %}
+      {% include "partials/submission.html" with category=category submission=submission %}
     {% endfor %}
   </div>
 </div>
+
+{% include "partials/player.html" with category=category %}
+
+<script>
+  $(document).ready(function() {
+    $('#player').popup({
+      scrolllock: true,
+      blur: false,
+      color: '#fff',
+      opacity: 0.95,
+      vertical: 'top',
+    });
+  });
+
+  $('a.player_open').click(function(e) {
+    // The field name is case insensitive in Postgres!
+    var categoryId = $(this).data('categoryid');
+    var submissionId = $(this).data('submissionid');
+
+    $.ajax({
+      url: '/api/media/play/' + categoryId + '/' + submissionId,
+      method: 'GET',
+      dataType: 'json',
+      // data: JSON.stringify({
+      //   categoryId: categoryId,
+      //   submissionId: submissionId
+      // }),
+      contentType: 'application/json; charset=utf-8',
+      success: function(response) {
+        console.debug(response);
+        if('error' in response) {
+          //
+        }
+        else {
+          //
+        }
+      }
+    });
+
+    // console.log();
+  });
+</script>
+
 {% endblock content %}

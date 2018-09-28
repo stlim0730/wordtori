@@ -9,7 +9,6 @@ from django.shortcuts import render, redirect
 import re
 import urllib.request
 
-# Create your views here.
 @api_view(['POST'])
 @parser_classes((FormParser, MultiPartParser, ))
 def upload(request):
@@ -128,3 +127,10 @@ def upload(request):
       fail_silently=True,
     )
   return render(request, 'speak.html', context=context)
+
+@api_view(['GET'])
+def play(request, category, submission):
+  return Response({
+    'categoryId': category,
+    'submissionId': submission
+  })
