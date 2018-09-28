@@ -130,7 +130,22 @@ def upload(request):
 
 @api_view(['GET'])
 def play(request, category, submission):
-  return Response({
-    'categoryId': category,
-    'submissionId': submission
-  })
+  submission = Submission.objects.filter(category__categoryId=category, submissionId=submission)
+  if len(submission) == 1:
+    submission = submission[0]
+    return Response({
+      'name': submission.name,
+      'yearsInNeighborhoodFrom': submission.yearsInNeighborhoodFrom,
+      'yearsInNeighborhoodTo': submission.yearsInNeighborhoodTo,
+      'yearOfBirth': submission.yearOfBirth,
+      'placeOfBirth': submission.placeOfBirth,
+      'occupations': submission.occupations,
+      'description': submission.description,
+      'submissionDate': submission.submissionDate,
+      'mediaType': submission.mediaType,
+      'mediaHash': submission.mediaHash
+    })
+  else:
+    return Response({
+      'error': 'Submission not found.'
+    })

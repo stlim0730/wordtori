@@ -24,9 +24,13 @@ input[type=file] {
   height: 100%;
   width: auto;
 }
+button.player_close:hover { color: #7f7f7f; }
 @media (max-width: 720px) {
   .submission-card img {
     height: auto;
     width: 100%;
+  }
+  #player-content-frame {
+    min-height: 283px;
   }
 }
