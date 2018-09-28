@@ -6,6 +6,7 @@ from django.core.mail import send_mail
 from .forms import SubmissionForm
 from .models import Submission, Category, AdminEmail
 from django.shortcuts import render, redirect
+from tagging.models import Tag
 import re
 import urllib.request
 
@@ -34,6 +35,7 @@ def upload(request):
   categoryId = request.data['categoryId']
   photoMimeType = request.FILES['photo'].content_type
   note = request.data['note']
+  tags = request.data['tags']
   if submissionMode == 'upload':
     if not file:
       # File size limit exceeded or File not attached
@@ -116,6 +118,7 @@ def upload(request):
   elif submissionMode == 'record':
     pass
   # Success
+  Tag.objects.update_tags(submission, tags)
   messages.add_message(request, messages.SUCCESS, 'Successfully submitted! Your submission will be reviewed by the moderator.')
   adminEmails = [ae.email for ae in AdminEmail.objects.all()]
   if len(adminEmails) > 0:

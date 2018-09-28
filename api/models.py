@@ -1,7 +1,7 @@
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
 import datetime
-# from slugify import slugify
+from tagging.registry import register
 
 class Submission(models.Model):
   MEDIA_TYPE_CHOICES = (
@@ -43,6 +43,8 @@ class Submission(models.Model):
   mediaType = models.CharField(max_length=len('soundcloud'), choices=MEDIA_TYPE_CHOICES)
   mediaHash = models.CharField(max_length=30, null=True, blank=True, default='')
   published = models.BooleanField(default=False)
+
+register(Submission)
 
 class Category(models.Model):
   class Meta:

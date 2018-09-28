@@ -41,6 +41,7 @@ INSTALLED_APPS = [
 
     # Third-party apps
     'rest_framework',
+    'tagging',
 
     # Local apps
     'pages.apps.PagesConfig',
@@ -151,6 +152,9 @@ STATICFILES_DIRS = (
 # Media files (Hexo)
 MEDIA_ROOT = os.path.join(PROJECT_ROOT, 'media')
 MEDIA_URL = '/media/'
+
+# Django Tagging
+FORCE_LOWERCASE_TAGS = True
 
 # To override local settings from default settings,
 #   local_settings.py must not exist on the production server or in shared repository.
