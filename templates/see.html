@@ -32,6 +32,9 @@
       color: '#fff',
       opacity: 0.97,
       vertical: 'top',
+      onclose: function() {
+        resetPlayer();
+      }
     });
   });
 
@@ -48,7 +51,8 @@
       success: function(response) {
         console.log(response);
         if('error' in response) {
-          //
+          resetPlayer();
+          alert(response.error);
         }
         else {
           setPlayer(response)
