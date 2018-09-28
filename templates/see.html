@@ -1,10 +1,15 @@
 {% extends "base.html" %}
 
 {% block content %}
+<script src="/static/js/jquerypopupoverlay/jquery.popupoverlay.js"></script>
+
 <div class="container">
   <div class="row">
-    <div class="col padding-top-40 padding-bottom-20">
+    <div class="col-6 padding-top-40 padding-bottom-20">
       <h2 class="padding-bottom-20">{{category.name}}</h2>
+    </div>
+    <div class="col-6 padding-top-40 padding-bottom-20">
+      <!-- <h2 class="padding-bottom-20">Toggle</h2> -->
     </div>
   </div>
 </div>
@@ -12,8 +17,92 @@
 <div class="container">
   <div class="row">
     {% for submission in submissions %}
-      {% include "partials/submission.html" with submission=submission %}
+      {% include "partials/submission.html" with category=category submission=submission %}
     {% endfor %}
   </div>
 </div>
+
+{% include "partials/player.html" with category=category %}
+
+<script>
+  $(document).ready(function() {
+    $('#player').popup({
+      scrolllock: true,
+      blur: false,
+      color: '#fff',
+      opacity: 0.97,
+      vertical: 'top',
+      onclose: function() {
+        resetPlayer();
+      }
+    });
+  });
+
+  $('a.player_open').click(function(e) {
+    // The field name is case insensitive in Postgres!
+    var categoryId = $(this).data('categoryid');
+    var submissionId = $(this).data('submissionid');
+
+    $.ajax({
+      url: '/api/media/play/' + categoryId + '/' + submissionId,
+      method: 'GET',
+      dataType: 'json',
+      contentType: 'application/json; charset=utf-8',
+      success: function(response) {
+        console.log(response);
+        if('error' in response) {
+          resetPlayer();
+          alert(response.error);
+        }
+        else {
+          setPlayer(response)
+        }
+      }
+    });
+  });
+
+  var resetPlayer = function() {
+    $('.player-fields').text('-');
+  }
+
+  var setPlayer = function(res) {
+    res.name ?
+      $('#player-name').text(res.name) :
+      $('#player-name').text('Unknown User');
+    res.yearsInNeighborhoodFrom && res.yearsInNeighborhoodTo ?
+      $('#player-yearsInNeighborhood').text(res.yearsInNeighborhoodFrom + '-' + res.yearsInNeighborhoodTo) :
+      $('#player-yearsInNeighborhood').text('-');
+    res.yearOfBirth ?
+      $('#player-yearOfBirth').text(res.yearOfBirth) :
+      $('#player-yearOfBirth').text('-');
+    res.placeOfBirth ?
+      $('#player-placeOfBirth').text(res.placeOfBirth) :
+      $('#player-placeOfBirth').text('-');
+    res.occupations ?
+      $('#player-occupations').text(res.occupations) :
+      $('#player-occupations').text('-');
+    res.description ?
+      $('#player-description').text(res.description) :
+      $('#player-description').text('-');
+    res.submissionDate ?
+      $('#player-submissionDate').text(res.submissionDate) :
+      $('#player-submissionDate').text('-');
+    res.mediaType && res.mediaHash ?
+      $('#player-content-frame').html(getMediaEmbed(res.mediaType, res.mediaHash)) : null;
+  }
+
+  var getMediaEmbed = function(mediaType, mediaHash) {
+    if(mediaType == 'youtube') {
+      return '<iframe width="100%" height="62%" src="https://www.youtube.com/embed/' + mediaHash + '" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>';
+    }
+    else if(mediaType == 'soundcloud') {
+      return '<iframe width="100%" height="100%" scrolling="no" frameborder="no" allow="autoplay" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/' + mediaHash + '&color=%23ff5500&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=true"></iframe>';
+    }
+    else {
+      alert('media type error!');
+      return;
+    }
+  }
+</script>
+
 {% endblock content %}

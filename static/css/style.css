@@ -15,4 +15,22 @@ input[type=file] {
   position: absolute;
   z-index: -1;
 }
-.hover-card:hover { background-color: #F7F7F7; }
+.submission-card {
+  height: 283px;
+  padding: 0px;
+  overflow: hidden;
+}
+.submission-card img {
+  height: 100%;
+  width: auto;
+}
+button.player_close:hover { color: #7f7f7f; }
+@media (max-width: 720px) {
+  .submission-card img {
+    height: auto;
+    width: 100%;
+  }
+  #player-content-frame {
+    min-height: 283px;
+  }
+}

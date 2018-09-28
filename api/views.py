@@ -9,7 +9,6 @@ from django.shortcuts import render, redirect
 import re
 import urllib.request
 
-# Create your views here.
 @api_view(['POST'])
 @parser_classes((FormParser, MultiPartParser, ))
 def upload(request):
@@ -128,3 +127,25 @@ def upload(request):
       fail_silently=True,
     )
   return render(request, 'speak.html', context=context)
+
+@api_view(['GET'])
+def play(request, category, submission):
+  submission = Submission.objects.filter(category__categoryId=category, submissionId=submission)
+  if len(submission) == 1:
+    submission = submission[0]
+    return Response({
+      'name': submission.name,
+      'yearsInNeighborhoodFrom': submission.yearsInNeighborhoodFrom,
+      'yearsInNeighborhoodTo': submission.yearsInNeighborhoodTo,
+      'yearOfBirth': submission.yearOfBirth,
+      'placeOfBirth': submission.placeOfBirth,
+      'occupations': submission.occupations,
+      'description': submission.description,
+      'submissionDate': submission.submissionDate,
+      'mediaType': submission.mediaType,
+      'mediaHash': submission.mediaHash
+    })
+  else:
+    return Response({
+      'error': 'Submission not found.'
+    })
