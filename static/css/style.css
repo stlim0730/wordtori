@@ -21,7 +21,7 @@ input[type=file] {
   height: 100%;
   width: auto;
 }
-button.player_close:hover { color: #7f7f7f; }
+button.player_close:hover { color: #afafaf; }
 #player-content-frame iframe { max-height: 540px }
 @media (max-width: 720px) {
   .submission-card img {
