@@ -144,6 +144,7 @@ def play(request, category, submission):
       'placeOfBirth': submission.placeOfBirth,
       'occupations': submission.occupations,
       'description': submission.description,
+      'tags': [t.name for t in submission.tags],
       'submissionDate': submission.submissionDate,
       'mediaType': submission.mediaType,
       'mediaHash': submission.mediaHash

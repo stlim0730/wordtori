@@ -84,11 +84,23 @@
     res.description ?
       $('#player-description').text(res.description) :
       $('#player-description').text('-');
+    res.tags.length > 0 ?
+      $('#player-tags').html(getTagsFormatted(res.tags)) :
+      $('#player-tags').text('-');
     res.submissionDate ?
       $('#player-submissionDate').text(res.submissionDate) :
       $('#player-submissionDate').text('-');
     res.mediaType && res.mediaHash ?
       $('#player-content-frame').html(getMediaEmbed(res.mediaType, res.mediaHash)) : null;
+  }
+
+  var getTagsFormatted = function(tags) {
+    var res = '';
+    for(i in tags) {
+      var tag = tags[i];
+      res += '<span class="badge badge-primary">' + tag + '</span> &nbsp;';
+    }
+    return res;
   }
 
   var getMediaEmbed = function(mediaType, mediaHash) {

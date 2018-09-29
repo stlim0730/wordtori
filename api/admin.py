@@ -10,7 +10,7 @@ from slugify import slugify
 class SubmissionAdmin(admin.ModelAdmin):
   model = Submission
   list_display = ['submissionId', 'published', 'name', 'category', 'submissionDate', 'mediaType']
-  readonly_fields = ['photoReview', 'photoMimeType', 'mimeType', 'mediaType', 'mediaHash', 'review', 'consented', 'submissionDate']
+  readonly_fields = ['photoReview', 'photoMimeType', 'mimeType', 'review', 'consented', 'submissionDate']
 
   def photoReview(self, obj):
     photoFileExt = obj.photoMimeType.split('/')[-1]

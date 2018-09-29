@@ -15,7 +15,7 @@ def see(request, slug):
   submissions = Submission.objects.filter(
     category__slug=slug, published=True, consented=True,
     mediaType__isnull=False, mediaHash__isnull=False
-  )
+  ).order_by('-submissionDate', 'name')
   for submission in submissions:
     submission.photo = base64.b64encode(submission.photo).decode('utf-8')
   context = {
