@@ -15,7 +15,7 @@ def see(request, slug):
   submissions = Submission.objects.filter(
     category__slug=slug, published=True, consented=True,
     mediaType__isnull=False, mediaHash__isnull=False
-  )
+  ).order_by('-submissionDate', 'name')
   for submission in submissions:
     submission.photo = base64.b64encode(submission.photo).decode('utf-8')
   context = {
@@ -26,21 +26,15 @@ def see(request, slug):
   return render(request, 'see.html', context)
 
 def why(request):
-  context = {
-    'active': 'why'
-  }
+  context = { 'active': 'why' }
   return render(request, 'why.html', context)
 
 def how(request):
-  context = {
-    'active': 'how'
-  }
+  context = { 'active': 'how' }
   return render(request, 'how.html', context)
 
 def groundrules(request):
-  context = {
-    'active': 'groundrules'
-  }
+  context = { 'active': 'groundrules' }
   return render(request, 'groundrules.html', context)
 
 def speak(request):

@@ -112,6 +112,12 @@
             {{ form.description }}
           </div>
 
+          <!-- tags -->
+          <div class="form-group">
+            <label for="{{ form.tags.id_for_label }}">Tags (separated by comma)</label>
+            {{ form.tags }}
+          </div>
+
           <!-- note -->
           <div class="form-group">
             {{ form.note.errors }}

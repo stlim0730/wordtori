@@ -25,6 +25,7 @@ input[type=file] {
   width: auto;
 }
 button.player_close:hover { color: #7f7f7f; }
+#player-content-frame iframe { max-height: 540px }
 @media (max-width: 720px) {
   .submission-card img {
     height: auto;

@@ -1,5 +1,6 @@
 from django import forms
 from api.models import Submission
+import tagging
 
 class SubmissionForm(forms.ModelForm):
   class Meta:
@@ -88,6 +89,15 @@ class SubmissionForm(forms.ModelForm):
       attrs={
         'rows': '3',
         'class': 'form-control no-resize',
+        'placeholder': 'Optional'
+      }
+    )
+  )
+  tags = tagging.forms.TagField(
+    required=False,
+    widget=forms.TextInput(
+      attrs={
+        'class': 'form-control',
         'placeholder': 'Optional'
       }
     )
