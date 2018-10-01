@@ -9,6 +9,9 @@ from django.shortcuts import render, redirect
 from tagging.models import Tag
 import re
 import urllib.request
+from pages.views import getAllSubmissions
+from django.db.models import Q
+from .serializers import *
 
 @api_view(['POST'])
 @parser_classes((FormParser, MultiPartParser, ))
@@ -153,3 +156,21 @@ def play(request, category, submission):
     return Response({
       'error': 'Submission not found.'
     })
+
+@api_view(['GET'])
+def typeFilter(request, category, mediaType):
+  submissions = getAllSubmissions(category)
+  if mediaType == 'video':
+    submissions = submissions.filter(
+      Q(mediaType=mediaType) | Q(mediaType='youtube')
+    )
+  elif mediaType == 'audio':
+    submissions = submissions.filter(
+      Q(mediaType=mediaType) | Q(mediaType='soundcloud')
+    )
+  elif mediaType == 'image':
+    submissions = submissions.filter(mediaType=mediaType)
+  submissionIds = [s.submissionId for s in submissions]
+  return Response({
+    'submissionIds': submissionIds
+  })

@@ -115,6 +115,34 @@
       return;
     }
   }
+
+  // Media Type Filter
+  $('a.media-type-filter').click(function(e) {
+    var mediaType = $(this).data('media-type');
+    if(mediaType=='all') {
+      $('.submission-wrapper').removeClass('d-none');
+      return;
+    }
+    $('.submission-wrapper').addClass('d-none');
+    $.ajax({
+      url: '/api/media/filter/type/' + '{{category.slug}}' + '/' + mediaType,
+      method: 'GET',
+      dataType: 'json',
+      contentType: 'application/json; charset=utf-8',
+      success: function(response) {
+        console.log(response);
+        if('error' in response) {
+          //
+        }
+        else {
+          for(i in response.submissionIds) {
+            var submissionId = response.submissionIds[i];
+            $('.submission-wrapper[data-submissionId=' + submissionId + ']').removeClass('d-none');
+          }
+        }
+      }
+    });
+  });
 </script>
 
 {% endblock content %}
