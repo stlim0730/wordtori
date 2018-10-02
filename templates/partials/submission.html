@@ -1,10 +1,22 @@
 <div class="col-md-3 mb-3 submission-wrapper" data-submissionId="{{submission.submissionId}}" style="padding: 0px; display: inline-block;">
   <div class="card bg-secondary">
-    <a href="#" class="player_open" data-categoryId="{{category.categoryId}}" data-submissionId="{{submission.submissionId}}" style="text-decoration: none;">
+    <div
+      class="player_open" data-categoryId="{{category.categoryId}}"
+      data-submissionId="{{submission.submissionId}}">
       <div class="card-body submission-card">
         <img src="data:image/jpeg;base64,{{submission.photo}}" />
       </div>
-    </a>
+    </div>
+    <div
+      class="description-overlay d-none player_open"
+      data-categoryId="{{category.categoryId}}" data-submissionId="{{submission.submissionId}}">
+      <p>
+        &emsp;{{submission.description|slice:"0:250"}}{% if submission.description %}...{% endif %}
+      </p>
+      <p style="text-align: center; font-weight: bold">
+        Click for Details
+      </p>
+    </div>
   </div>
   <div style="text-align: center">
     {{submission.name}}

@@ -5,10 +5,10 @@
 
 <div class="container">
   <div class="row">
-    <div class="col-md-5 col-sm-12 my-md-4">
+    <div class="col-md-4 col-sm-12 mt-md-4">
       <h2 class="mt-3">{{category.name}}</h2>
     </div>
-    <div class="col-md-7 col-sm-12 my-md-4">
+    <div class="col-md-8 col-sm-12 mt-md-4">
       {% include "partials/toolbar.html" with categories=categories category=category tags=tags %}
     </div>
   </div>
@@ -38,7 +38,7 @@
     });
   });
 
-  $('a.player_open').click(function(e) {
+  $('.player_open').click(function(e) {
     // The field name is case insensitive in Postgres!
     var categoryId = $(this).data('categoryid');
     var submissionId = $(this).data('submissionid');
@@ -204,6 +204,10 @@
     if(e.keyCode==13) {
       $('#search-button').click();
     }
+  });
+
+  $('#toggle-description').change(function(e) {
+    $('.description-overlay').toggleClass('d-none');
   });
 </script>
 
