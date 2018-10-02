@@ -1,45 +1,32 @@
 from rest_framework import serializers
+import base64
 
-# class ThemeSerializer(serializers.ModelSerializer):
-#   class Meta:
-#     model = Theme
-#     fields = ('name', 'slug', 'author', 'repoUrl')
-
-# class ProjectSerializer(serializers.ModelSerializer):
-#   class Meta:
-#     model = Project
-#     fields = (
-#       'owner', 'contributors', 'title', 'slug',
-#       'description', 'repoUrl', 'isPrivate',
-#       'createdAt', 'updatedAt', 'theme'
-#     )
-
-# class BranchSerializer(serializers.BaseSerializer):
+# class CategorySerializer(serializers.BaseSerializer):
 #   def to_representation(self, obj):
 #     return {
-#       'name': obj['name'],
-#       'commit': {
-#         'sha': obj['commit']['sha'],
-#         'url': obj['commit']['url']
-#       }
+#       'categoryId': obj.categoryId,
+#       'name': obj.name,
+#       'slug': obj.slug,
+#       'hidden': obj.hidden
 #     }
 
-# class CommitSerializer(serializers.BaseSerializer):
+# class SubmissionSerializer(serializers.BaseSerializer):
 #   def to_representation(self, obj):
 #     return {
-#       'url': obj['url'],
-#       'sha': obj['sha'],
-#       'html_url': obj['html_url'],
-#       'commit': {
-#         'url': obj['commit']['url'],
-#         'committer': {
-#           'name': obj['commit']['committer']['name'],
-#           'date': obj['commit']['committer']['date']
-#         },
-#         'message': obj['commit']['message'],
-#         'tree': {
-#           'url': obj['commit']['tree']['url'],
-#           'sha': obj['commit']['tree']['sha']
-#         }
-#       }
+#       'name': obj.name,
+#       'yearsInNeighborhoodFrom': obj.yearsInNeighborhoodFrom,
+#       'yearsInNeighborhoodTo': obj.yearsInNeighborhoodTo,
+#       'yearOfBirth': obj.yearOfBirth,
+#       'placeOfBirth': obj.placeOfBirth,
+#       'occupations': obj.occupations,
+#       'photo': base64.b64encode(obj.photo).decode('utf-8'),
+#       'category': CategorySerializer(obj.category, many=False).data,
+#       'consented': obj.consented,
+#       'description': obj.description,
+#       'note': obj.note,
+#       'submissionId': obj.submissionId,
+#       'submissionDate': obj.submissionDate,
+#       'mediaType': obj.mediaType,
+#       'mediaHash': obj.mediaHash,
+#       'published': obj.published
 #     }

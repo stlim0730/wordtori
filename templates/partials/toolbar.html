@@ -1,0 +1,50 @@
+<ul class="nav nav-pills my-3" style="float: right">
+  <li class="nav-item dropdown mr-0">
+    <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+      Category
+    </a>
+    <div class="dropdown-menu" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 37px, 0px);">
+      {% for category in categories %}
+        <a class="dropdown-item" href="/see/{{category.slug}}">{{category.name}}</a>
+      {% endfor %}
+    </div>
+  </li>
+  <li class="nav-item dropdown mr-0">
+    <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+      Media Type
+    </a>
+    <div class="dropdown-menu" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 37px, 0px);">
+      <a class="dropdown-item media-type-filter" data-media-type="all" href="#" style="font-weight: bold">Show All</a>
+      <div class="dropdown-divider"></div>
+      <a class="dropdown-item media-type-filter" data-media-type="audio" href="#">Audio</a>
+      <a class="dropdown-item media-type-filter" data-media-type="image" href="#">Image</a>
+      <a class="dropdown-item media-type-filter" data-media-type="video" href="#">Video</a>      
+    </div>
+  </li>
+  <li class="nav-item dropdown mr-0">
+    <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+      Tags
+    </a>
+    <div class="dropdown-menu" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 37px, 0px);">
+      <a class="dropdown-item tag-filter" data-tag="all" href="#" style="font-weight: bold">Show All</a>
+      <div class="dropdown-divider"></div>
+      {% for tag in tags %}
+        <a class="dropdown-item tag-filter" data-tag="{{tag}}" href="#">{{tag|title}}</a>
+      {% endfor %}
+    </div>
+  </li>
+  <li class="nav-item mr-0">
+    <div class="form-inline">
+      <input id="search-input" class="form-control form-control-sm mt-md-1 mr-1" type="text" placeholder="Enter keywords" style="width: 50% !important">
+      <button type="button" class="btn btn-primary btn-sm mt-md-1" id="search-button">Search</button>
+    </div>
+  </li>
+  <li>
+    <label class="switch" style="margin-top: 6px; margin-bottom: 0px; display: inline-block;">
+      <input id="toggle-description" type="checkbox">
+      <span class="slider"></span>
+    </label>
+    <div class="small" style="margin: 0px; display: block;">Toggle</div>
+    <div class="small" style="margin: 0px; display: block;">Description</div>
+  </li>
+</ul>

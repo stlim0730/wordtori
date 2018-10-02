@@ -44,6 +44,7 @@ class Submission(models.Model):
   mediaHash = models.CharField(max_length=30, null=True, blank=True, default='')
   published = models.BooleanField(default=False)
 
+# Django Tagging
 register(Submission)
 
 class Category(models.Model):

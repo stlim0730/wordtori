@@ -1,27 +1,46 @@
 from django.shortcuts import render
 from django.db import models
+from django.db.models import Q
 from api.forms import SubmissionForm
 from api.models import Submission, Category
+from tagging.models import Tag
 import base64
+
+def getAllCategories():
+  return Category.objects.filter(hidden=False)
+
+def getAllSubmissions(category):
+  submissions = Submission.objects.filter(
+    Q(mediaHash__isnull=False) | Q(mediaType='image'),
+    category__slug=category, published=True, consented=True,
+    mediaType__isnull=False
+  ).order_by('-submissionDate', 'name')
+  for submission in submissions:
+    submission.photo = base64.b64encode(submission.photo).decode('utf-8')
+    if submission.mediaType == 'image':
+      submission.blobContent = base64.b64encode(submission.blobContent).decode('utf-8')
+  # TODO: Drop unused fields for performance
+  return submissions
 
 def categories(request):
   context = {
     'active': 'see',
-    'categories': Category.objects.filter(hidden=False)
+    'categories': getAllCategories()
   }
   return render(request, 'categories.html', context)
 
 def see(request, slug):
-  submissions = Submission.objects.filter(
-    category__slug=slug, published=True, consented=True,
-    mediaType__isnull=False, mediaHash__isnull=False
-  ).order_by('-submissionDate', 'name')
+  submissions = getAllSubmissions(slug)
+  tags = []
   for submission in submissions:
-    submission.photo = base64.b64encode(submission.photo).decode('utf-8')
+    t = [tag.name for tag in Tag.objects.get_for_object(submission)]
+    tags.extend(t)
   context = {
     'active': 'see',
-    'category': Category.objects.filter(slug=slug)[0],
-    'submissions': submissions
+    'categories': getAllCategories(),
+    'category': getAllCategories().filter(slug=slug)[0],
+    'submissions': submissions,
+    'tags': sorted(list(set(tags)))
   }
   return render(request, 'see.html', context)
 
@@ -40,7 +59,7 @@ def groundrules(request):
 def speak(request):
   context = {
     'active': 'speak',
-    'categories': Category.objects.filter(hidden=False),
+    'categories': getAllCategories,
     'form': SubmissionForm()
   }
   return render(request, 'speak.html', context)

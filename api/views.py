@@ -6,9 +6,14 @@ from django.core.mail import send_mail
 from .forms import SubmissionForm
 from .models import Submission, Category, AdminEmail
 from django.shortcuts import render, redirect
-from tagging.models import Tag
+from tagging.models import Tag, TaggedItem
 import re
 import urllib.request
+from pages.views import getAllSubmissions
+from django.db.models import Q
+from .serializers import *
+import base64
+from django.contrib.postgres.search import SearchVector
 
 @api_view(['POST'])
 @parser_classes((FormParser, MultiPartParser, ))
@@ -136,6 +141,9 @@ def play(request, category, submission):
   submission = Submission.objects.filter(category__categoryId=category, submissionId=submission)
   if len(submission) == 1:
     submission = submission[0]
+    blobContent = None
+    if submission.mediaType == 'image':
+      blobContent = base64.b64encode(submission.blobContent).decode('utf-8')
     return Response({
       'name': submission.name,
       'yearsInNeighborhoodFrom': submission.yearsInNeighborhoodFrom,
@@ -147,9 +155,48 @@ def play(request, category, submission):
       'tags': [t.name for t in submission.tags],
       'submissionDate': submission.submissionDate,
       'mediaType': submission.mediaType,
-      'mediaHash': submission.mediaHash
+      'mediaHash': submission.mediaHash,
+      'blobContent': blobContent
     })
   else:
     return Response({
       'error': 'Submission not found.'
     })
+
+@api_view(['GET'])
+def typeFilter(request, category, mediaType):
+  submissions = getAllSubmissions(category)
+  if mediaType == 'video':
+    submissions = submissions.filter(
+      Q(mediaType=mediaType) | Q(mediaType='youtube')
+    )
+  elif mediaType == 'audio':
+    submissions = submissions.filter(
+      Q(mediaType=mediaType) | Q(mediaType='soundcloud')
+    )
+  elif mediaType == 'image':
+    submissions = submissions.filter(mediaType=mediaType)
+  submissionIds = [s.submissionId for s in submissions]
+  return Response({
+    'submissionIds': submissionIds
+  })
+
+@api_view(['GET'])
+def tagFilter(request, category, tag):
+  submissions = getAllSubmissions(category)
+  submissions = TaggedItem.objects.get_union_by_model(submissions, [tag])
+  submissionIds = [s.submissionId for s in submissions]
+  return Response({
+    'submissionIds': submissionIds
+  })
+
+@api_view(['GET'])
+def searchFilter(request, category, keyword):
+  submissions = getAllSubmissions(category)
+  submissions = Submission.objects.annotate(
+    search=SearchVector('name', 'description')
+  ).filter(search=keyword)
+  submissionIds = [s.submissionId for s in submissions]
+  return Response({
+    'submissionIds': submissionIds
+  })
