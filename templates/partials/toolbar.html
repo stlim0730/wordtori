@@ -1,6 +1,16 @@
 <ul class="nav nav-pills my-3" style="float: right">
   <li class="nav-item dropdown mr-0">
     <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+      Category
+    </a>
+    <div class="dropdown-menu" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 37px, 0px);">
+      {% for category in categories %}
+        <a class="dropdown-item" href="/see/{{category.slug}}">{{category.name}}</a>
+      {% endfor %}
+    </div>
+  </li>
+  <li class="nav-item dropdown mr-0">
+    <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
       Media Type
     </a>
     <div class="dropdown-menu" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 37px, 0px);">

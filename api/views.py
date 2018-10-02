@@ -12,6 +12,7 @@ import urllib.request
 from pages.views import getAllSubmissions
 from django.db.models import Q
 from .serializers import *
+import base64
 
 @api_view(['POST'])
 @parser_classes((FormParser, MultiPartParser, ))
@@ -139,6 +140,9 @@ def play(request, category, submission):
   submission = Submission.objects.filter(category__categoryId=category, submissionId=submission)
   if len(submission) == 1:
     submission = submission[0]
+    blobContent = None
+    if submission.mediaType == 'image':
+      blobContent = base64.b64encode(submission.blobContent).decode('utf-8')
     return Response({
       'name': submission.name,
       'yearsInNeighborhoodFrom': submission.yearsInNeighborhoodFrom,
@@ -150,7 +154,8 @@ def play(request, category, submission):
       'tags': [t.name for t in submission.tags],
       'submissionDate': submission.submissionDate,
       'mediaType': submission.mediaType,
-      'mediaHash': submission.mediaHash
+      'mediaHash': submission.mediaHash,
+      'blobContent': blobContent
     })
   else:
     return Response({
