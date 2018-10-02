@@ -13,6 +13,7 @@ from pages.views import getAllSubmissions
 from django.db.models import Q
 from .serializers import *
 import base64
+from django.contrib.postgres.search import SearchVector
 
 @api_view(['POST'])
 @parser_classes((FormParser, MultiPartParser, ))
@@ -183,8 +184,18 @@ def typeFilter(request, category, mediaType):
 @api_view(['GET'])
 def tagFilter(request, category, tag):
   submissions = getAllSubmissions(category)
-  # Narrow down the submissions
   submissions = TaggedItem.objects.get_union_by_model(submissions, [tag])
+  submissionIds = [s.submissionId for s in submissions]
+  return Response({
+    'submissionIds': submissionIds
+  })
+
+@api_view(['GET'])
+def searchFilter(request, category, keyword):
+  submissions = getAllSubmissions(category)
+  submissions = Submission.objects.annotate(
+    search=SearchVector('name', 'description')
+  ).filter(search=keyword)
   submissionIds = [s.submissionId for s in submissions]
   return Response({
     'submissionIds': submissionIds

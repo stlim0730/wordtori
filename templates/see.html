@@ -101,7 +101,7 @@
       res += '<span class="badge badge-primary">' + tag + '</span> &nbsp;';
     }
     return res;
-  }
+  };
 
   var getMediaEmbed = function(mediaType, mediaHash, blobContent) {
     if(mediaType == 'youtube') {
@@ -117,12 +117,12 @@
       alert('media type error!');
       return;
     }
-  }
+  };
 
   // Media Type Filter
   $('a.media-type-filter').click(function(e) {
     var mediaType = $(this).data('media-type');
-    if(mediaType=='all') {
+    if(mediaType == 'all') {
       $('.submission-wrapper').removeClass('d-none');
       return;
     }
@@ -133,15 +133,12 @@
       dataType: 'json',
       contentType: 'application/json; charset=utf-8',
       success: function(response) {
-        console.log(response);
+        // console.log(response);
         if('error' in response) {
           //
         }
         else {
-          for(i in response.submissionIds) {
-            var submissionId = response.submissionIds[i];
-            $('.submission-wrapper[data-submissionId=' + submissionId + ']').removeClass('d-none');
-          }
+          showOnlyRelevent(response);
         }
       }
     });
@@ -150,7 +147,7 @@
   // Tag Filter
   $('a.tag-filter').click(function(e) {
     var tag = $(this).data('tag');
-    if(tag=='all') {
+    if(tag == 'all') {
       $('.submission-wrapper').removeClass('d-none');
       return;
     }
@@ -161,18 +158,52 @@
       dataType: 'json',
       contentType: 'application/json; charset=utf-8',
       success: function(response) {
-        console.log(response);
+        // console.log(response);
         if('error' in response) {
           //
         }
         else {
-          for(i in response.submissionIds) {
-            var submissionId = response.submissionIds[i];
-            $('.submission-wrapper[data-submissionId=' + submissionId + ']').removeClass('d-none');
-          }
+          showOnlyRelevent(response);
         }
       }
     });
+  });
+
+  $('#search-button').click(function(e) {
+    var keyword = $('#search-input').val().trim();
+    if(keyword == "") {
+      $('.submission-wrapper').removeClass('d-none');
+      return;
+    }
+    $('.submission-wrapper').addClass('d-none');
+    $.ajax({
+      url: '/api/media/search/' + '{{category.slug}}' + '/' + keyword,
+      method: 'GET',
+      dataType: 'json',
+      contentType: 'application/json; charset=utf-8',
+      success: function(response) {
+        // console.log(response);
+        if('error' in response) {
+          //
+        }
+        else {
+          showOnlyRelevent(response);
+        }
+      }
+    });
+  });
+
+  var showOnlyRelevent = function(res) {
+    for(i in res.submissionIds) {
+      var submissionId = res.submissionIds[i];
+      $('.submission-wrapper[data-submissionId=' + submissionId + ']').removeClass('d-none');
+    }
+  };
+
+  $('#search-input').keydown(function(e) {
+    if(e.keyCode==13) {
+      $('#search-button').click();
+    }
   });
 </script>
 
