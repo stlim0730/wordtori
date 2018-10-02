@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.db import models
 from api.forms import SubmissionForm
 from api.models import Submission, Category
+from tagging.models import Tag
 import base64
 
 def categories(request):
@@ -18,14 +19,20 @@ def getAllSubmissions(category):
   ).order_by('-submissionDate', 'name')
   for submission in submissions:
     submission.photo = base64.b64encode(submission.photo).decode('utf-8')
+  # TODO: Drop unused fields for performance
   return submissions
 
 def see(request, slug):
   submissions = getAllSubmissions(slug)
+  tags = []
+  for submission in submissions:
+    t = [tag.name for tag in Tag.objects.get_for_object(submission)]
+    tags.extend(t)
   context = {
     'active': 'see',
     'category': Category.objects.filter(slug=slug)[0],
-    'submissions': submissions
+    'submissions': submissions,
+    'tags': sorted(list(set(tags)))
   }
   return render(request, 'see.html', context)
 

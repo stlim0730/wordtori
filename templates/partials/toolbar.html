@@ -5,6 +5,7 @@
     </a>
     <div class="dropdown-menu" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 37px, 0px);">
       <a class="dropdown-item media-type-filter" data-media-type="all" href="#" style="font-weight: bold">Show All</a>
+      <div class="dropdown-divider"></div>
       <a class="dropdown-item media-type-filter" data-media-type="audio" href="#">Audio</a>
       <a class="dropdown-item media-type-filter" data-media-type="image" href="#">Image</a>
       <a class="dropdown-item media-type-filter" data-media-type="video" href="#">Video</a>      
@@ -15,9 +16,11 @@
       Tags
     </a>
     <div class="dropdown-menu" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 37px, 0px);">
-      <!-- <a class="dropdown-item" href="#">Video</a>
-      <a class="dropdown-item" href="#">Image</a>
-      <a class="dropdown-item" href="#">Audio</a> -->
+      <a class="dropdown-item tag-filter" data-tag="all" href="#" style="font-weight: bold">Show All</a>
+      <div class="dropdown-divider"></div>
+      {% for tag in tags %}
+        <a class="dropdown-item tag-filter" data-tag="{{tag}}" href="#">{{tag|title}}</a>
+      {% endfor %}
     </div>
   </li>
   <li class="nav-item mr-0">

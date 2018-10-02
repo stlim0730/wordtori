@@ -6,7 +6,7 @@ from django.core.mail import send_mail
 from .forms import SubmissionForm
 from .models import Submission, Category, AdminEmail
 from django.shortcuts import render, redirect
-from tagging.models import Tag
+from tagging.models import Tag, TaggedItem
 import re
 import urllib.request
 from pages.views import getAllSubmissions
@@ -170,6 +170,16 @@ def typeFilter(request, category, mediaType):
     )
   elif mediaType == 'image':
     submissions = submissions.filter(mediaType=mediaType)
+  submissionIds = [s.submissionId for s in submissions]
+  return Response({
+    'submissionIds': submissionIds
+  })
+
+@api_view(['GET'])
+def tagFilter(request, category, tag):
+  submissions = getAllSubmissions(category)
+  # Narrow down the submissions
+  submissions = TaggedItem.objects.get_union_by_model(submissions, [tag])
   submissionIds = [s.submissionId for s in submissions]
   return Response({
     'submissionIds': submissionIds
