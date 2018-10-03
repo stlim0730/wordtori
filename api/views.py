@@ -73,6 +73,9 @@ def upload(request):
     # YouTube Link format: https://youtu.be/bSwga3LYLVg
     # SoundCloud Link format: https://soundcloud.com/user-28036692/thom-heyer
     # SoundCloud track id found in meta tag content="soundcloud://sounds:458282508"
+    # 
+    # This block of code is copied to api.admin -- Keep them consistent
+    # 
     youTubeRegex = r'^https://youtu\.be/\w+$'
     soundCloudRegex = r'^https://soundcloud\.com/.+/.+$'
     mediaType = None
