@@ -12,8 +12,8 @@ def getAllCategories():
 def getAllSubmissions(category):
   submissions = Submission.objects.filter(
     Q(mediaHash__isnull=False) | Q(mediaType='image'),
-    category__slug=category, published=True, consented=True,
-    mediaType__isnull=False
+    Q(mediaType='youtube') | Q(mediaType='soundcloud'),
+    category__slug=category, published=True, consented=True
   ).order_by('-submissionDate', 'name')
   for submission in submissions:
     submission.photo = base64.b64encode(submission.photo).decode('utf-8')

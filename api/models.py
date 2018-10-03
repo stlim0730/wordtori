@@ -44,6 +44,9 @@ class Submission(models.Model):
   mediaHash = models.CharField(max_length=30, null=True, blank=True, default='')
   published = models.BooleanField(default=False)
 
+  def __str__(self):
+    return 'Submission: ' + self.name + ' (' + str(self.submissionId) + ')'
+
 # Django Tagging
 register(Submission)
 
@@ -57,11 +60,14 @@ class Category(models.Model):
   hidden = models.BooleanField(default=False)
 
   def __str__(self):
-    return self.name
+    return 'Category: ' + self.name
 
 class AdminEmail(models.Model):
   adminEmailId = models.AutoField(primary_key=True)
   email = models.EmailField()
+
+  def __str__(self):
+   return 'Email: ' + self.email
 
 class Event(models.Model):
   eventId = models.AutoField(primary_key=True)
@@ -76,3 +82,6 @@ class Event(models.Model):
   imageFile = models.ImageField(upload_to='events', null=True, blank=True)
   imageMimeType = models.CharField(max_length=len('image/jpeg'), null=True, blank=True, default='')
   hidden = models.BooleanField(default=False)
+
+  def __str__(self):
+   return 'Event: ' + self.title
