@@ -73,5 +73,6 @@ class Event(models.Model):
   link1 = models.URLField(max_length=300, null=True, blank=True)
   link2 = models.URLField(max_length=300, null=True, blank=True)
   image = models.BinaryField(max_length=10 * 1024 * 1024, null=True)
+  imageFile = models.ImageField(upload_to='events', null=True, blank=True)
   imageMimeType = models.CharField(max_length=len('image/jpeg'), null=True, blank=True, default='')
   hidden = models.BooleanField(default=False)

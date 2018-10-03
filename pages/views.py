@@ -23,7 +23,10 @@ def getAllSubmissions(category):
   return submissions
 
 def getAllEvents():
-  return Event.objects.filter(hidden=False).order_by('-date', 'time')
+  events = Event.objects.filter(hidden=False).order_by('-date', 'time')
+  for event in events:
+    event.image = base64.b64encode(event.image).decode('utf-8')
+  return events
 
 def categories(request):
   context = {
