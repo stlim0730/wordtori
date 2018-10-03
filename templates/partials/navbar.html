@@ -8,7 +8,7 @@
     <div class="collapse navbar-collapse" id="wordtori-navbar">
       <ul class="navbar-nav ml-auto">
         
-        {% if active == "see" or not active %}
+        {% if active == "see" %}
           <li class="nav-item active">
         {% else %}
           <li class="nav-item">
@@ -16,7 +16,7 @@
           <a class="nav-link" href="/see">See</a>
         </li>
 
-        {% if active == "why" or not active %}
+        {% if active == "why" %}
           <li class="nav-item active">
         {% else %}
           <li class="nav-item">
@@ -24,7 +24,7 @@
           <a class="nav-link" href="/why">Why</a>
         </li>
 
-        {% if active == "how" or not active %}
+        {% if active == "how" %}
           <li class="nav-item active">
         {% else %}
           <li class="nav-item">
@@ -32,12 +32,20 @@
           <a class="nav-link" href="/how">How</a>
         </li>
 
-        {% if active == "groundrules" or not active %}
+        {% if active == "groundrules" %}
           <li class="nav-item active">
         {% else %}
           <li class="nav-item">
         {% endif %}
           <a class="nav-link" href="/groundrules">Ground Rules</a>
+        </li>
+
+        {% if active == "events" %}
+          <li class="nav-item active">
+        {% else %}
+          <li class="nav-item">
+        {% endif %}
+          <a class="nav-link" href="/events">Events</a>
         </li>
 
         <li class="nav-item">

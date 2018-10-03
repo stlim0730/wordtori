@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container">
+{% for event in events %}
+  <div class="row">
+    <div class="col-md-6 my-5">
+      <h2>{{event.title}}</h2>
+      <div class="my-4">
+        {{event.description|safe}}
+      </div>
+      <div class="my-4">
+      {% if event.date %}
+        <dt class="text-primary">Date</dt>
+        <dd>{{event.date}}</dd>
+      {% endif %}
+      {% if event.time %}
+        <dt class="text-primary">Time</dt>
+        <dd>{{event.time}}</dd>
+      {% endif %}
+      {% if event.location %}
+        <dt class="text-primary">Location</dt>
+        <dd>{{event.location}}</dd>
+      {% endif %}
+      {% if event.link1 %}
+        <dt class="text-primary">See also</dt>
+        <dd><a href="{{event.link1}}" target="_blank">{{event.link1}}</a></dd>
+      {% endif %}
+      {% if event.link2 %}
+        <dt class="text-primary">See also</dt>
+        <dd><a href="{{event.link2}}" target="_blank">{{event.link2}}</a></dd>
+      {% endif %}
+      </div>
+    </div>
+    <div class="col-md-6">
+      <p>
+        {% if event.image %}
+          <img src="data:{{event.imageMimeType}};base64,{{event.image}}" style="width: 100%" />
+        {% endif %}
+      </p>
+    </div>
+  </div>
+{% endfor %}
+</div>
+
+{% endblock content %}

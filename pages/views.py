@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.db import models
 from django.db.models import Q
 from api.forms import SubmissionForm
-from api.models import Submission, Category
+from api.models import Submission, Category, Event
 from tagging.models import Tag
 import base64
 
@@ -21,6 +21,9 @@ def getAllSubmissions(category):
       submission.blobContent = base64.b64encode(submission.blobContent).decode('utf-8')
   # TODO: Drop unused fields for performance
   return submissions
+
+def getAllEvents():
+  return Event.objects.filter(hidden=False).order_by('-date', 'time')
 
 def categories(request):
   context = {
@@ -55,6 +58,13 @@ def how(request):
 def groundrules(request):
   context = { 'active': 'groundrules' }
   return render(request, 'groundrules.html', context)
+
+def events(request):
+  context = {
+    'active': 'events',
+    'events': getAllEvents()
+  }
+  return render(request, 'events.html', context)
 
 def speak(request):
   context = {

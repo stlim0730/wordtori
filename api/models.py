@@ -62,4 +62,16 @@ class Category(models.Model):
 class AdminEmail(models.Model):
   adminEmailId = models.AutoField(primary_key=True)
   email = models.EmailField()
-  
+
+class Event(models.Model):
+  eventId = models.AutoField(primary_key=True)
+  title = models.CharField(max_length=100)
+  date = models.DateField(null=True, blank=True)
+  time = models.TimeField(null=True, blank=True)
+  location = models.CharField(max_length=300)
+  description = models.TextField(null=True, blank=True)
+  link1 = models.URLField(max_length=300, null=True, blank=True)
+  link2 = models.URLField(max_length=300, null=True, blank=True)
+  image = models.BinaryField(max_length=10 * 1024 * 1024, null=True)
+  imageMimeType = models.CharField(max_length=len('image/jpeg'), null=True, blank=True, default='')
+  hidden = models.BooleanField(default=False)

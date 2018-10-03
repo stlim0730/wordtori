@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.utils.safestring import mark_safe
-from .models import Submission, Category, AdminEmail
+from .models import Submission, Category, AdminEmail, Event
 import base64
 import tempfile
 import os
@@ -60,6 +60,11 @@ class CategoryAdmin(admin.ModelAdmin):
   model = Category
   list_display = ('categoryId', 'name', 'slug', 'hidden')
 
+class EventAdmin(admin.ModelAdmin):
+  model = Event
+  list_display = ('eventId', 'title', 'date', 'location', 'hidden')
+
 admin.site.register(Submission, SubmissionAdmin)
 admin.site.register(Category, CategoryAdmin)
+admin.site.register(Event, EventAdmin)
 admin.site.register(AdminEmail)
