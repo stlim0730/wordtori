@@ -1,11 +1,12 @@
 from django.contrib import admin
 from django.utils.safestring import mark_safe
-from .models import Submission, Category, AdminEmail
+from .models import Submission, Category, AdminEmail, Event
 import base64
 import tempfile
 import os
 from django.conf import settings
 from slugify import slugify
+from django.contrib import messages
 
 class SubmissionAdmin(admin.ModelAdmin):
   model = Submission
@@ -58,8 +59,35 @@ class SubmissionAdmin(admin.ModelAdmin):
 
 class CategoryAdmin(admin.ModelAdmin):
   model = Category
-  list_display = ('categoryId', 'name', 'slug', 'hidden')
+  list_display = ['categoryId', 'name', 'slug', 'hidden']
+
+class EventAdmin(admin.ModelAdmin):
+  model = Event
+  list_display = ['eventId', 'title', 'date', 'location', 'hidden']
+  readonly_fields = ['imageMimeType', 'imageReview']
+
+  def save_model(self, request, obj, form, change):
+    super(EventAdmin, self).save_model(request, obj, form, change)
+    if 'imageFile' in form.changed_data:
+      imageFilePath = None
+      if obj.imageFile:
+        imageFilePath = os.path.join(settings.MEDIA_ROOT, str(obj.imageFile))
+        with open(imageFilePath, 'rb') as fi:
+          obj.image = fi.read()
+      super(EventAdmin, self).save_model(request, obj, form, change)
+      if imageFilePath:
+        os.remove(imageFilePath)
+
+  def imageReview(self, obj):
+    if obj.image:
+      return mark_safe('\
+          <img src="data:{imageMimeType};base64,{image}" style="max-width: 500px" />'
+          .format(imageMimeType=obj.imageMimeType, image=base64.b64encode(obj.image).decode('utf-8'))
+        )
+    else:
+      return None
 
 admin.site.register(Submission, SubmissionAdmin)
 admin.site.register(Category, CategoryAdmin)
+admin.site.register(Event, EventAdmin)
 admin.site.register(AdminEmail)

@@ -26,6 +26,7 @@ urlpatterns = [
   url(r'^why$', views.why, name='why'),
   url(r'^how$', views.how, name='how'),
   url(r'^groundrules$', views.groundrules, name='groundrules'),
+  url(r'^events$', views.events, name='events'),
   url(r'^speak$', views.speak, name='speak'),
   url(r'^api/', include('api.urls')),
 ]
