@@ -7,7 +7,9 @@
       <a class="dropdown-item" data-tag="all" href="/see" style="font-weight: bold">Show All</a>
       <div class="dropdown-divider"></div>
       {% for category in categories %}
-        <a class="dropdown-item" href="/see/{{category.slug}}">{{category.name}}</a>
+        {% if submissionCnt|dict_key:category.slug > 0 %}
+          <a class="dropdown-item" href="/see/{{category.slug}}">{{category.name}}</a>
+        {% endif %}
       {% endfor %}
     </div>
   </li>

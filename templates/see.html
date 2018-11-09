@@ -6,7 +6,7 @@
 <div class="container">
   <div class="row">
     <div class="offset-md-4 col-md-8 col-sm-12 mt-md-4">
-      {% include "partials/toolbar.html" with categories=categories category=category tags=tags %}
+      {% include "partials/toolbar.html" with categories=categories category=category submissionCnt=submissionCnt tags=tags %}
     </div>
   </div>
 </div>
@@ -14,10 +14,12 @@
 <div class="container">
   <div class="row">
     {% for category in categories %}
-      <div class="col-12">
-        <h2 class="mt-4">{{category.name}}</h2>
-        <p class="lead">{{category.description}}</p>
-      </div>
+      {% if submissions|dict_key:category.slug|length > 0 %}
+        <div class="col-12">
+          <h2 class="mt-4">{{category.name}}</h2>
+          <p class="lead">{{category.description}}</p>
+        </div>
+      {% endif %}
       {% for submission in submissions|dict_key:category.slug %}
         {% include "partials/submission.html" with category=category submission=submission %}
       {% endfor %}

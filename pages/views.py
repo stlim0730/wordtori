@@ -42,6 +42,9 @@ def categories(request):
 
 def see(request, slug=None):
   categories = getAllCategories()
+  submissionCnt = {}
+  for category in categories:
+    submissionCnt[category.slug] = getSubmissionsPerCat(category.slug).count()
   submissions = {}
   if slug:
     categories = categories.filter(slug=slug)
@@ -52,9 +55,14 @@ def see(request, slug=None):
     for submission in submissions[category.slug]:
       t = [tag.name for tag in Tag.objects.get_for_object(submission)]
       tags.extend(t)
+  categories = getAllCategories()
+  for category in categories:
+    if category.slug not in submissions:
+      submissions[category.slug] = []
   context = {
     'active': 'see',
     'categories': categories,
+    'submissionCnt': submissionCnt,
     'submissions': submissions,
     'tags': sorted(list(set(tags)))
   }
