@@ -5,11 +5,16 @@ from api.forms import SubmissionForm
 from api.models import Submission, Category, Event
 from tagging.models import Tag
 import base64
+from django.template.defaultfilters import register
+
+@register.filter(name='dict_key')
+def dict_key(d, k):
+  return d[k]
 
 def getAllCategories():
   return Category.objects.filter(hidden=False)
 
-def getAllSubmissions(category):
+def getSubmissionsPerCat(category):
   submissions = Submission.objects.filter(
     Q(mediaHash__isnull=False) | Q(mediaType='image'),
     Q(mediaType='youtube') | Q(mediaType='soundcloud'),
@@ -35,16 +40,21 @@ def categories(request):
   }
   return render(request, 'categories.html', context)
 
-def see(request, slug):
-  submissions = getAllSubmissions(slug)
+def see(request, slug=None):
+  categories = getAllCategories()
+  submissions = {}
+  if slug:
+    categories = categories.filter(slug=slug)
+  for category in categories:
+    submissions[category.slug] = getSubmissionsPerCat(category.slug)
   tags = []
-  for submission in submissions:
-    t = [tag.name for tag in Tag.objects.get_for_object(submission)]
-    tags.extend(t)
+  for category in categories:
+    for submission in submissions[category.slug]:
+      t = [tag.name for tag in Tag.objects.get_for_object(submission)]
+      tags.extend(t)
   context = {
     'active': 'see',
-    'categories': getAllCategories(),
-    'category': getAllCategories().filter(slug=slug)[0],
+    'categories': categories,
     'submissions': submissions,
     'tags': sorted(list(set(tags)))
   }

@@ -20,9 +20,9 @@ from pages import views
 
 urlpatterns = [
   path('admin/', admin.site.urls),
-  url(r'^$', views.categories, name='categories'),
-  url(r'^see$', views.categories, name='categories'),
-  url(r'^see/(?P<slug>.+)$', views.see, name='see'),
+  url(r'^$', views.see, name='see'),
+  # url(r'^see$', views.categories, name='categories'),
+  url(r'^see/(?P<slug>.*)$', views.see, name='see'),
   url(r'^why$', views.why, name='why'),
   url(r'^how$', views.how, name='how'),
   url(r'^groundrules$', views.groundrules, name='groundrules'),
