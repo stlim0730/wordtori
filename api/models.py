@@ -58,6 +58,7 @@ class Category(models.Model):
   name = models.CharField(max_length=100)
   slug = models.SlugField(max_length=100, unique=True)
   hidden = models.BooleanField(default=False)
+  description = models.TextField(null=True, blank=True, default='')
 
   def __str__(self):
     return 'Category: ' + self.name

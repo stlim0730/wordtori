@@ -9,7 +9,7 @@ from django.shortcuts import render, redirect
 from tagging.models import Tag, TaggedItem
 import re
 import urllib.request
-from pages.views import getAllSubmissions
+from pages.views import getSubmissionsPerCat
 from django.db.models import Q
 from .serializers import *
 import base64
@@ -168,7 +168,7 @@ def play(request, category, submission):
 
 @api_view(['GET'])
 def typeFilter(request, category, mediaType):
-  submissions = getAllSubmissions(category)
+  submissions = getSubmissionsPerCat(category)
   if mediaType == 'video':
     submissions = submissions.filter(
       Q(mediaType=mediaType) | Q(mediaType='youtube')
@@ -186,7 +186,7 @@ def typeFilter(request, category, mediaType):
 
 @api_view(['GET'])
 def tagFilter(request, category, tag):
-  submissions = getAllSubmissions(category)
+  submissions = getSubmissionsPerCat(category)
   submissions = TaggedItem.objects.get_union_by_model(submissions, [tag])
   submissionIds = [s.submissionId for s in submissions]
   return Response({
@@ -195,7 +195,7 @@ def tagFilter(request, category, tag):
 
 @api_view(['GET'])
 def searchFilter(request, category, keyword):
-  submissions = getAllSubmissions(category)
+  submissions = getSubmissionsPerCat(category)
   submissions = Submission.objects.annotate(
     search=SearchVector('name', 'description')
   ).filter(search=keyword)
