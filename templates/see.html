@@ -14,10 +14,12 @@
 <div class="container">
   <div class="row">
     {% for category in categories %}
-      <div class="col-12">
-        <h2 class="mt-4">{{category.name}}</h2>
-        <p class="lead">{{category.description}}</p>
-      </div>
+      {% if submissions|dict_key:category.slug|length > 0 %}
+        <div class="col-12">
+          <h2 class="mt-4">{{category.name}}</h2>
+          <p class="lead">{{category.description}}</p>
+        </div>
+      {% endif %}
       {% for submission in submissions|dict_key:category.slug %}
         {% include "partials/submission.html" with category=category submission=submission %}
       {% endfor %}
