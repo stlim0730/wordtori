@@ -25,6 +25,7 @@ def upload(request):
     return render(request, 'speak.html', context=context)
   consented = True
   name = request.data['name']
+  contact = request.data['contact']
   submissionMode = request.data['submissionMode']
   file = None
   if 'file' in request.FILES:
@@ -36,9 +37,12 @@ def upload(request):
   yearOfBirth = request.data['yearOfBirth']
   placeOfBirth = request.data['placeOfBirth']
   occupations = request.data['occupations']
-  photo = request.FILES['photo'].read()
+  photo = None
+  photoMimeType = None
+  if 'photo' in request.FILES:
+    photo = request.FILES['photo'].read()
+    photoMimeType = request.FILES['photo'].content_type
   categoryId = request.data['categoryId']
-  photoMimeType = request.FILES['photo'].content_type
   note = request.data['note']
   tags = request.data['tags']
   if submissionMode == 'upload':
@@ -52,6 +56,7 @@ def upload(request):
     submission = Submission(
       consented=consented,
       name=name,
+      contact=contact,
       # Uploaded
       blobContent=blobContent,
       mimeType=mimeType,
@@ -106,6 +111,7 @@ def upload(request):
     submission = Submission(
       consented=consented,
       name=name,
+      contact=contact,
       # Linked
       url=url,
       mediaHash=mediaHash,
