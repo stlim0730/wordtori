@@ -1,3 +1,13 @@
 from django.db import models
 
-# Create your models here.
+class Page(models.Model):
+  pageId = models.AutoField(primary_key=True)
+  pageOrder = models.IntegerField(null=True, default=0)
+  label = models.CharField(max_length=20, unique=True)
+  htmlContent = models.TextField(null=True, blank=True)
+  oldLabel = models.CharField(max_length=len('groundrules'), unique=True)
+  emphasized = models.BooleanField(default=False)
+  usePageSettings = models.BooleanField(default=True)
+  
+  def __str__(self):
+    return self.label + ' page'

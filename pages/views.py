@@ -1,8 +1,11 @@
 from django.shortcuts import render
-from django.db import models
+from django.template import loader
+from django.http import HttpResponse
+# from django.db import models
 from django.db.models import Q
 from api.forms import SubmissionForm
 from api.models import Submission, Category, Event
+from pages.models import Page
 from tagging.models import Tag
 import base64
 from django.template.defaultfilters import register
@@ -10,6 +13,10 @@ from django.template.defaultfilters import register
 @register.filter(name='dict_key')
 def dict_key(d, k):
   return d[k]
+
+def getMenu():
+  pages = list(Page.objects.all().order_by('pageOrder'))
+  return pages
 
 def getAllCategories():
   return Category.objects.filter(hidden=False)
@@ -33,13 +40,6 @@ def getAllEvents():
     event.image = base64.b64encode(event.image).decode('utf-8')
   return events
 
-def categories(request):
-  context = {
-    'active': 'see',
-    'categories': getAllCategories()
-  }
-  return render(request, 'categories.html', context)
-
 def see(request, slug=None):
   categories = getAllCategories()
   submissionCnt = {}
@@ -60,6 +60,7 @@ def see(request, slug=None):
     if category.slug not in submissions:
       submissions[category.slug] = []
   context = {
+    'menu': getMenu(),
     'active': 'see',
     'categories': categories,
     'submissionCnt': submissionCnt,
@@ -68,20 +69,19 @@ def see(request, slug=None):
   }
   return render(request, 'see.html', context)
 
-def why(request):
-  context = { 'active': 'why' }
-  return render(request, 'why.html', context)
-
-def how(request):
-  context = { 'active': 'how' }
-  return render(request, 'how.html', context)
-
-def groundrules(request):
-  context = { 'active': 'groundrules' }
-  return render(request, 'groundrules.html', context)
+def staticPage(request):
+  oldLabel = request.path[1:]
+  content = Page.objects.filter(oldLabel=oldLabel)[0].htmlContent
+  context = {
+    'menu': getMenu(),
+    'active': oldLabel,
+    'staticContent': content
+  }
+  return render(request, 'base.html', context)
 
 def events(request):
   context = {
+    'menu': getMenu(),
     'active': 'events',
     'events': getAllEvents()
   }
@@ -89,6 +89,7 @@ def events(request):
 
 def speak(request):
   context = {
+    'menu': getMenu(),
     'active': 'speak',
     'categories': getAllCategories,
     'form': SubmissionForm()
