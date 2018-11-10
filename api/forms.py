@@ -20,6 +20,15 @@ class SubmissionForm(forms.ModelForm):
       }
     )
   )
+  contact = forms.CharField(
+    max_length=100,
+    widget=forms.TextInput(
+      attrs={
+        'class': 'form-control',
+        'placeholder': 'Email Address or Phone Number; this information won\'t be published'
+      }
+    )
+  )
   yearsInNeighborhoodFrom = forms.IntegerField(
     required=False,
     widget=forms.NumberInput(

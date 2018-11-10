@@ -25,6 +25,7 @@ def upload(request):
     return render(request, 'speak.html', context=context)
   consented = True
   name = request.data['name']
+  contact = request.data['contact']
   submissionMode = request.data['submissionMode']
   file = None
   if 'file' in request.FILES:
@@ -54,7 +55,8 @@ def upload(request):
     mediaType = mimeType.split('/')[0]
     submission = Submission(
       consented=consented,
-      name=request.data['yearsInNeighborhoodFrom'],
+      name=name,
+      contact=contact,
       # Uploaded
       blobContent=blobContent,
       mimeType=mimeType,
@@ -109,6 +111,7 @@ def upload(request):
     submission = Submission(
       consented=consented,
       name=name,
+      contact=contact,
       # Linked
       url=url,
       mediaHash=mediaHash,

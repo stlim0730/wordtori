@@ -1,5 +1,4 @@
 from django.db import models
-from django.core.validators import MinValueValidator, MaxValueValidator
 import datetime
 from tagging.registry import register
 
@@ -12,7 +11,6 @@ class Submission(models.Model):
     ('youtube', 'YouTube')
   )
 
-  # Required fields
   name = models.CharField(max_length=100)
   yearsInNeighborhoodFrom = models.CharField(max_length=4, null=True, blank=True)
   yearsInNeighborhoodTo = models.CharField(max_length=4, null=True, blank=True)
@@ -22,12 +20,12 @@ class Submission(models.Model):
   photo = models.BinaryField(max_length=5 * 1024 * 1024, null=True, blank=True)
   category= models.ForeignKey('Category', on_delete=models.CASCADE)
   consented = models.BooleanField(default=False)
-
-  # Optional fields
+  note = models.TextField(null=True, blank=True)
+  contact = models.CharField(max_length=100, null=True, blank=True)
+  
   blobContent = models.BinaryField(null=True, blank=True, max_length=200 * 1024 * 1024)
   url = models.URLField(max_length=300, null=True, blank=True)
   description = models.TextField(null=True, blank=True)
-  note = models.TextField(null=True, blank=True)
   # TODO: tags = None
 
   # Generated fields

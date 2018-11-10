@@ -19,6 +19,13 @@
             {{ form.name }}
           </div>
 
+          <!-- contact -->
+          <div class="form-group">
+            {{ form.contact.errors }}
+            <label for="{{ form.contact.id_for_label }}">Contact Information</label>
+            {{ form.contact }}
+          </div>
+
           <!-- yearsInNeighborhoodFrom / yearsInNeighborhoodFrom -->
           <div class="form-group">
             {{ form.yearsInNeighborhoodFrom.errors }}
