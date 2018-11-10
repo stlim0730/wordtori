@@ -21,11 +21,9 @@ from pages import views
 urlpatterns = [
   path('admin/', admin.site.urls),
   url(r'^$', views.see, name='see'),
-  # url(r'^see$', views.categories, name='categories'),
   url(r'^see/(?P<slug>.*)$', views.see, name='see'),
-  url(r'^why$', views.why, name='why'),
-  url(r'^how$', views.how, name='how'),
-  url(r'^groundrules$', views.groundrules, name='groundrules'),
+  url(r'^why$', views.staticPage, name='staticPage'),
+  url(r'^how$', views.staticPage, name='staticPage'),
   url(r'^events$', views.events, name='events'),
   url(r'^speak$', views.speak, name='speak'),
   url(r'^api/', include('api.urls')),

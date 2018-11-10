@@ -32,7 +32,7 @@
       };
     </script> -->
 
-    {% include "partials/navbar.html" with active=active %}
+    {% include "partials/navbar.html" with active=active menu=menu %}
 
     {% if messages %}
       {% for message in messages %}
@@ -45,6 +45,8 @@
 
     {% block content %}
     {% endblock content %}
+
+    {% if staticContent %}{{ staticContent|safe }}{% endif %}
 
     {% include "partials/footer.html" %}
   </body>
