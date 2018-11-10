@@ -61,15 +61,15 @@
             </label>
           </div>
 
-          <!-- categoryId / categoryName -->
-          {% for category in categories %}
+          <!-- categoryName -->
           <div class="form-group">
             <label>Category</label>
             <select class="form-control" name="categoryId">
-              <option value="{{category.categoryId}}">{{category.name}}</option>
+              {% for category in categories %}
+                <option value="{{category.categoryId}}">{{category.name}}</option>
+              {% endfor %}
             </select>            
           </div>
-          {% endfor %}
 
           <!-- file / url -->
           <label for="content-tabs">Content</label>

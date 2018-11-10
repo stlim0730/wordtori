@@ -12,16 +12,11 @@ class Submission(models.Model):
     ('youtube', 'YouTube')
   )
 
-  YEAR_VALIDATORS = [
-    MinValueValidator(1900),
-    MaxValueValidator(datetime.datetime.now().year)
-  ]
-
   # Required fields
   name = models.CharField(max_length=100)
-  yearsInNeighborhoodFrom = models.IntegerField(validators=YEAR_VALIDATORS, null=True, blank=True)
-  yearsInNeighborhoodTo = models.IntegerField(validators=YEAR_VALIDATORS, null=True, blank=True)
-  yearOfBirth = models.IntegerField(validators=YEAR_VALIDATORS, null=True, blank=True)
+  yearsInNeighborhoodFrom = models.CharField(max_length=4, null=True, blank=True)
+  yearsInNeighborhoodTo = models.CharField(max_length=4, null=True, blank=True)
+  yearOfBirth = models.CharField(max_length=4, null=True, blank=True)
   placeOfBirth = models.CharField(max_length=100, null=True, blank=True)
   occupations = models.CharField(max_length=200, null=True, blank=True)
   photo = models.BinaryField(max_length=5 * 1024 * 1024, null=True, blank=True)

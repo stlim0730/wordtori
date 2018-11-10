@@ -5,18 +5,23 @@ import tagging
 class SubmissionForm(forms.ModelForm):
   class Meta:
     model = Submission
-    fields = ['name', 'description', 'url']
-
+    fields = [
+      'name', 'yearsInNeighborhoodFrom', 'yearsInNeighborhoodTo',
+      'yearOfBirth', 'placeOfBirth', 'occupations', 'category',
+      'consented', 'url', 'description', 'note'
+    ]
+    
   name = forms.CharField(
     max_length=100,
     widget=forms.TextInput(
       attrs={
-        'class': 'form-control'#,
-        # 'placeholder': 'Required'
+        'class': 'form-control',
+        'placeholder': 'Required'
       }
     )
   )
   yearsInNeighborhoodFrom = forms.IntegerField(
+    required=False,
     widget=forms.NumberInput(
       attrs={
         'class': 'form-control mr-md-2',
@@ -25,6 +30,7 @@ class SubmissionForm(forms.ModelForm):
     )
   )
   yearsInNeighborhoodTo = forms.IntegerField(
+    required=False,
     widget=forms.NumberInput(
       attrs={
         'class': 'form-control',
@@ -33,6 +39,7 @@ class SubmissionForm(forms.ModelForm):
     )
   )
   yearOfBirth = forms.IntegerField(
+    required=False,
     widget=forms.NumberInput(
       attrs={
         'class': 'form-control'
@@ -40,6 +47,7 @@ class SubmissionForm(forms.ModelForm):
     )
   )
   placeOfBirth = forms.CharField(
+    required=False,
     max_length=100,
     widget=forms.TextInput(
       attrs={
@@ -48,6 +56,7 @@ class SubmissionForm(forms.ModelForm):
     )
   )
   occupations = forms.CharField(
+    required=False,
     max_length=200,
     widget=forms.TextInput(
       attrs={
@@ -56,6 +65,7 @@ class SubmissionForm(forms.ModelForm):
     )
   )
   photo = forms.ImageField(
+    required=False,
     widget=forms.ClearableFileInput(
       attrs={
         'class': 'form-control',
@@ -75,7 +85,8 @@ class SubmissionForm(forms.ModelForm):
     )
   )
   url = forms.URLField(
-    max_length=300, required=False,
+    required=False,
+    max_length=300,
     widget=forms.URLInput(
       attrs={
         'class': 'form-control',
@@ -88,8 +99,7 @@ class SubmissionForm(forms.ModelForm):
     widget=forms.Textarea(
       attrs={
         'rows': '3',
-        'class': 'form-control no-resize',
-        'placeholder': 'Optional'
+        'class': 'form-control no-resize'
       }
     )
   )
@@ -97,8 +107,7 @@ class SubmissionForm(forms.ModelForm):
     required=False,
     widget=forms.TextInput(
       attrs={
-        'class': 'form-control',
-        'placeholder': 'Optional'
+        'class': 'form-control'
       }
     )
   )
@@ -107,8 +116,7 @@ class SubmissionForm(forms.ModelForm):
     widget=forms.Textarea(
       attrs={
         'rows': '2',
-        'class': 'form-control no-resize',
-        'placeholder': 'Optional'
+        'class': 'form-control no-resize'
       }
     )
   )
