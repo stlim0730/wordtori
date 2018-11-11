@@ -67,6 +67,7 @@
   });
 
   var resetPlayer = function() {
+    $('.player-fields').parent('div').removeClass('d-none');
     $('.player-fields').text('-');
   }
 
@@ -76,25 +77,25 @@
       $('#player-name').text('Unknown User');
     res.yearsInNeighborhoodFrom && res.yearsInNeighborhoodTo ?
       $('#player-yearsInNeighborhood').text(res.yearsInNeighborhoodFrom + '-' + res.yearsInNeighborhoodTo) :
-      $('#player-yearsInNeighborhood').text('-');
+      $('#player-yearsInNeighborhood').parent('div').addClass('d-none');
     res.yearOfBirth ?
       $('#player-yearOfBirth').text(res.yearOfBirth) :
-      $('#player-yearOfBirth').text('-');
+      $('#player-yearOfBirth').parent('div').addClass('d-none');
     res.placeOfBirth ?
       $('#player-placeOfBirth').text(res.placeOfBirth) :
-      $('#player-placeOfBirth').text('-');
+      $('#player-placeOfBirth').parent('div').addClass('d-none');
     res.occupations ?
       $('#player-occupations').text(res.occupations) :
-      $('#player-occupations').text('-');
+      $('#player-occupations').parent('div').addClass('d-none');
     res.description ?
       $('#player-description').text(res.description) :
-      $('#player-description').text('-');
+      $('#player-description').parent('div').addClass('d-none');
     res.tags.length > 0 ?
       $('#player-tags').html(getTagsFormatted(res.tags)) :
-      $('#player-tags').text('-');
+      $('#player-tags').parent('div').addClass('d-none');
     res.submissionDate ?
       $('#player-submissionDate').text(res.submissionDate) :
-      $('#player-submissionDate').text('-');
+      $('#player-submissionDate').parent('div').addClass('d-none');
     res.mediaType && (res.mediaHash || (res.mediaType && res.blobContent)) ?
       $('#player-content-frame').html(getMediaEmbed(res.mediaType, res.mediaHash, res.blobContent)) : null;
   }
