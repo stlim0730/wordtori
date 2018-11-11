@@ -125,46 +125,28 @@
     }
   };
 
-  // Media Type Filter
-  $('a.media-type-filter').click(function(e) {
-    var mediaType = $(this).data('media-type');
-    if(mediaType == 'all') {
-      $('.submission-wrapper').removeClass('d-none');
-      return;
-    }
-    $('.submission-wrapper').addClass('d-none');
-    $.ajax({
-      url: '/api/media/filter/type/' + '{{category.slug}}' + '/' + mediaType,
-      method: 'GET',
-      dataType: 'json',
-      contentType: 'application/json; charset=utf-8',
-      success: function(response) {
-        // console.log(response);
-        if('error' in response) {
-          //
-        }
-        else {
-          showOnlyRelevent(response);
-        }
-      }
-    });
-  });
-
   // Tag Filter
   $('a.tag-filter').click(function(e) {
     var tag = $(this).data('tag');
-    if(tag == 'all') {
+    if(tag == '--all--') {
       $('.submission-wrapper').removeClass('d-none');
       return;
     }
     $('.submission-wrapper').addClass('d-none');
+    var url;
+    if('{{category}}' != 'None') {
+      url = '/api/media/filter/tag/' + '{{category.slug}}' + '/' + tag;
+    }
+    else {
+      url = '/api/media/filter/tag/--all--/' + tag;
+    }
     $.ajax({
-      url: '/api/media/filter/tag/' + '{{category.slug}}' + '/' + tag,
+      url: url,
       method: 'GET',
       dataType: 'json',
       contentType: 'application/json; charset=utf-8',
       success: function(response) {
-        // console.log(response);
+        console.log(response);
         if('error' in response) {
           //
         }

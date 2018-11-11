@@ -9,7 +9,7 @@ from django.shortcuts import render, redirect
 from tagging.models import Tag, TaggedItem
 import re
 import urllib.request
-from pages.views import getSubmissionsPerCat
+from pages.views import getAllCategories, getSubmissionsPerCat
 from django.db.models import Q
 from .serializers import *
 import base64
@@ -44,6 +44,7 @@ def upload(request):
     photoMimeType = request.FILES['photo'].content_type
   categoryId = request.data['categoryId']
   note = request.data['note']
+  tagline = request.data['tagline']
   tags = request.data['tags']
   if submissionMode == 'upload':
     if not file:
@@ -71,7 +72,8 @@ def upload(request):
       yearOfBirth=yearOfBirth,
       placeOfBirth=placeOfBirth,
       occupations=occupations,
-      note=note
+      note=note,
+      tagline=tagline
     )
     submission.save()
   elif submissionMode == 'link':
@@ -126,7 +128,8 @@ def upload(request):
       yearOfBirth=yearOfBirth,
       placeOfBirth=placeOfBirth,
       occupations=occupations,
-      note=note
+      note=note,
+      tagline=tagline
     )
     submission.save()
   elif submissionMode == 'record':
@@ -172,31 +175,23 @@ def play(request, category, submission):
       'error': 'Submission not found.'
     })
 
-@api_view(['GET'])
-def typeFilter(request, category, mediaType):
+def getSubIdsByTagPerCat(category, tag):
   submissions = getSubmissionsPerCat(category)
-  if mediaType == 'video':
-    submissions = submissions.filter(
-      Q(mediaType=mediaType) | Q(mediaType='youtube')
-    )
-  elif mediaType == 'audio':
-    submissions = submissions.filter(
-      Q(mediaType=mediaType) | Q(mediaType='soundcloud')
-    )
-  elif mediaType == 'image':
-    submissions = submissions.filter(mediaType=mediaType)
-  submissionIds = [s.submissionId for s in submissions]
-  return Response({
-    'submissionIds': submissionIds
-  })
+  submissions = TaggedItem.objects.get_by_model(submissions, [tag])
+  return [s.submissionId for s in submissions]
 
 @api_view(['GET'])
 def tagFilter(request, category, tag):
-  submissions = getSubmissionsPerCat(category)
-  submissions = TaggedItem.objects.get_union_by_model(submissions, [tag])
-  submissionIds = [s.submissionId for s in submissions]
+  res = []
+  if category == '--all--':
+    categories = getAllCategories()
+    for cat in categories:
+      res.extend(getSubIdsByTagPerCat(cat.slug, tag))
+  else:
+    res = getSubIdsByTagPerCat(category, tag)
   return Response({
-    'submissionIds': submissionIds
+    'submissionIds': res,
+    'category': category
   })
 
 @api_view(['GET'])
