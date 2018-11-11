@@ -22,6 +22,7 @@ class Submission(models.Model):
   consented = models.BooleanField(default=False)
   note = models.TextField(null=True, blank=True)
   contact = models.CharField(max_length=100, null=True, blank=True)
+  tagline = models.CharField(max_length=200, null=True, blank=True)
   
   blobContent = models.BinaryField(null=True, blank=True, max_length=200 * 1024 * 1024)
   url = models.URLField(max_length=300, null=True, blank=True)
