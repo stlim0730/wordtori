@@ -9,7 +9,7 @@ from django.shortcuts import render, redirect
 from tagging.models import Tag, TaggedItem
 import re
 import urllib.request
-from pages.views import getAllCategories, getSubmissionsPerCat
+from pages.views import getAllCategories, getSubmissionsPerCat, getMenu
 from django.db.models import Q
 from .serializers import *
 import base64
@@ -19,7 +19,7 @@ from django.contrib.postgres.search import SearchVector
 @parser_classes((FormParser, MultiPartParser, ))
 def upload(request):
   # For reseponse
-  context = { 'active': 'speak', 'form': SubmissionForm(), 'categories': Category.objects.filter(hidden=False) }
+  context = { 'active': 'speak', 'form': SubmissionForm(), 'categories': Category.objects.filter(hidden=False), 'menu': getMenu }
   if request.data['consented'] != 'on':
     messages.add_message(request, messages.ERROR, 'Submission failed! Please check the consent form.')
     return render(request, 'speak.html', context=context)
@@ -44,7 +44,7 @@ def upload(request):
     photoMimeType = request.FILES['photo'].content_type
   categoryId = request.data['categoryId']
   note = request.data['note']
-  tagline = request.data['tagline']
+  tagline = request.data['tags']
   tags = request.data['tags']
   if submissionMode == 'upload':
     if not file:

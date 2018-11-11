@@ -74,7 +74,6 @@ class SubmissionForm(forms.ModelForm):
     )
   )
   photo = forms.ImageField(
-    required=False,
     widget=forms.ClearableFileInput(
       attrs={
         'class': 'form-control',

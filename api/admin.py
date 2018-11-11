@@ -21,11 +21,11 @@ class SubmissionAdmin(admin.ModelAdmin):
     # Handle tags
     Tag.objects.update_tags(obj, obj.tagline)
     # Handle blob content
-    if obj.published and obj.url and (obj.mediaType=='video' or obj.mediaType=='audio'):#'url' in form.changed_data:
+    if obj.url and (obj.mediaType=='video' or obj.mediaType=='audio'):#'url' in form.changed_data:
       # 
       # This block of code is copied from api.view -- Keep them consistent
       # 
-      youTubeRegex = r'^https://youtu\.be/\w+$'
+      youTubeRegex = r'^https://youtu\.be/.+$'
       soundCloudRegex = r'^https://soundcloud\.com/.+/.+$'
       mediaType = None
       mediaHash = None
