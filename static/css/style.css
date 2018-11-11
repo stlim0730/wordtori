@@ -22,13 +22,13 @@ input[type=file] {
   width: auto;
 }
 button.player_close:hover { color: #afafaf; }
-#player-content-frame iframe { max-height: 540px }
+#player-content-frame iframe { min-height: 540px; }
 @media (max-width: 720px) {
   .submission-card img {
     height: auto;
     width: 100%;
   }
-  #player-content-frame {
+  #player-content-frame iframe {
     min-height: 283px;
   }
 }
