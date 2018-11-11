@@ -5,6 +5,7 @@ import base64
 import tempfile
 import os
 import re
+from tagging.models import Tag
 import urllib.request
 from django.conf import settings
 from slugify import slugify
@@ -17,6 +18,9 @@ class SubmissionAdmin(admin.ModelAdmin):
 
   def save_model(self, request, obj, form, change):
     super(SubmissionAdmin, self).save_model(request, obj, form, change)
+    # Handle tags
+    Tag.objects.update_tags(obj, obj.tagline)
+    # Handle blob content
     if obj.published and obj.url and (obj.mediaType=='video' or obj.mediaType=='audio'):#'url' in form.changed_data:
       # 
       # This block of code is copied from api.view -- Keep them consistent
