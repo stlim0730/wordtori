@@ -190,17 +190,25 @@ def tagFilter(request, category, tag):
   else:
     res = getSubIdsByTagPerCat(category, tag)
   return Response({
-    'submissionIds': res,
-    'category': category
+    'submissionIds': res
   })
+
+def getSubIdsBySearchPerCat(category, keyword):
+  submissions = getSubmissionsPerCat(category)
+  submissions = submissions.annotate(
+    search=SearchVector('name', 'description')
+  ).filter(search=keyword)
+  return [s.submissionId for s in submissions]
 
 @api_view(['GET'])
 def searchFilter(request, category, keyword):
-  submissions = getSubmissionsPerCat(category)
-  submissions = Submission.objects.annotate(
-    search=SearchVector('name', 'description')
-  ).filter(search=keyword)
-  submissionIds = [s.submissionId for s in submissions]
+  res = []
+  if category == '--all--':
+    categories = getAllCategories()
+    for cat in categories:
+      res.extend(getSubIdsBySearchPerCat(cat.slug, keyword))
+  else:
+    res = getSubIdsBySearchPerCat(category, keyword)
   return Response({
-    'submissionIds': submissionIds
+    'submissionIds': res
   })
