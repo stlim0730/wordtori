@@ -31,7 +31,7 @@ class Submission(models.Model):
 
   # Generated fields
   submissionId = models.AutoField(primary_key=True)
-  submissionDate = models.DateField(default=datetime.datetime.now())
+  submissionDate = models.DateField(null=True, blank=True)
   photoMimeType = models.CharField(max_length=len('image/jpeg'), null=True, blank=True)
   mimeType = models.CharField(max_length=len('video/webm'), null=True, blank=True, default='')
   mediaType = models.CharField(max_length=len('soundcloud'), choices=MEDIA_TYPE_CHOICES)

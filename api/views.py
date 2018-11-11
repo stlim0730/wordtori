@@ -14,6 +14,7 @@ from django.db.models import Q
 from .serializers import *
 import base64
 from django.contrib.postgres.search import SearchVector
+from django.utils import timezone
 
 @api_view(['POST'])
 @parser_classes((FormParser, MultiPartParser, ))
@@ -73,7 +74,8 @@ def upload(request):
       placeOfBirth=placeOfBirth,
       occupations=occupations,
       note=note,
-      tagline=tagline
+      tagline=tagline,
+      submissionDate=timezone.now()
     )
     submission.save()
   elif submissionMode == 'link':
@@ -129,7 +131,8 @@ def upload(request):
       placeOfBirth=placeOfBirth,
       occupations=occupations,
       note=note,
-      tagline=tagline
+      tagline=tagline,
+      submissionDate=timezone.now()
     )
     submission.save()
   elif submissionMode == 'record':
