@@ -87,14 +87,12 @@
             <li class="nav-item">
               <a class="nav-link" data-toggle="tab" href="#link">Link</a>
             </li>
-            <!-- <li class="nav-item">
-              <a class="nav-link disabled" href="#record" title="Under construction">Record</a>
-            </li> -->
+            <li class="nav-item">
+              <a class="nav-link disabled" data-toggle="tab" href="#record">Record (Voice Only)</a>
+            </li>
           </ul>
           <div class="tab-content">
             <div class="tab-pane fade active show submit-content-tab-pane" id="upload">
-              <!-- <input type="file" name="file" id="file-input" accept="audio/*,video/*,image/*" />
-              <label id="file-input-label" for="file-input" class="btn btn-outline-primary btn-block">Choose a File</label> -->
               {{ form.file.errors }}
               {{ form.file }}
               <label id="file-input-label" for="{{ form.file.id_for_label }}" class="btn btn-outline-primary btn-block">
@@ -108,7 +106,14 @@
               </div>
             </div>
             <div class="tab-pane fade submit-content-tab-pane" id="record">
-              <p>Etsy mixtape wayfarers, ethical wes anderson tofu before they sold out mcsweeney's organic lomo retro fanny pack lo-fi farm-to-table readymade. Messenger bag gentrify pitchfork tattooed craft beer, iphone skateboard locavore carles etsy salvia banksy hoodie helvetica. DIY synth PBR banksy irony. Leggings gentrify squid 8-bit cred pitchfork.</p>
+              <div class="form-group">
+                <button type="button" class="btn btn-outline-danger" id="record-button"><div style="display: inline-block; font-size: 5em; vertical-align: middle; padding-bottom: 8px">&#8226;</div> <span id="record-button-text">Record</span></button>
+                <button type="button" class="btn btn-outline-primary d-none" id="stop-button"><i class="icono-stop"></i> Stop</button>
+                <button type="button" class="btn btn-outline-success d-none" id="play-button"><i class="icono-play"></i> Test</button>
+                <button type="button" class="btn btn-outline-secondary d-none" id="pause-button"><i class="icono-pause"></i> Pause</button>
+                <audio controls loop class="d-none">
+                </audio>
+              </div>
             </div>
           </div>
 
@@ -160,7 +165,16 @@
   </div>
 </div>
 
+<script src="/static/js/jssoundrecorder/recorder.js"></script>
+<!-- <script src="/static/js/jssoundrecorder/recorderWorker.js"></script> -->
 <script>
+  var recording = false;
+  var audio_context,
+    recorder,
+    volume,
+    volumeLevel = 0,
+    currentEditedSoundIndex;
+
   // submissionMode
   $('.nav.nav-tabs li.nav-item a:not(.disabled)').click(function(e) {
     submissionMode = $(this).text().trim().toLowerCase();
@@ -205,6 +219,43 @@
     label.addClass('btn-outline-info');
   });
 
+  // Recording on Browser
+  $('#record-button').click(function(e) {
+    // Button UI
+    if(!recording) {
+      $('#record-button').addClass('d-none');
+      $('#stop-button').removeClass('d-none');
+      $('#play-button').addClass('d-none');
+      recording = true;
+      startRecording();
+    }
+  });
+
+  $('#stop-button').click(function(e) {
+    if(recording) {
+      recording = false;
+      $('#record-button').removeClass('d-none');
+      $('#record-button-text').text('Record Again');
+      $('#stop-button').addClass('d-none');
+      $('#play-button').removeClass('d-none');
+      recorder && recorder.stop();
+      recorder && recorder.exportWAV(handleWAV.bind(this));
+      recorder.clear();
+    }
+  });
+  $('#play-button').click(function(e) {
+    var audio = document.querySelector('audio');
+    audio.play();
+    $(this).addClass('d-none');
+    $('#pause-button').removeClass('d-none');
+  });
+  $('#pause-button').click(function(e) {
+    var audio = document.querySelector('audio');
+    audio.pause();
+    $(this).addClass('d-none');
+    $('#play-button').removeClass('d-none');
+  });
+
   // consented
   $('.consent-set').children('input[type=checkbox]').change(function(e) {
     var consented = $(this).prop('checked');
@@ -215,6 +266,59 @@
     else {
       submitButton.prop('disabled', true);
     }
+  });
+
+  function startUserMedia(stream) {
+    var input = audio_context.createMediaStreamSource(stream);
+    // console.log('Media stream created.');
+
+    volume = audio_context.createGain();
+    volume.gain.value = volumeLevel;
+    input.connect(volume);
+    volume.connect(audio_context.destination);
+    // console.log('Input connected to audio context destination.');
+    
+    recorder = new Recorder(input);
+    // console.log('Recorder initialised.');
+  }
+
+  function startRecording(button) {
+    recorder && recorder.record();
+  }
+
+  function handleWAV(blob) {
+    var audio = document.querySelector('audio');
+    try {
+      audio.srcObject = blob;
+    } catch (error) {
+      audio.src = URL.createObjectURL(blob);
+    }
+
+    var f = new FileReader();
+    f.onload = function(e) {
+        audio_context.decodeAudioData(e.target.result, function(buffer) {
+          console.warn(buffer);
+          // $('#audioLayerControl')[0].handleAudio(buffer);
+        }, function(e) {
+          console.warn(e);
+        });
+    };
+    f.readAsArrayBuffer(blob);
+    console.log(f);
+
+    console.log(audio_context);
+  }
+
+  $(document).ready(function() {
+    if(navigator.getUserMedia) {
+      $('a[href="#record"]').removeClass('disabled');
+
+      audio_context = new AudioContext();
+    }
+    
+    navigator.getUserMedia({audio: true}, startUserMedia, function(e) {
+      alert('An error occurred in recording on the browser.');
+    });
   });
 
 </script>
