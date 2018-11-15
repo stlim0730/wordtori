@@ -32,6 +32,9 @@ def upload(request):
   if 'file' in request.FILES:
     file = request.FILES['file']
   url = request.data['url']
+  recording = None
+  if 'recording' in request.FILES:
+    recording = request.FILES['recording']
   description = request.data['description']
   yearsInNeighborhoodFrom = request.data['yearsInNeighborhoodFrom']
   yearsInNeighborhoodTo = request.data['yearsInNeighborhoodTo']
@@ -136,7 +139,36 @@ def upload(request):
     )
     submission.save()
   elif submissionMode == 'record':
-    pass
+    if not recording:
+      # File size limit exceeded or File not attached
+      messages.add_message(request, messages.ERROR, 'Submission failed! Please check the recording (upto 200MB).')
+      return render(request, 'speak.html', context=context)
+    blobContent = recording.read()
+    mimeType = recording.content_type
+    mediaType = mimeType.split('/')[0]
+    submission = Submission(
+      consented=consented,
+      name=name,
+      contact=contact,
+      # Recorded
+      blobContent=blobContent,
+      mimeType=mimeType,
+      # Recorded
+      description=description,
+      mediaType=mediaType,
+      photo=photo,
+      photoMimeType=photoMimeType,
+      category=Category.objects.filter(categoryId=categoryId)[0],
+      yearsInNeighborhoodFrom=yearsInNeighborhoodFrom,
+      yearsInNeighborhoodTo=yearsInNeighborhoodTo,
+      yearOfBirth=yearOfBirth,
+      placeOfBirth=placeOfBirth,
+      occupations=occupations,
+      note=note,
+      tagline=tagline,
+      submissionDate=timezone.now()
+    )
+    submission.save()
   # Success
   Tag.objects.update_tags(submission, tags)
   messages.add_message(request, messages.SUCCESS, 'Successfully submitted! Your submission will be reviewed by the moderator.')
