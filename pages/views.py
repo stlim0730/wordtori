@@ -8,6 +8,7 @@ from api.models import Submission, Category, Event
 from pages.models import Page
 from tagging.models import Tag
 import base64
+from django.contrib import messages
 from django.template.defaultfilters import register
 
 @register.filter(name='dict_key')
@@ -100,4 +101,6 @@ def speak(request):
     'categories': getAllCategories,
     'form': SubmissionForm()
   }
+  if 'record' in request.GET and request.GET['record']=='success':
+    messages.add_message(request, messages.SUCCESS, 'Successfully submitted! Your submission will be reviewed by the moderator.')
   return render(request, 'speak.html', context)

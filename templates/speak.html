@@ -107,6 +107,8 @@
             </div>
             <div class="tab-pane fade submit-content-tab-pane" id="record">
               <div class="form-group">
+                {{ form.recording.errors }}
+                {{ form.recording }}
                 <button type="button" class="btn btn-outline-danger" id="record-button"><div style="display: inline-block; font-size: 5em; vertical-align: middle; padding-bottom: 8px">&#8226;</div> <span id="record-button-text">Record</span></button>
                 <button type="button" class="btn btn-outline-primary d-none" id="stop-button"><i class="icono-stop"></i> Stop</button>
                 <button type="button" class="btn btn-outline-success d-none" id="play-button"><i class="icono-play"></i> Test</button>
@@ -169,6 +171,7 @@
 <!-- <script src="/static/js/jssoundrecorder/recorderWorker.js"></script> -->
 <script>
   var recording = false;
+  var recordingBlob = null;
   var audio_context,
     recorder,
     volume,
@@ -176,8 +179,8 @@
     currentEditedSoundIndex;
 
   // submissionMode
-  $('.nav.nav-tabs li.nav-item a:not(.disabled)').click(function(e) {
-    submissionMode = $(this).text().trim().toLowerCase();
+  $('.nav.nav-tabs li.nav-item a').click(function(e) {
+    submissionMode = $(this).text().trim().toLowerCase().split(" ")[0];
     $('#submissionMode').val(submissionMode);
   });
 
@@ -221,11 +224,18 @@
 
   // Recording on Browser
   $('#record-button').click(function(e) {
+    var audio = document.querySelector('audio');
+    try {
+      audio.srcObject = null;
+    } catch (error) {
+      audio.src = null;
+    }
     // Button UI
     if(!recording) {
       $('#record-button').addClass('d-none');
       $('#stop-button').removeClass('d-none');
       $('#play-button').addClass('d-none');
+      $('#pause-button').addClass('d-none');
       recording = true;
       startRecording();
     }
@@ -293,21 +303,31 @@
     } catch (error) {
       audio.src = URL.createObjectURL(blob);
     }
+    recordingBlob = blob;
 
     var f = new FileReader();
     f.onload = function(e) {
         audio_context.decodeAudioData(e.target.result, function(buffer) {
           console.warn(buffer);
-          // $('#audioLayerControl')[0].handleAudio(buffer);
         }, function(e) {
           console.warn(e);
         });
     };
     f.readAsArrayBuffer(blob);
-    console.log(f);
-
-    console.log(audio_context);
   }
+
+  $("#submission-form").submit(function(e) {
+    if(recordingBlob && $('#submissionMode').val() == 'record') {
+      e.preventDefault();
+      var form = $(this)[0];
+      var formData = new FormData(form);
+      var request = new XMLHttpRequest();
+      formData.append('recording', recordingBlob);
+      request.open('post', form.action);
+      request.send(formData);
+      window.location.href = '/speak?record=success'
+    }
+  });
 
   $(document).ready(function() {
     if(navigator.getUserMedia) {
