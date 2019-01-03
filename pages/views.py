@@ -1,7 +1,6 @@
 from django.shortcuts import render
 from django.template import loader
 from django.http import HttpResponse
-# from django.db import models
 from django.db.models import Q
 from api.forms import SubmissionForm
 from api.models import Submission, Category, Event, TermsOfConsent
