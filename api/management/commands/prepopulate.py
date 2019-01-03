@@ -4,7 +4,8 @@ from datetime import datetime
 from django.conf import settings
 from django.core.management import BaseCommand
 from django.db import connection, transaction, router
-from api.models import Submission, Category
+from api.models import Submission, Category, TermsOfConsent
+from pages.models import Page
 import json
 import base64
 
@@ -13,6 +14,8 @@ class Command(BaseCommand):
   def handle(self, *args, **options):
     categories = None
     submissions = None
+    termsOfConsents = None
+    pages = None
 
     # Category
     filePath = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'categories.json')
@@ -73,6 +76,39 @@ class Command(BaseCommand):
     print('{cnt} submission objects were created.'.format(cnt=cnt))
     self.updateAutoIncrement('api', Submission, 'submissionId', cnt + 1)
 
+    # TermsOfConsents
+    cnt = TermsOfConsent.objects.count()
+    if cnt < 1:
+      filePath = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'termsOfConsents.json')
+      with open(filePath, encoding='utf-8') as f:
+        termsOfConsents = json.load(f)
+      newToc = TermsOfConsent.objects.create(
+        passage=termsOfConsents[0]['passage']
+      )
+      cnt += 1
+      print('{cnt} termsOfConsent objects were created.'.format(cnt=cnt))
+
+    # Pages
+    filePath = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'pages.json')
+    with open(filePath, encoding='utf-8') as f:
+      pages = json.load(f)
+    cnt = 0
+    for page in pages:
+      exists = Page.objects.filter(label=page['label'])
+      if exists:
+        continue
+      htmlContent = None
+      if page['htmlContent'] != "":
+        with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), page['htmlContent']), encoding='utf-8') as f:
+          htmlContent = f.read()
+      newPage = Page.objects.create(
+        pageOrder=page['pageOrder'], label=page['label'], htmlContent=htmlContent,
+        oldLabel=page['oldLabel'], emphasized=page['emphasized'], usePageSettings=page['usePageSettings']
+      )
+      cnt += 1
+    print('{cnt} page objects were created.'.format(cnt=cnt))
+    self.updateAutoIncrement('pages', Page, 'pageId', cnt + 1)
+
 # api_category_categoryId_seq
 # api_submission_submissionId_seq
 
@@ -80,7 +116,7 @@ class Command(BaseCommand):
     cursor = connection.cursor()
     _router = settings.DATABASES[router.db_for_write(model)]['NAME']
     alter_str = "ALTER sequence \"{app}_{model}_{idField}_seq\" RESTART WITH {value}".format(
-      app='api', model=model.__name__.lower(), idField=idField, value=value
+      app=app, model=model.__name__.lower(), idField=idField, value=value
     )
     # alter_str = "ALTER table {}.{} 'AUTO_INCREMENT'={}".format(
     #   _router, model._meta.db_table, value

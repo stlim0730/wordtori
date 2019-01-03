@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.utils.safestring import mark_safe
-from .models import Submission, Category, AdminEmail, Event
+from .models import Submission, Category, AdminEmail, Event, TermsOfConsent
 import base64
 import tempfile
 import os
@@ -159,3 +159,4 @@ admin.site.register(Submission, SubmissionAdmin)
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Event, EventAdmin)
 admin.site.register(AdminEmail)
+admin.site.register(TermsOfConsent)

@@ -4,7 +4,7 @@ from django.http import HttpResponse
 # from django.db import models
 from django.db.models import Q
 from api.forms import SubmissionForm
-from api.models import Submission, Category, Event
+from api.models import Submission, Category, Event, TermsOfConsent
 from pages.models import Page
 from tagging.models import Tag
 import base64
@@ -77,7 +77,7 @@ def see(request, slug=None):
   return render(request, 'see.html', context)
 
 def staticPage(request):
-  oldLabel = request.path[1:]
+  oldLabel = request.path[1:-1]
   content = Page.objects.filter(oldLabel=oldLabel)[0].htmlContent
   context = {
     'menu': getMenu(),
@@ -99,7 +99,8 @@ def speak(request):
     'menu': getMenu(),
     'active': 'speak',
     'categories': getAllCategories,
-    'form': SubmissionForm()
+    'form': SubmissionForm(),
+    'termsOfConsent': TermsOfConsent.objects.all()[0]
   }
   if 'record' in request.GET and request.GET['record']=='success':
     messages.add_message(request, messages.SUCCESS, 'Successfully submitted! Your submission will be reviewed by the moderator.')

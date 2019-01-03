@@ -1,10 +1,10 @@
-<div class="col-md-3 mb-3 submission-wrapper" data-submissionId="{{submission.submissionId}}" style="padding: 0px; display: inline-block;">
+<div class="col-md-4 mb-3 px-2 submission-wrapper" data-submissionId="{{submission.submissionId}}" style="padding: 0px; display: inline-block;">
   <div class="card bg-secondary">
     <div
       class="player_open" data-categoryId="{{category.categoryId}}"
       data-submissionId="{{submission.submissionId}}">
-      <div class="card-body submission-card">
-        <img src="data:image/jpeg;base64,{{submission.photo}}" />
+      <div class="card-body submission-card" style="background-image: url(data:image/jpeg;base64,{{submission.photo}}); background-repeat: no-repeat; background-size: cover; background-position: center">
+        <!-- <img src="data:image/jpeg;base64,{{submission.photo}}" /> -->
       </div>
     </div>
     <div

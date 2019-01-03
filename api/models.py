@@ -80,3 +80,9 @@ class Event(models.Model):
 
   def __str__(self):
    return 'Event: ' + self.title
+
+class TermsOfConsent(models.Model):
+  defaultPassage = """
+    The information and data (submission) provided using this form will be reviewed by the moderator. If you agree to submit, you are assumed to agree with the moderator's decision to publish your submission through WordToRI.
+  """
+  passage = models.TextField(default=defaultPassage.strip())
