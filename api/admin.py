@@ -132,10 +132,18 @@ class CategoryAdmin(admin.ModelAdmin):
 class EventAdmin(admin.ModelAdmin):
   model = Event
   list_display = ['eventId', 'title', 'date', 'location', 'hidden']
-  readonly_fields = ['imageMimeType', 'imageReview']
+  readonly_fields = ['imageMimeType', 'imageReview', 'mediaHash']
 
   def save_model(self, request, obj, form, change):
     super(EventAdmin, self).save_model(request, obj, form, change)
+    # When video is added or changed
+    if 'videoURL' in form.changed_data:
+      youTubeRegex = r'^https://youtu\.be/.+$'
+      mediaHash = None
+      if re.match(youTubeRegex, obj.videoURL):
+        obj.mediaHash = obj.videoURL.split('/')[-1]
+        obj.save()
+    # When image is added or changed
     if 'imageFile' in form.changed_data:
       imageFilePath = None
       if obj.imageFile:

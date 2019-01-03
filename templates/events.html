@@ -34,11 +34,14 @@
       </div>
     </div>
     <div class="col-md-6 my-5">
-      <p>
-        {% if event.image %}
+      {% if event.image %}
+        <p>
           <img src="data:{{event.imageMimeType}};base64,{{event.image}}" style="width: 100%" />
-        {% endif %}
-      </p>
+        </p>
+      {% endif %}
+      {% if event.mediaHash %}
+        <iframe width="100%" src="https://www.youtube.com/embed/{{event.mediaHash}}" frameborder="0" allow="autoplay; encrypted-media" style="min-height: 300px" allowfullscreen></iframe>
+      {% endif %}
     </div>
   </div>
 {% endfor %}

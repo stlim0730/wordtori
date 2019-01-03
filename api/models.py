@@ -73,6 +73,8 @@ class Event(models.Model):
   description = models.TextField(null=True, blank=True)
   link1 = models.URLField(max_length=300, null=True, blank=True)
   link2 = models.URLField(max_length=300, null=True, blank=True)
+  videoURL = models.URLField(max_length=300, null=True, blank=True)
+  mediaHash = models.CharField(max_length=30, null=True, blank=True, default='')
   image = models.BinaryField(max_length=10 * 1024 * 1024, null=True)
   imageFile = models.ImageField(upload_to='events', null=True, blank=True)
   imageMimeType = models.CharField(max_length=len('image/jpeg'), null=True, blank=True, default='')
