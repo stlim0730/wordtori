@@ -7,7 +7,7 @@
       <h2 class="mb-4">
         Submit Your Word
       </h2>
-      <form id="submission-form" action="/api/media/upload" method="post" enctype="multipart/form-data">
+      <form id="submission-form" action="/api/media/upload/" method="post" enctype="multipart/form-data">
         <fieldset>
           {% csrf_token %}
           {{ form.non_field_errors }}

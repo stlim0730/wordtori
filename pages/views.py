@@ -25,7 +25,7 @@ def getAllCategories():
 def getSubmissionsPerCat(category):
   submissions = Submission.objects.filter(
     Q(mediaHash__isnull=False) | Q(mediaType='image'),
-    Q(mediaType='youtube') | Q(mediaType='soundcloud'),
+    # Q(mediaType='youtube') | Q(mediaType='soundcloud'),
     category__slug=category, published=True, consented=True
   ).order_by('-submissionDate', 'name')
   for submission in submissions:

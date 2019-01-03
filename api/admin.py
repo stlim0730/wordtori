@@ -101,7 +101,7 @@ class SubmissionAdmin(admin.ModelAdmin):
       )
 
   def contentReview(self, obj):
-    if obj.mimeType and obj.blobContent:
+    if obj.blobContent:# and obj.mimeType:
       # Uploaded media
       contentFileName = self.getContentFileName(obj)
       contentFilePath = self.getContentFilePath(obj)
