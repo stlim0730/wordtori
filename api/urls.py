@@ -1,9 +1,10 @@
+from django.urls import path
 from django.conf.urls import url
 from . import views
 
 urlpatterns = [
-  url(r'^media/upload$', views.upload, name='upload'),
-  url(r'^media/play/(?P<category>[0-9]+)/(?P<submission>[0-9]+)$', views.play, name='play'),
-  url(r'^media/filter/tag/(?P<category>.+)/(?P<tag>.+)$', views.tagFilter, name='tagFilter'),
-  url(r'^media/search/(?P<category>.+)/(?P<keyword>.+)$', views.searchFilter, name='searchFilter'),
+  path('media/upload/', views.upload),
+  path('media/play/<category>/<submission>/', views.play),# url(r'^media/play/(?P<category>[0-9]+)/(?P<submission>[0-9]+)$', views.play, name='play'),
+  url(r'^media/filter/tag/(?P<category>.+)/(?P<tag>.+)/$', views.tagFilter),
+  url(r'^media/search/(?P<category>.+)/(?P<keyword>.+)/$', views.searchFilter),
 ]

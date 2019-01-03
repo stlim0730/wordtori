@@ -1,0 +1,47 @@
+[
+  {
+    "pageId": 1,
+    "pageOrder": 1,
+    "label": "See",
+    "htmlContent": "",
+    "oldLabel": "see",
+    "emphasized": false,
+    "usePageSettings": false
+  },
+  {
+    "pageId": 2,
+    "pageOrder": 2,
+    "label": "Why",
+    "htmlContent": "why.html",
+    "oldLabel": "why",
+    "emphasized": false,
+    "usePageSettings": true
+  },
+  {
+    "pageId": 3,
+    "pageOrder": 3,
+    "label": "How",
+    "htmlContent": "how.html",
+    "oldLabel": "how",
+    "emphasized": false,
+    "usePageSettings": true
+  },
+  {
+    "pageId": 4,
+    "pageOrder": 4,
+    "label": "Events",
+    "htmlContent": "",
+    "oldLabel": "events",
+    "emphasized": false,
+    "usePageSettings": false
+  },
+  {
+    "pageId": 5,
+    "pageOrder": 5,
+    "label": "Speak",
+    "htmlContent": "",
+    "oldLabel": "speak",
+    "emphasized": true,
+    "usePageSettings": false
+  }
+]
