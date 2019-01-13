@@ -25,39 +25,43 @@ class SubmissionAdmin(admin.ModelAdmin):
       # 
       # This block of code is copied from api.view -- Keep them consistent
       # 
-      youTubeRegex = r'^https://youtu\.be/.+$'
-      soundCloudRegex = r'^https://soundcloud\.com/.+/.+$'
-      mediaType = None
-      mediaHash = None
-      if re.match(youTubeRegex, obj.url):
-        obj.mediaType = 'youtube'
-        obj.mediaHash = obj.url.split('/')[-1]
-        obj.blobContent = None
-        obj.save()
-        os.remove(self.getPhotoFilePath(obj))
-        os.remove(self.getContentFilePath(obj))
-      elif re.match(soundCloudRegex, obj.url):
-        scRes = urllib.request.urlopen(obj.url)
-        if scRes.status == 200:
-          scCont = scRes.read().decode('utf-8')
-          match = re.search(r'content=\"soundcloud://sounds:([0-9]+)\"', scCont)
-          if match:
-            obj.mediaType = 'soundcloud'
-            obj.mediaHash = match.group(1)
-            obj.blobContent = None
-            obj.save()
-            os.remove(self.getPhotoFilePath(obj))
-            os.remove(self.getContentFilePath(obj))
+      if obj.videoURL:
+        youTubeRegex = r'^https://youtu\.be/.+$'
+        soundCloudRegex = r'^https://soundcloud\.com/.+/.+$'
+        mediaType = None
+        mediaHash = None
+        if re.match(youTubeRegex, obj.url):
+          obj.mediaType = 'youtube'
+          obj.mediaHash = obj.url.split('/')[-1]
+          obj.blobContent = None
+          obj.save()
+          os.remove(self.getPhotoFilePath(obj))
+          os.remove(self.getContentFilePath(obj))
+        elif re.match(soundCloudRegex, obj.url):
+          scRes = urllib.request.urlopen(obj.url)
+          if scRes.status == 200:
+            scCont = scRes.read().decode('utf-8')
+            match = re.search(r'content=\"soundcloud://sounds:([0-9]+)\"', scCont)
+            if match:
+              obj.mediaType = 'soundcloud'
+              obj.mediaHash = match.group(1)
+              obj.blobContent = None
+              obj.save()
+              os.remove(self.getPhotoFilePath(obj))
+              os.remove(self.getContentFilePath(obj))
+            else:
+              # The SoundCloud page is not reachable
+              messages.add_message(request, messages.ERROR, 'Submission failed! Couldn\'t identify the content.')
           else:
             # The SoundCloud page is not reachable
-            messages.add_message(request, messages.ERROR, 'Submission failed! Couldn\'t identify the content.')
+            messages.add_message(request, messages.ERROR, 'Submission failed! The page doesn\'t exist.')
         else:
-          # The SoundCloud page is not reachable
-          messages.add_message(request, messages.ERROR, 'Submission failed! The page doesn\'t exist.')
+          # URL submission doesn't match the expected formats
+          messages.add_message(request, messages.ERROR, 'Submission failed! Please check the URL (Links from SoundCloud or YouTube are accepted).')
       else:
-        # URL submission doesn't match the expected formats
-        messages.add_message(request, messages.ERROR, 'Submission failed! Please check the URL (Links from SoundCloud or YouTube are accepted).')
-
+        obj.mediaHash = None
+        obj.save()
+        
   #     imageFilePath = None
   #     if obj.imageFile:
   #       imageFilePath = os.path.join(settings.MEDIA_ROOT, str(obj.imageFile))
@@ -138,10 +142,14 @@ class EventAdmin(admin.ModelAdmin):
     super(EventAdmin, self).save_model(request, obj, form, change)
     # When video is added or changed
     if 'videoURL' in form.changed_data:
-      youTubeRegex = r'^https://youtu\.be/.+$'
-      mediaHash = None
-      if re.match(youTubeRegex, obj.videoURL):
-        obj.mediaHash = obj.videoURL.split('/')[-1]
+      if obj.videoURL:
+        youTubeRegex = r'^https://youtu\.be/.+$'
+        mediaHash = None
+        if re.match(youTubeRegex, obj.videoURL):
+          obj.mediaHash = obj.videoURL.split('/')[-1]
+          obj.save()
+      else:
+        obj.mediaHash = None
         obj.save()
     # When image is added or changed
     if 'imageFile' in form.changed_data:
