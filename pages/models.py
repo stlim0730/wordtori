@@ -8,6 +8,7 @@ class Page(models.Model):
   oldLabel = models.CharField(max_length=len('groundrules'), unique=True)
   emphasized = models.BooleanField(default=False)
   usePageSettings = models.BooleanField(default=True)
+  hiddenOnMenu = models.BooleanField(default=False)
   
   def __str__(self):
     return self.label + ' page'

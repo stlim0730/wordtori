@@ -8,9 +8,11 @@
     <div class="collapse navbar-collapse" id="wordtori-navbar">
       <ul class="navbar-nav ml-auto">
         {% for menuItem in menu %}
-          <li class="nav-item {% if active == menuItem.oldLabel %}active{% endif %}">
-            <a class="nav-link" href="/{{menuItem.oldLabel}}" style="{% if menuItem.emphasized %}background-color: #1A1A1A; color: #FFFFFF; text-align: center;{% endif %}">{{menuItem.label}}</a>
-          </li>
+          {% if not menuItem.hiddenOnMenu%}
+            <li class="nav-item {% if active == menuItem.oldLabel %}active{% endif %}">
+              <a class="nav-link" href="/{{menuItem.oldLabel}}" style="{% if menuItem.emphasized %}background-color: #1A1A1A; color: #FFFFFF; text-align: center;{% endif %}">{{menuItem.label}}</a>
+            </li>
+            {% endif %}
         {% endfor %}
       </ul>
     </div>
