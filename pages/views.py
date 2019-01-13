@@ -37,7 +37,8 @@ def getSubmissionsPerCat(category):
 def getAllEvents():
   events = Event.objects.filter(hidden=False).order_by('-date', 'time')
   for event in events:
-    event.image = base64.b64encode(event.image).decode('utf-8')
+    if event.image:
+      event.image = base64.b64encode(event.image).decode('utf-8')
   return events
 
 def see(request, slug=None):
