@@ -7,6 +7,7 @@ import os
 import re
 from tagging.models import Tag
 import urllib.request
+import urllib.parse as urlparse
 from django.conf import settings
 from slugify import slugify
 from django.contrib import messages
@@ -21,18 +22,27 @@ class SubmissionAdmin(admin.ModelAdmin):
     # Handle tags
     Tag.objects.update_tags(obj, obj.tagline)
     # Handle blob content
-    if obj.url and (obj.mediaType=='video' or obj.mediaType=='audio'):#'url' in form.changed_data:
+    if (obj.mediaType=='video' or obj.mediaType=='audio') and 'url' in form.changed_data:
       # 
       # This block of code is copied from api.view -- Keep them consistent
       # 
-      if obj.videoURL:
-        youTubeRegex = r'^https://youtu\.be/.+$'
+      if obj.url:
+        youTubeShareRegex = r'^https://youtu\.be/.+$'
+        youTubePageRegex = r'^https://www.youtube.com/watch\?.*'
         soundCloudRegex = r'^https://soundcloud\.com/.+/.+$'
         mediaType = None
         mediaHash = None
-        if re.match(youTubeRegex, obj.url):
+        if re.match(youTubeShareRegex, obj.url):
           obj.mediaType = 'youtube'
           obj.mediaHash = obj.url.split('/')[-1]
+          obj.blobContent = None
+          obj.save()
+          os.remove(self.getPhotoFilePath(obj))
+          os.remove(self.getContentFilePath(obj))
+        elif re.match(youTubePageRegex, obj.url):
+          obj.mediaType = 'youtube'
+          parsed = urlparse.urlparse(obj.url)
+          obj.mediaHash = urlparse.parse_qs(parsed.query)['v'][0]
           obj.blobContent = None
           obj.save()
           os.remove(self.getPhotoFilePath(obj))
@@ -143,10 +153,15 @@ class EventAdmin(admin.ModelAdmin):
     # When video is added or changed
     if 'videoURL' in form.changed_data:
       if obj.videoURL:
-        youTubeRegex = r'^https://youtu\.be/.+$'
+        youTubeShareRegex = r'^https://youtu\.be/.+$'
+        youTubePageRegex = r'^https://www.youtube.com/watch\?.*'
         mediaHash = None
-        if re.match(youTubeRegex, obj.videoURL):
+        if re.match(youTubeShareRegex, obj.videoURL):
           obj.mediaHash = obj.videoURL.split('/')[-1]
+          obj.save()
+        elif re.match(youTubePageRegex, obj.videoURL):
+          parsed = urlparse.urlparse(obj.videoURL)
+          obj.mediaHash = urlparse.parse_qs(parsed.query)['v'][0]
           obj.save()
       else:
         obj.mediaHash = None

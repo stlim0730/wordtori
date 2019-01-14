@@ -9,6 +9,7 @@ from django.shortcuts import render, redirect
 from tagging.models import Tag, TaggedItem
 import re
 import urllib.request
+import urllib.parse as urlparse
 from pages.views import getAllCategories, getSubmissionsPerCat, getMenu
 from django.db.models import Q
 from .serializers import *
@@ -46,10 +47,10 @@ def upload(request):
   if 'photo' in request.FILES:
     photo = request.FILES['photo'].read()
     photoMimeType = request.FILES['photo'].content_type
-  categoryId = request.data['categoryId']
+  categoryId = 1#request.data['categoryId']
   note = request.data['note']
-  tagline = request.data['tags']
-  tags = request.data['tags']
+  tagline = ''#request.data['tags']
+  tags = []#request.data['tags']
   if submissionMode == 'upload':
     if not file:
       # File size limit exceeded or File not attached
@@ -88,13 +89,18 @@ def upload(request):
     # 
     # This block of code is copied to api.admin -- Keep them consistent
     # 
-    youTubeRegex = r'^https://youtu\.be/\w+$'
+    youTubeShareRegex = r'^https://youtu\.be/.+$'
+    youTubePageRegex = r'^https://www.youtube.com/watch\?.*'
     soundCloudRegex = r'^https://soundcloud\.com/.+/.+$'
     mediaType = None
     mediaHash = None
-    if re.match(youTubeRegex, url):
+    if re.match(youTubeShareRegex, url):
       mediaType = 'youtube'
       mediaHash = url.split('/')[-1]
+    elif re.match(youTubePageRegex, url):
+      mediaType = 'youtube'
+      parsed = urlparse.urlparse(url)
+      mediaHash = urlparse.parse_qs(parsed.query)['v'][0]
     elif re.match(soundCloudRegex, url):
       scRes = urllib.request.urlopen(url)
       if scRes.status == 200:
