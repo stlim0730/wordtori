@@ -9,6 +9,7 @@ urlpatterns = [
   path('see/<slug>', views.see), # url(r'^see/(?P<slug>.*)$', views.see, name='see'),
   path('why/', views.staticPage), # url(r'^why$', views.staticPage, name='staticPage'),
   path('how/', views.staticPage), # url(r'^how$', views.staticPage, name='staticPage'),
+  path('groundrules/', views.staticPage),
   path('events/', views.events), # url(r'^events$', views.events, name='events'),
   path('speak/', views.speak), # url(r'^speak$', views.speak, name='speak'),
   path('api/', include('api.urls')), # url(r'^api/', ),
