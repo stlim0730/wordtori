@@ -35,7 +35,8 @@ class Command(BaseCommand):
     if len(Category.objects.all()) < 1:
       print('No categories found.')
       sys.exit(1)
-    self.updateAutoIncrement('api', Category, 'categoryId', cnt + 1)
+    if cnt > 0:
+      self.updateAutoIncrement('api', Category, 'categoryId', cnt + 1)
 
     # Submission
     filePath = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'submissions.json')
@@ -74,7 +75,8 @@ class Command(BaseCommand):
       )
       cnt += 1
     print('{cnt} submission objects were created.'.format(cnt=cnt))
-    self.updateAutoIncrement('api', Submission, 'submissionId', cnt + 1)
+    if cnt > 0:
+      self.updateAutoIncrement('api', Submission, 'submissionId', cnt + 1)
 
     # TermsOfConsents
     cnt = TermsOfConsent.objects.count()
@@ -102,12 +104,13 @@ class Command(BaseCommand):
         with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), page['htmlContent']), encoding='utf-8') as f:
           htmlContent = f.read()
       newPage = Page.objects.create(
-        pageOrder=page['pageOrder'], label=page['label'], htmlContent=htmlContent,
+        pageOrder=page['pageOrder'], label=page['label'], htmlContent=htmlContent, hiddenOnMenu=page['hiddenOnMenu'],
         oldLabel=page['oldLabel'], emphasized=page['emphasized'], usePageSettings=page['usePageSettings']
       )
       cnt += 1
     print('{cnt} page objects were created.'.format(cnt=cnt))
-    self.updateAutoIncrement('pages', Page, 'pageId', cnt + 1)
+    if cnt > 0:
+      self.updateAutoIncrement('pages', Page, 'pageId', cnt + 1)
 
 # api_category_categoryId_seq
 # api_submission_submissionId_seq

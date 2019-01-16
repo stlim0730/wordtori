@@ -48,5 +48,15 @@
     "emphasized": true,
     "usePageSettings": false,
     "hiddenOnMenu": true
+  },
+  {
+    "pageId": 6,
+    "pageOrder": 6,
+    "label": "Groundrules",
+    "htmlContent": "groundrules.html",
+    "oldLabel": "groundrules",
+    "emphasized": false,
+    "usePageSettings": true,
+    "hiddenOnMenu": true
   }
 ]
