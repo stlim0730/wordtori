@@ -5,10 +5,10 @@
   
   <div class="row">
     <div class="col-md-8 offset-md-2 my-4">
-      <a href="/groundrules" class="btn btn-block btn-link my-3">Check Groundrules</a>
       <h2 class="mb-4">
         Submit Your Word
       </h2>
+      <a href="/groundrules" class="text-right btn btn-block btn-link my-3">Check Groundrules</a>
       <form id="submission-form" action="/api/media/upload/" method="post" enctype="multipart/form-data">
         <fieldset>
           {% csrf_token %}
