@@ -185,6 +185,12 @@
   $('.nav.nav-tabs li.nav-item a').click(function(e) {
     submissionMode = $(this).text().trim().toLowerCase().split(" ")[0];
     $('#submissionMode').val(submissionMode);
+    if(submissionMode=='record') {
+      audio_context = new AudioContext();
+      navigator.getUserMedia({audio: true}, startUserMedia, function(e) {
+        alert('An error occurred in recording on the browser.');
+      });
+    }
   });
 
   // Size check for file inputs: photo / file
@@ -335,13 +341,7 @@
   $(document).ready(function() {
     if(navigator.getUserMedia) {
       $('a[href="#record"]').removeClass('disabled');
-
-      audio_context = new AudioContext();
     }
-    
-    navigator.getUserMedia({audio: true}, startUserMedia, function(e) {
-      alert('An error occurred in recording on the browser.');
-    });
   });
 
 </script>
