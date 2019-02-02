@@ -328,13 +328,18 @@
   $("#submission-form").submit(function(e) {
     if(recordingBlob && $('#submissionMode').val() == 'record') {
       e.preventDefault();
+
+      var relocate = function() {
+        window.location.href = '/speak?record=success';
+      }
+
       var form = $(this)[0];
       var formData = new FormData(form);
       var request = new XMLHttpRequest();
+      request.addEventListener('load', relocate);
       formData.append('recording', recordingBlob);
       request.open('post', form.action);
       request.send(formData);
-      window.location.href = '/speak?record=success'
     }
   });
 
