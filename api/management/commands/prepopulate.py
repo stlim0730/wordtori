@@ -5,7 +5,7 @@ from django.conf import settings
 from django.core.management import BaseCommand
 from django.db import connection, transaction, router
 from api.models import Submission, Category, TermsOfConsent
-from pages.models import Page
+from pages.models import Title, Page
 import json
 import base64
 
@@ -90,6 +90,21 @@ class Command(BaseCommand):
       cnt += 1
       print('{cnt} termsOfConsent objects were created.'.format(cnt=cnt))
 
+    # Title
+    filePath = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'titles.json')
+    with open(filePath, encoding='utf-8') as f:
+      titles = json.load(f)
+    cnt = 0
+    for title in titles:
+      exists = Title.objects.filter(title=title['title'])
+      if exists:
+        continue
+      newTitle = Title.objects.create(
+        title=title['title']
+      )
+      cnt += 1
+    print('{cnt} title objects were created.'.format(cnt=cnt))
+    
     # Pages
     filePath = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'pages.json')
     with open(filePath, encoding='utf-8') as f:
