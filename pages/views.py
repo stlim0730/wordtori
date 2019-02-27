@@ -45,7 +45,7 @@ def getAllEvents():
       event.image = base64.b64encode(event.image).decode('utf-8')
   return events
 
-def see(request, slug=None):
+def what(request, slug=None):
   categories = getAllCategories()
   submissionCnt = {}
   for category in categories:
@@ -72,14 +72,14 @@ def see(request, slug=None):
   context = {
     'title': getTitle(),
     'menu': getMenu(),
-    'active': 'see',
+    'active': 'what',
     'categories': categories,
     'category': category,
     'submissionCnt': submissionCnt,
     'submissions': submissions,
     'tags': sorted(list(set(tags)))
   }
-  return render(request, 'see.html', context)
+  return render(request, 'what.html', context)
 
 def staticPage(request):
   oldLabel = request.path[1:-1]
