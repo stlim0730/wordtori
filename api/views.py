@@ -10,7 +10,7 @@ from tagging.models import Tag, TaggedItem
 import re
 import urllib.request
 import urllib.parse as urlparse
-from pages.views import getAllCategories, getSubmissionsPerCat, getMenu
+from pages.views import getAllCategories, getSubmissionsPerCat, getMenu, getTitle
 from django.db.models import Q
 from .serializers import *
 import base64
@@ -21,7 +21,7 @@ from django.utils import timezone
 @parser_classes((FormParser, MultiPartParser, ))
 def upload(request):
   # For reseponse
-  context = { 'active': 'speak', 'form': SubmissionForm(), 'categories': Category.objects.filter(hidden=False), 'menu': getMenu() }
+  context = { 'active': 'speak', 'form': SubmissionForm(), 'categories': Category.objects.filter(hidden=False), 'menu': getMenu(), 'title': getTitle() }
   if request.data['consented'] != 'on':
     messages.add_message(request, messages.ERROR, 'Submission failed! Please check the consent form.')
     return render(request, 'speak.html', context=context)

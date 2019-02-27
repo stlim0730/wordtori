@@ -4,7 +4,7 @@ from django.http import HttpResponse
 from django.db.models import Q
 from api.forms import SubmissionForm
 from api.models import Submission, Category, Event, TermsOfConsent
-from pages.models import Page
+from pages.models import Title, Page
 from tagging.models import Tag
 import base64
 from django.contrib import messages
@@ -13,6 +13,10 @@ from django.template.defaultfilters import register
 @register.filter(name='dict_key')
 def dict_key(d, k):
   return d[k]
+
+def getTitle():
+  title = list(Title.objects.all())[0].title
+  return title
 
 def getMenu():
   pages = list(Page.objects.all().order_by('pageOrder'))
@@ -41,7 +45,7 @@ def getAllEvents():
       event.image = base64.b64encode(event.image).decode('utf-8')
   return events
 
-def see(request, slug=None):
+def what(request, slug=None):
   categories = getAllCategories()
   submissionCnt = {}
   for category in categories:
@@ -66,20 +70,22 @@ def see(request, slug=None):
   else:
     category = None
   context = {
+    'title': getTitle(),
     'menu': getMenu(),
-    'active': 'see',
+    'active': 'what',
     'categories': categories,
     'category': category,
     'submissionCnt': submissionCnt,
     'submissions': submissions,
     'tags': sorted(list(set(tags)))
   }
-  return render(request, 'see.html', context)
+  return render(request, 'what.html', context)
 
 def staticPage(request):
   oldLabel = request.path[1:-1]
   content = Page.objects.filter(oldLabel=oldLabel)[0].htmlContent
   context = {
+    'title': getTitle(),
     'menu': getMenu(),
     'active': oldLabel,
     'staticContent': content
@@ -88,6 +94,7 @@ def staticPage(request):
 
 def events(request):
   context = {
+    'title': getTitle(),
     'menu': getMenu(),
     'active': 'events',
     'events': getAllEvents()
@@ -96,6 +103,7 @@ def events(request):
 
 def speak(request):
   context = {
+    'title': getTitle(),
     'menu': getMenu(),
     'active': 'speak',
     'categories': getAllCategories,

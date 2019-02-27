@@ -1,5 +1,8 @@
 from django.db import models
 
+class Title(models.Model):
+  title = models.CharField(max_length=20, primary_key=True)
+
 class Page(models.Model):
   pageId = models.AutoField(primary_key=True)
   pageOrder = models.IntegerField(null=True, default=0)

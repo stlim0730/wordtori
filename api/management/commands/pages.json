@@ -2,12 +2,12 @@
   {
     "pageId": 1,
     "pageOrder": 1,
-    "label": "See",
+    "label": "What",
     "htmlContent": "",
-    "oldLabel": "see",
+    "oldLabel": "what",
     "emphasized": false,
     "usePageSettings": false,
-    "hiddenOnMenu": true
+    "hiddenOnMenu": false
   },
   {
     "pageId": 2,

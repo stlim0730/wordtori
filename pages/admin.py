@@ -1,5 +1,11 @@
 from django.contrib import admin
-from .models import Page
+from .models import Title, Page
+
+class TitleAdmin(admin.ModelAdmin):
+  model = Title
+  list_display = ['title']
+
+admin.site.register(Title, TitleAdmin)
 
 class PageAdmin(admin.ModelAdmin):
   model = Page
