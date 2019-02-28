@@ -5,6 +5,7 @@ from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 import json
 import base64
+from django.conf import settings
 
 def backupAll(key):
   rawData = {
@@ -23,6 +24,8 @@ def backupAll(key):
     outputList.append(serialized)
   with open(fileName, 'w', encoding='utf-8') as f:
     f.write(json.dumps(outputList, sort_keys=True, indent=2))
+  # if not settings.DEBUG:
+  #   pass
 
 @receiver(post_save, sender=Page)
 def pageUpdated(sender, instance, created, **kwargs):
