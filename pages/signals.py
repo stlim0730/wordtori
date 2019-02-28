@@ -66,7 +66,7 @@ def backupAll(key):
       pushProcess.stdin.write(settings.GITHUB_ACCOUNT + '\n')
       pushProcess.stdin.write(settings.GITHUB_PASSWORD + '\n')
       with open('res.txt', 'w') as res:
-        res.write(pushProcess.stdout)
+        res.write(pushProcess.stdout.read())
     # pushProcess.communicate(input=bytes(settings.GITHUB_ACCOUNT + '\n', encoding='utf-8'))
     # pushProcess.communicate(input=bytes(settings.GITHUB_PASSWORD + '\n', encoding='utf-8'))
     
