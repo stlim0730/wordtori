@@ -1,8 +1,8 @@
 [
   {
-    "name": "Race",
-    "slug": "race",
     "categoryId": 1,
-    "hidden": false
+    "hidden": false,
+    "name": "Race",
+    "slug": "race"
   }
 ]

@@ -1,10 +1,10 @@
 import os
 import sys
-from datetime import datetime
+import datetime
 from django.conf import settings
 from django.core.management import BaseCommand
 from django.db import connection, transaction, router
-from api.models import Submission, Category, TermsOfConsent
+from api.models import Submission, Category, TermsOfConsent, Event
 from pages.models import Title, Page
 import json
 import base64
@@ -53,7 +53,7 @@ class Command(BaseCommand):
       if exists:
         continue
       dateSplit = submission['submissionDate'].split('-')
-      submissionDate = datetime(year=int(dateSplit[0]), month=int(dateSplit[1]), day=int(dateSplit[2]))
+      submissionDate = datetime.datetime(year=int(dateSplit[0]), month=int(dateSplit[1]), day=int(dateSplit[2]))
       newSubmission = Submission.objects.create(
         name=submission['name'],
         yearsInNeighborhoodFrom=submission['yearsInNeighborhoodFrom'],
@@ -67,7 +67,7 @@ class Command(BaseCommand):
         description=submission['description'],
         note=submission['note'],
         submissionId=submission['submissionId'],
-        submissionDate=submission['submissionDate'],
+        submissionDate=submissionDate,#submission['submissionDate'],
         photoMimeType=submission['photoMimeType'],
         mediaType=submission['mediaType'],
         mediaHash=submission['mediaHash'],
@@ -77,6 +77,41 @@ class Command(BaseCommand):
     print('{cnt} submission objects were created.'.format(cnt=cnt))
     if cnt > 0:
       self.updateAutoIncrement('api', Submission, 'submissionId', cnt + 1)
+
+    # Event
+    filePath = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'events.json')
+    with open(filePath, encoding='utf-8') as f:
+      events = json.load(f)
+    cnt = 0
+    for event in events:
+      exists = Event.objects.filter(
+        eventId=event['eventId'], title=event['title']
+      )
+      if exists:
+        continue
+      dateSplit = event['date'].split('-')
+      timeSplit = event['time'].split(':')
+      date = datetime.datetime(year=int(dateSplit[0]), month=int(dateSplit[1]), day=int(dateSplit[2]))
+      time = datetime.time(hour=int(timeSplit[0]), minute=int(timeSplit[1]), second=int(timeSplit[2]))
+      newEvent = Event.objects.create(
+        eventId=event['eventId'],
+        title=event['title'],
+        date=date,
+        time=time,
+        location=event['location'],
+        description=event['description'],
+        link1=event['link1'],
+        link2=event['link2'],
+        image=base64.b64decode(event['image']),
+        imageMimeType=event['imageMimeType'],
+        videoURL=event['videoURL'],
+        mediaHash=event['mediaHash'],
+        hidden=event['hidden']
+      )
+      cnt += 1
+    print('{cnt} event objects were created.'.format(cnt=cnt))
+    if cnt > 0:
+      self.updateAutoIncrement('api', Event, 'eventId', cnt + 1)
 
     # TermsOfConsents
     cnt = TermsOfConsent.objects.count()

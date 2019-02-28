@@ -58,8 +58,8 @@ class Category(models.Model):
     return 'Category: ' + self.name
 
 class AdminEmail(models.Model):
-  adminEmailId = models.AutoField(primary_key=True)
-  email = models.EmailField()
+  # adminEmailId = models.AutoField(primary_key=True)
+  email = models.EmailField(primary_key=True)
 
   def __str__(self):
    return 'Email: ' + self.email
