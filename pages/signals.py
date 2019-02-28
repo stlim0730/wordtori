@@ -58,8 +58,8 @@ def backupAll(key):
       shlex.split('git push origin master'), cwd=settings.BASE_DIR,
       stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE
     )
-    pushProcess.communicate(settings.GITHUB_ACCOUNT)
-    pushProcess.communicate(settings.GITHUB_PASSWORD)
+    pushProcess.communicate(byte(settings.GITHUB_ACCOUNT))
+    pushProcess.communicate(byte(settings.GITHUB_PASSWORD))
     
 @receiver(post_save, sender=Page)
 def pageUpdated(sender, instance, created, **kwargs):
