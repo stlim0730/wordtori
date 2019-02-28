@@ -42,10 +42,10 @@ def backupAll(key):
       shlex.split('git config user.name "{}"'.format(settings.GITHUB_ACCOUNT)),
       cwd=settings.BASE_DIR
     )
-    subprocess.run(
-      shlex.split('git config user.password "{}"'.format(settings.GITHUB_PASSWORD)),
-      cwd=settings.BASE_DIR
-    )
+    # subprocess.run(
+    #   shlex.split('git config user.password "{}"'.format(settings.GITHUB_PASSWORD)),
+    #   cwd=settings.BASE_DIR
+    # )
     subprocess.run(
       shlex.split('git add {}'.format(fileName)),
       cwd=settings.BASE_DIR
@@ -63,7 +63,8 @@ def backupAll(key):
     #   stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE
     # )
     subprocess.run(
-      shlex.split('git push origin master'), cwd=settings.BASE_DIR
+      shlex.split('git push origin master'), cwd=settings.BASE_DIR,
+      input=b'{}\n{}'.format(settings.GITHUB_ACCOUNT, settings.GITHUB_PASSWORD)
     )
       # pushProcess.stdin.write(settings.GITHUB_ACCOUNT)
       # pushProcess.stdin.write(settings.GITHUB_PASSWORD)
