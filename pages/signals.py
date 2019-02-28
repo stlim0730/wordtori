@@ -39,7 +39,11 @@ def backupAll(key):
       cwd=settings.BASE_DIR
     )
     subprocess.Popen(
-      shlex.split('git config user.name "{}"'.format(settings.NAME)),
+      shlex.split('git config user.name "{}"'.format(settings.GITHUB_ACCOUNT)),
+      cwd=settings.BASE_DIR
+    )
+    subprocess.Popen(
+      shlex.split('git config user.password "{}"'.format(settings.GITHUB_PASSWORD)),
       cwd=settings.BASE_DIR
     )
     subprocess.Popen(
@@ -58,18 +62,17 @@ def backupAll(key):
     #   shlex.split('git push origin master'), cwd=settings.BASE_DIR,
     #   stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE
     # )
-    with subprocess.Popen(
-      shlex.split('git push origin master'), cwd=settings.BASE_DIR,
-      stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE
-    ) as pushProcess:
+    subprocess.Popen(
+      shlex.split('git push origin master'), cwd=settings.BASE_DIR
+    )
       # pushProcess.stdin.write(settings.GITHUB_ACCOUNT)
       # pushProcess.stdin.write(settings.GITHUB_PASSWORD)
       # with open('res.txt', 'w') as res:
       #   res.write(pushProcess.stdout.read())
-      pushProcess.communicate(
-        input=bytes(settings.GITHUB_ACCOUNT + '\n' + settings.GITHUB_PASSWORD + '\n',
-        encoding='utf-8')
-      )
+      # pushProcess.communicate(
+      #   input=bytes(settings.GITHUB_ACCOUNT + '\n' + settings.GITHUB_PASSWORD + '\n',
+      #   encoding='utf-8')
+      # )
     
 @receiver(post_save, sender=Page)
 def pageUpdated(sender, instance, created, **kwargs):
