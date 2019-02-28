@@ -60,15 +60,16 @@ def backupAll(key):
     # )
     with subprocess.Popen(
       shlex.split('git push origin master'), cwd=settings.BASE_DIR,
-      stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
-      universal_newlines=True
+      stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE
     ) as pushProcess:
-      pushProcess.stdin.write(settings.GITHUB_ACCOUNT + '\n')
-      pushProcess.stdin.write(settings.GITHUB_PASSWORD + '\n')
-      with open('res.txt', 'w') as res:
-        res.write(pushProcess.stdout.read())
-    # pushProcess.communicate(input=bytes(settings.GITHUB_ACCOUNT + '\n', encoding='utf-8'))
-    # pushProcess.communicate(input=bytes(settings.GITHUB_PASSWORD + '\n', encoding='utf-8'))
+      # pushProcess.stdin.write(settings.GITHUB_ACCOUNT)
+      # pushProcess.stdin.write(settings.GITHUB_PASSWORD)
+      # with open('res.txt', 'w') as res:
+      #   res.write(pushProcess.stdout.read())
+      pushProcess.communicate(
+        input=bytes(settings.GITHUB_ACCOUNT + '\n' + settings.GITHUB_PASSWORD + '\n',
+        encoding='utf-8')
+      )
     
 @receiver(post_save, sender=Page)
 def pageUpdated(sender, instance, created, **kwargs):
