@@ -6,7 +6,7 @@ from django.dispatch import receiver
 import json
 import base64
 from django.conf import settings
-import shlex, subprocess
+import shlex, subprocess, shutil
 
 def backupAll(key):
   rawData = {
@@ -34,16 +34,16 @@ def backupAll(key):
   # stdin: <GitHub_ID>
   # stdin: <GitHub_password>
   if settings.DEBUG and settings.GITHUB_ACCOUNT and settings.GITHUB_PASSWORD and settings.EMAIL_ADDRESS and settings.NAME:
+    with open('~/.gitconfig', 'w') as conf:
+      conf.write('[credential]\n    helper = store')
+    with open('~/.git-credentials', 'w') as cred:
+      cred.write('https://{}:{}@github.com'.format(settings.GITHUB_ACCOUNT, settings.GITHUB_PASSWORD))
     subprocess.run(
       shlex.split('git config user.email "{}"'.format(settings.EMAIL_ADDRESS)),
       cwd=settings.BASE_DIR
     )
     subprocess.run(
       shlex.split('git config user.name "{}"'.format(settings.GITHUB_ACCOUNT)),
-      cwd=settings.BASE_DIR
-    )
-    subprocess.run(
-      shlex.split('git config user.password "{}"'.format(settings.GITHUB_PASSWORD)),
       cwd=settings.BASE_DIR
     )
     subprocess.run(
@@ -58,21 +58,12 @@ def backupAll(key):
       shlex.split('git commit -m "{}"'.format('auto-update data for {} model instances'.format(key))),
       cwd=settings.BASE_DIR
     )
-    # pushProcess = subprocess.Popen(
-    #   shlex.split('git push origin master'), cwd=settings.BASE_DIR,
-    #   stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE
-    # )
     subprocess.run(
       shlex.split('git push origin master'), cwd=settings.BASE_DIR
     )
-      # pushProcess.stdin.write(settings.GITHUB_ACCOUNT)
-      # pushProcess.stdin.write(settings.GITHUB_PASSWORD)
-      # with open('res.txt', 'w') as res:
-      #   res.write(pushProcess.stdout.read())
-      # pushProcess.communicate(
-      #   input=bytes(settings.GITHUB_ACCOUNT + '\n' + settings.GITHUB_PASSWORD + '\n',
-      #   encoding='utf-8')
-      # )
+    shutil.rmtree('~/.gitconfig', ignore_errors=True)
+    shutil.rmtree('~/.git-credentials', ignore_errors=True)
+
     
 @receiver(post_save, sender=Page)
 def pageUpdated(sender, instance, created, **kwargs):
