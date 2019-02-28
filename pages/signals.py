@@ -54,12 +54,19 @@ def backupAll(key):
       shlex.split('git commit -m "{}"'.format('auto-update data for {} model instances'.format(key))),
       cwd=settings.BASE_DIR
     )
-    pushProcess = subprocess.Popen(
+    # pushProcess = subprocess.Popen(
+    #   shlex.split('git push origin master'), cwd=settings.BASE_DIR,
+    #   stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE
+    # )
+    with subprocess.Popen(
       shlex.split('git push origin master'), cwd=settings.BASE_DIR,
-      stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE
-    )
-    pushProcess.communicate(bytes(settings.GITHUB_ACCOUNT + '\n', encoding='utf-8'))
-    pushProcess.communicate(bytes(settings.GITHUB_PASSWORD + '\n', encoding='utf-8'))
+      stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+      universal_newlines=True
+    ) as pushProcess:
+      pushProcess.stdin.write(settings.GITHUB_ACCOUNT + '\n')
+      pushProcess.stdin.write(settings.GITHUB_PASSWORD + '\n')
+    # pushProcess.communicate(input=bytes(settings.GITHUB_ACCOUNT + '\n', encoding='utf-8'))
+    # pushProcess.communicate(input=bytes(settings.GITHUB_PASSWORD + '\n', encoding='utf-8'))
     
 @receiver(post_save, sender=Page)
 def pageUpdated(sender, instance, created, **kwargs):
