@@ -33,7 +33,7 @@ def backupAll(key):
   # git push origin <branch>
   # stdin: <GitHub_ID>
   # stdin: <GitHub_password>
-  if settings.DEBUG and settings.GITHUB_ACCOUNT and settings.GITHUB_PASSWORD and settings.EMAIL_ADDRESS and settings.NAME:
+  if settings.DEBUG and settings.GITHUB_ACCOUNT and settings.GITHUB_PASSWORD and settings.EMAIL_ADDRESS:
     with open('~/.gitconfig', 'w') as conf:
       conf.write('[credential]\n    helper = store')
     with open('~/.git-credentials', 'w') as cred:
