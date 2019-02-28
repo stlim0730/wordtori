@@ -6,7 +6,8 @@ from django.dispatch import receiver
 import json
 import base64
 from django.conf import settings
-import shlex, subprocess, shutil
+import shlex, subprocess, shutil, os
+from pathlib import Path
 
 def backupAll(key):
   rawData = {
@@ -34,9 +35,11 @@ def backupAll(key):
   # stdin: <GitHub_ID>
   # stdin: <GitHub_password>
   if settings.DEBUG and settings.GITHUB_ACCOUNT and settings.GITHUB_PASSWORD and settings.EMAIL_ADDRESS:
-    with open('~/.gitconfig', 'w') as conf:
+    configPath = os.path.join(str(Path.home()), '.gitconfig')
+    credPath = os.path.join(str(Path.home()), '.git-credentials')
+    with open(configPath, 'w') as conf:
       conf.write('[credential]\n    helper = store')
-    with open('~/.git-credentials', 'w') as cred:
+    with open(credPath, 'w') as cred:
       cred.write('https://{}:{}@github.com'.format(settings.GITHUB_ACCOUNT, settings.GITHUB_PASSWORD))
     subprocess.run(
       shlex.split('git config user.email "{}"'.format(settings.EMAIL_ADDRESS)),
@@ -61,9 +64,8 @@ def backupAll(key):
     subprocess.run(
       shlex.split('git push origin master'), cwd=settings.BASE_DIR
     )
-    shutil.rmtree('~/.gitconfig', ignore_errors=True)
-    shutil.rmtree('~/.git-credentials', ignore_errors=True)
-
+    shutil.rmtree(configPath, ignore_errors=True)
+    shutil.rmtree(credPath, ignore_errors=True)
     
 @receiver(post_save, sender=Page)
 def pageUpdated(sender, instance, created, **kwargs):
