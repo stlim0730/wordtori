@@ -34,7 +34,7 @@ def backupAll(key):
   # git push origin <branch>
   # stdin: <GitHub_ID>
   # stdin: <GitHub_password>
-  if settings.DEBUG and settings.GITHUB_ACCOUNT and settings.GITHUB_PASSWORD and settings.EMAIL_ADDRESS:
+  if not settings.DEBUG and settings.GITHUB_ACCOUNT and settings.GITHUB_PASSWORD and settings.EMAIL_ADDRESS:
     configPath = os.path.join(str(Path.home()), '.gitconfig')
     credPath = os.path.join(str(Path.home()), '.git-credentials')
     with open(configPath, 'w') as conf:
