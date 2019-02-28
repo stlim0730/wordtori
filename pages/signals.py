@@ -34,11 +34,26 @@ def backupAll(key):
   # stdin: <GitHub_ID>
   # stdin: <GitHub_password>
   if settings.DEBUG and settings.GITHUB_ACCOUNT and settings.GITHUB_PASSWORD and settings.EMAIL_ADDRESS and settings.NAME:
-    subprocess.run('git config user.email "{}"'.format(settings.EMAIL_ADDRESS))
-    subprocess.run('git config user.name "{}"'.format(settings.NAME))
-    subprocess.run('git add {}'.format(fileName))
-    subprocess.run('git add {}'.format('api/management/commands/*.html'))
-    subprocess.run('git commit -m "{}"'.format('update data for {} model instances'.format(key)))
+    subprocess.Popen(
+      shlex.split('git config user.email "{}"'.format(settings.EMAIL_ADDRESS)),
+      cwd=settings.BASE_DIR
+    )
+    subprocess.Popen(
+      shlex.split('git config user.name "{}"'.format(settings.NAME)),
+      cwd=settings.BASE_DIR
+    )
+    subprocess.Popen(
+      shlex.split('git add {}'.format(fileName)),
+      cwd=settings.BASE_DIR
+    )
+    subprocess.Popen(
+      shlex.split('git add {}'.format('api/management/commands/*.html')),
+      cwd=settings.BASE_DIR
+    )
+    subprocess.Popen(
+      shlex.split('git commit -m "{}"'.format('auto-update data for {} model instances'.format(key))),
+      cwd=settings.BASE_DIR
+    )
     pushProcess = subprocess.Popen(
       shlex.split('git push origin master'), cwd=settings.BASE_DIR,
       stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE
