@@ -34,27 +34,27 @@ def backupAll(key):
   # stdin: <GitHub_ID>
   # stdin: <GitHub_password>
   if settings.DEBUG and settings.GITHUB_ACCOUNT and settings.GITHUB_PASSWORD and settings.EMAIL_ADDRESS and settings.NAME:
-    subprocess.Popen(
+    subprocess.run(
       shlex.split('git config user.email "{}"'.format(settings.EMAIL_ADDRESS)),
       cwd=settings.BASE_DIR
     )
-    subprocess.Popen(
+    subprocess.run(
       shlex.split('git config user.name "{}"'.format(settings.GITHUB_ACCOUNT)),
       cwd=settings.BASE_DIR
     )
-    subprocess.Popen(
+    subprocess.run(
       shlex.split('git config user.password "{}"'.format(settings.GITHUB_PASSWORD)),
       cwd=settings.BASE_DIR
     )
-    subprocess.Popen(
+    subprocess.run(
       shlex.split('git add {}'.format(fileName)),
       cwd=settings.BASE_DIR
     )
-    subprocess.Popen(
+    subprocess.run(
       shlex.split('git add {}'.format('api/management/commands/*.html')),
       cwd=settings.BASE_DIR
     )
-    subprocess.Popen(
+    subprocess.run(
       shlex.split('git commit -m "{}"'.format('auto-update data for {} model instances'.format(key))),
       cwd=settings.BASE_DIR
     )
@@ -62,7 +62,7 @@ def backupAll(key):
     #   shlex.split('git push origin master'), cwd=settings.BASE_DIR,
     #   stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE
     # )
-    subprocess.Popen(
+    subprocess.run(
       shlex.split('git push origin master'), cwd=settings.BASE_DIR
     )
       # pushProcess.stdin.write(settings.GITHUB_ACCOUNT)
