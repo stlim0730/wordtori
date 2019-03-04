@@ -150,8 +150,8 @@ class Command(BaseCommand):
       if exists:
         continue
       htmlContent = None
-      if page['htmlContent'] != "":
-        with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), page['htmlContent']), encoding='utf-8') as f:
+      if page['htmlContent']:
+        with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), '{}.html'.format(page['oldLabel'])), encoding='utf-8') as f:
           htmlContent = f.read()
       newPage = Page.objects.create(
         pageOrder=page['pageOrder'], label=page['label'], htmlContent=htmlContent, hiddenOnMenu=page['hiddenOnMenu'],
