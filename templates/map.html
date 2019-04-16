@@ -1,0 +1,192 @@
+{% extends "base.html" %}
+
+{% block content %}
+<link rel="stylesheet" href="/static/css/leaflet/leaflet.css" />
+<script src="/static/js/leaflet/leaflet.js"></script>
+
+<div class="container">
+  <div class="row my-3">
+    
+  </div>
+</div>
+
+{% include "partials/player.html" %}
+
+<script>
+  $(document).ready(function() {
+    $('#player').popup({
+      scrolllock: true,
+      blur: false,
+      color: '#fff',
+      opacity: 0.97,
+      vertical: 'top',
+      onclose: function() {
+        resetPlayer();
+      }
+    });
+  });
+
+  $('.player_open').click(function(e) {
+    // The field name is case insensitive in Postgres!
+    var categoryId = $(this).data('categoryid');
+    var submissionId = $(this).data('submissionid');
+
+    $.ajax({
+      url: '/api/media/play/' + categoryId + '/' + submissionId,
+      method: 'GET',
+      dataType: 'json',
+      contentType: 'application/json; charset=utf-8',
+      success: function(response) {
+        // console.log(response);
+        if('error' in response) {
+          resetPlayer();
+          alert(response.error);
+        }
+        else {
+          setPlayer(response)
+        }
+      }
+    });
+  });
+
+  var resetPlayer = function() {
+    $('.player-fields').parent('div').removeClass('d-none');
+    $('.player-fields').text('-');
+  }
+
+  var setPlayer = function(res) {
+    res.name ?
+      $('#player-name').text(res.name) :
+      $('#player-name').text('Unknown User');
+    res.yearsInNeighborhoodFrom && res.yearsInNeighborhoodTo ?
+      $('#player-yearsInNeighborhood').text(res.yearsInNeighborhoodFrom + '-' + res.yearsInNeighborhoodTo) :
+      $('#player-yearsInNeighborhood').parent('div').addClass('d-none');
+    res.yearOfBirth ?
+      $('#player-yearOfBirth').text(res.yearOfBirth) :
+      $('#player-yearOfBirth').parent('div').addClass('d-none');
+    res.placeOfBirth ?
+      $('#player-placeOfBirth').text(res.placeOfBirth) :
+      $('#player-placeOfBirth').parent('div').addClass('d-none');
+    res.occupations ?
+      $('#player-occupations').text(res.occupations) :
+      $('#player-occupations').parent('div').addClass('d-none');
+    res.description ?
+      $('#player-description').text(res.description) :
+      $('#player-description').parent('div').addClass('d-none');
+    res.tags.length > 0 ?
+      $('#player-tags').html(getTagsFormatted(res.tags)) :
+      $('#player-tags').parent('div').addClass('d-none');
+    res.submissionDate ?
+      $('#player-submissionDate').text(res.submissionDate) :
+      $('#player-submissionDate').parent('div').addClass('d-none');
+    res.mediaType && (res.mediaHash || (res.mediaType && res.blobContent)) ?
+      $('#player-content-frame').html(getMediaEmbed(res.mediaType, res.mediaHash, res.blobContent)) : null;
+  }
+
+  var getTagsFormatted = function(tags) {
+    var res = '';
+    for(i in tags) {
+      var tag = tags[i];
+      res += '<span class="badge badge-primary">' + tag + '</span> &nbsp;';
+    }
+    return res;
+  };
+
+  var getMediaEmbed = function(mediaType, mediaHash, blobContent) {
+    if(mediaType == 'youtube') {
+      return '<iframe width="100%" height="62%" src="https://www.youtube.com/embed/' + mediaHash + '" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>';
+    }
+    else if(mediaType == 'soundcloud') {
+      return '<iframe width="100%" height="100%" scrolling="no" frameborder="no" allow="autoplay" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/' + mediaHash + '&color=%23ff5500&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=true"></iframe>';
+    }
+    else if(mediaType == 'image') {
+      return '<img src="data:image/jpeg;base64,' + blobContent + '" width="100%" />';
+    }
+    else {
+      alert('media type error!');
+      return;
+    }
+  };
+
+  // Tag Filter
+  $('a.tag-filter').click(function(e) {
+    var tag = $(this).data('tag');
+    if(tag == '--all--') {
+      $('.submission-wrapper').removeClass('d-none');
+      return;
+    }
+    $('.submission-wrapper').addClass('d-none');
+    var url;
+    if('{{category}}' != 'None') {
+      url = '/api/media/filter/tag/' + '{{category.slug}}' + '/' + tag;
+    }
+    else {
+      url = '/api/media/filter/tag/--all--/' + tag;
+    }
+    $.ajax({
+      url: url,
+      method: 'GET',
+      dataType: 'json',
+      contentType: 'application/json; charset=utf-8',
+      success: function(response) {
+        // console.log(response);
+        if('error' in response) {
+          //
+        }
+        else {
+          showOnlyRelevent(response);
+        }
+      }
+    });
+  });
+
+  $('#search-button').click(function(e) {
+    var keyword = $('#search-input').val().trim();
+    if(keyword == "") {
+      $('.submission-wrapper').removeClass('d-none');
+      return;
+    }
+    $('.submission-wrapper').addClass('d-none');
+    var url;
+    if('{{category}}' != 'None') {
+      url = '/api/media/search/' + '{{category.slug}}' + '/' + keyword;
+    }
+    else {
+      url = '/api/media/search/--all--/' + keyword;
+    }
+    $.ajax({
+      url: url,
+      method: 'GET',
+      dataType: 'json',
+      contentType: 'application/json; charset=utf-8',
+      success: function(response) {
+        // console.log(response);
+        if('error' in response) {
+          //
+        }
+        else {
+          showOnlyRelevent(response);
+        }
+      }
+    });
+  });
+
+  var showOnlyRelevent = function(res) {
+    for(i in res.submissionIds) {
+      var submissionId = res.submissionIds[i];
+      $('.submission-wrapper[data-submissionId=' + submissionId + ']').removeClass('d-none');
+    }
+  };
+
+  $('#search-input').keydown(function(e) {
+    if(e.keyCode==13) {
+      $('#search-button').click();
+    }
+  });
+
+  $('#toggle-description').change(function(e) {
+    $('.description-overlay').toggleClass('d-none');
+  });
+</script>
+
+{% endblock content %}

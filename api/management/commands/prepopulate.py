@@ -12,6 +12,7 @@ import base64
 class Command(BaseCommand):
 
   def handle(self, *args, **options):
+    # TODO: update cnt based on Database, but not the iteration counter
     categories = None
     submissions = None
     termsOfConsents = None

@@ -45,7 +45,7 @@ def getAllEvents():
       event.image = base64.b64encode(event.image).decode('utf-8')
   return events
 
-def what(request, slug=None):
+def getSubmissionContext(slug=None):
   categories = getAllCategories()
   submissionCnt = {}
   for category in categories:
@@ -69,16 +69,19 @@ def what(request, slug=None):
     category = getAllCategories().filter(slug=slug)[0]
   else:
     category = None
-  context = {
+  return {
     'title': getTitle(),
     'menu': getMenu(),
-    'active': 'what',
     'categories': categories,
     'category': category,
     'submissionCnt': submissionCnt,
     'submissions': submissions,
     'tags': sorted(list(set(tags)))
   }
+
+def what(request, slug=None):
+  context = getSubmissionContext()
+  context['active'] = 'what'
   return render(request, 'what.html', context)
 
 def staticPage(request):
@@ -91,6 +94,11 @@ def staticPage(request):
     'staticContent': content
   }
   return render(request, 'base.html', context)
+
+def map(request, slug=None):
+  context = getSubmissionContext()
+  context['active'] = 'map'
+  return render(request, 'map.html', context)
 
 def events(request):
   context = {
