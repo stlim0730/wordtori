@@ -3,12 +3,28 @@
 {% block content %}
 <link rel="stylesheet" href="/static/css/leaflet/leaflet.css" />
 <script src="/static/js/leaflet/leaflet.js"></script>
+<script src="/static/js/jquerypopupoverlay/jquery.popupoverlay.js"></script>
 
 <div class="container">
   <div class="row my-3">
-    
+    <div class="col" id="map" style="height: 70vh"></div>
   </div>
 </div>
+
+<script>
+  var map = L.map('map').setView([51.505, -0.09], 13);
+
+  L.tileLayer(
+    'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+    {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+  L.marker([51.5, -0.09]).addTo(map)
+    // bind submission name
+    .bindPopup('A pretty CSS3 popup.<br> Easily customizable.')
+    .openPopup();
+</script>
 
 {% include "partials/player.html" %}
 
