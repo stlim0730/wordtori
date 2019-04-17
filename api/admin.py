@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.utils.safestring import mark_safe
-from .models import Submission, Category, AdminEmail, Event, TermsOfConsent
+from .models import Submission, Category, AdminEmail, Event, TermsOfConsent, Map
 import base64
 import tempfile
 import os
@@ -14,7 +14,7 @@ from django.contrib import messages
 
 class SubmissionAdmin(admin.ModelAdmin):
   model = Submission
-  list_display = ['submissionId', 'published', 'name', 'contact', 'category', 'submissionDate']
+  list_display = ['submissionId', 'published', 'name', 'latitude', 'longitude', 'submissionDate']
   readonly_fields = ['mediaType', 'mediaHash', 'photoReview', 'photoMimeType', 'mimeType', 'contentReview', 'consented', 'submissionDate']
 
   def save_model(self, request, obj, form, change):
@@ -191,3 +191,4 @@ admin.site.register(Category, CategoryAdmin)
 admin.site.register(Event, EventAdmin)
 admin.site.register(AdminEmail)
 admin.site.register(TermsOfConsent)
+admin.site.register(Map)

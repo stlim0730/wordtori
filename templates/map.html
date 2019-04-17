@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block content %}
+<link rel="stylesheet" href="/static/css/leaflet/leaflet.css" />
+<script src="/static/js/leaflet/leaflet.js"></script>
+<script src="/static/js/jquerypopupoverlay/jquery.popupoverlay.js"></script>
+
+<div class="container">
+  <div class="row my-3">
+    <div class="col" id="map" style="height: 70vh"></div>
+  </div>
+</div>
+
+<div class="d-none">
+  {% for popup in popups %}
+    <div class="player_open text-center" id="popup-{{forloop.counter0}}" data-categoryId="{{popup.categoryId}}" data-submissionId="{{popup.submissionId}}">
+      <img src="data:image/jpeg;base64,{{popup.photo}}" style="max-height: 50px" />
+      <p>{{popup.name}}</p>
+    </div>
+  {% endfor %}
+</div>
+
+{% include "partials/player.html" %}
+
+{% include "partials/player_script.html" %}
+
+<script>
+  var viewCenterLat = '{{viewCenterLat}}' == 'None' ? 40.761302 : parseFloat('{{viewCenterLat}}');
+  var viewCenterLong = '{{viewCenterLong}}' == 'None' ? -73.950777 : parseFloat('{{viewCenterLong}}');
+  var viewCenterZoom = '{{viewCenterZoom}}' == 'None' ? 15 : parseFloat('{{viewCenterZoom}}');
+  var submissionsForMap = '{{submissionsForMap|safe|escapejs}}';
+  submissionsForMap = JSON.parse(submissionsForMap);
+
+  var map = L.map('map').setView([viewCenterLat, viewCenterLong], viewCenterZoom);
+
+  L.tileLayer(
+    'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+    {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+  // console.log(submissionsForMap);
+  for(var i in submissionsForMap) {
+    var submission = submissionsForMap[i];
+    if(submission.latitude && submission.longitude) {
+      var submissionPopup = L.DomUtil.get('popup-' + i);
+      L.marker([submission.latitude, submission.longitude]).addTo(map)
+      // bind submission
+      .bindPopup(
+        submissionPopup
+      );
+    }
+  }
+</script>
+
+{% endblock content %}
