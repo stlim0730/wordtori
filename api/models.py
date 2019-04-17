@@ -16,6 +16,8 @@ class Submission(models.Model):
   yearsInNeighborhoodTo = models.CharField(max_length=4, null=True, blank=True)
   yearOfBirth = models.CharField(max_length=4, null=True, blank=True)
   placeOfBirth = models.CharField(max_length=100, null=True, blank=True)
+  latitude = models.DecimalField(max_digits=9, decimal_places=6, null=True)
+  longitude = models.DecimalField(max_digits=9, decimal_places=6, null=True)
   occupations = models.CharField(max_length=200, null=True, blank=True)
   photo = models.BinaryField(max_length=5 * 1024 * 1024, null=True, blank=True)
   category= models.ForeignKey('Category', on_delete=models.CASCADE)
@@ -63,6 +65,16 @@ class AdminEmail(models.Model):
 
   def __str__(self):
    return 'Email: ' + self.email
+
+class Map(models.Model):
+  viewCenterLat = models.DecimalField(max_digits=9, decimal_places=6, null=True)
+  viewCenterLong = models.DecimalField(max_digits=9, decimal_places=6, null=True)
+  viewCenterZoom = models.IntegerField(null=True)
+
+  def __str__(self):
+   return 'Center latitude: ' + str(self.viewCenterLat)\
+   + ' / Center longitude: ' + str(self.viewCenterLong)\
+   + ' / Center zoom: ' + str(self.viewCenterZoom)
 
 class Event(models.Model):
   eventId = models.AutoField(primary_key=True)

@@ -1,11 +1,14 @@
 from django.shortcuts import render
 from django.template import loader
-from django.http import HttpResponse
+from django.core import serializers
+# from django.http import HttpResponse
 from django.db.models import Q
 from api.forms import SubmissionForm
-from api.models import Submission, Category, Event, TermsOfConsent
+from api.models import Submission, Category, Event, TermsOfConsent, Map
+# from api.serializers import SubmissionSerializer
 from pages.models import Title, Page
 from tagging.models import Tag
+import json
 import base64
 from django.contrib import messages
 from django.template.defaultfilters import register
@@ -21,6 +24,13 @@ def getTitle():
 def getMenu():
   pages = list(Page.objects.all().order_by('pageOrder'))
   return pages
+
+def getMapConfig():
+  mapConfig = list(Map.objects.all())#[0]
+  if len(mapConfig) > 0:
+    return mapConfig[0]
+  else:
+    None
 
 def getAllCategories():
   return Category.objects.filter(hidden=False)
@@ -97,7 +107,32 @@ def staticPage(request):
 
 def map(request, slug=None):
   context = getSubmissionContext()
+  mapConfig = getMapConfig()
+  context['viewCenterLat'] = mapConfig.viewCenterLat if mapConfig else None
+  context['viewCenterLong'] = mapConfig.viewCenterLong if mapConfig else None
+  context['viewCenterZoom'] = mapConfig.viewCenterZoom if mapConfig else None
   context['active'] = 'map'
+  context['submissionsForMap'] = []
+  context['popups'] = []
+  for cat in  context['submissions']:
+    subPerCat = context['submissions'][cat]
+    for s in subPerCat:
+      context['submissionsForMap'].append({
+        'categoryId': s.category.categoryId,
+        'submissionId': s.submissionId,
+        'name': s.name,
+        'latitude': float(s.latitude) if s.latitude else None,
+        'longitude': float(s.longitude) if s.longitude else None,
+        'photo': s.photo
+      })
+      context['popups'].append({
+        'categoryId': s.category.categoryId,
+        'submissionId': s.submissionId,
+        'name': s.name,
+        'photo': s.photo
+      })
+  context['submissionsForMap'] = json.dumps(context['submissionsForMap'])
+    # context['submissionsForMap'][cat] = serializers.serialize('json', context['submissions'][cat])
   return render(request, 'map.html', context)
 
 def events(request):
