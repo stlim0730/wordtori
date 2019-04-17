@@ -53,20 +53,20 @@
     "emphasized": false,
     "hiddenOnMenu": false,
     "htmlContent": null,
-    "label": "What",
-    "oldLabel": "see",
-    "pageId": 1,
-    "pageOrder": 1,
+    "label": "Map",
+    "oldLabel": "map",
+    "pageId": 7,
+    "pageOrder": 4,
     "usePageSettings": false
   },
   {
     "emphasized": false,
     "hiddenOnMenu": false,
     "htmlContent": null,
-    "label": "Map",
-    "oldLabel": "map",
-    "pageId": 7,
-    "pageOrder": 4,
+    "label": "What",
+    "oldLabel": "what",
+    "pageId": 1,
+    "pageOrder": 1,
     "usePageSettings": false
   }
 ]
