@@ -45,7 +45,6 @@ def getSubmissionsPerCat(category):
     submission.photo = base64.b64encode(submission.photo).decode('utf-8')
     if submission.mediaType == 'image':
       submission.blobContent = base64.b64encode(submission.blobContent).decode('utf-8')
-  # TODO: Drop unused fields for performance
   return submissions
 
 def getAllEvents():
