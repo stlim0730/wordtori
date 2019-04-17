@@ -1,3 +1,5 @@
+{% csrf_token %}
+
 <div class="container" id="player">
   <div class="row">
     <div class="col my-4">
@@ -32,9 +34,10 @@
       <h6>Description</h6>
       <div id="player-description" class="player-fields mb-4"></div>
     </div>
-    <div class="col-md-3">
-      <h6>Tags</h6>
+    <div class="col-md-6">
+      <h6>Tags<button class="btn btn-link ml-4" id="tag-edit-button"><small>Edit</small></button></h6>
       <div id="player-tags" class="player-fields mb-4"></div>
+      <textarea id="player-tagline" class="d-none player-fields mb-4" style="width: 100%; resize: none"></textarea>
     </div>
     <div class="col-md-3">
       <h6>Submitted On</h6>
@@ -42,3 +45,54 @@
     </div>
   </div>
 </div>
+
+<script>
+  var editingTags = false;
+
+  $('#tag-edit-button').click(function(e) {
+    if(!editingTags) {
+      // Clicked Edit
+      $(this).removeClass('btn-link');
+      $(this).addClass('btn-primary btn-sm');
+      $(this).children('small').text('Done');
+      editingTags = true;
+      $('#player-tags').addClass('d-none');
+      $('#player-tagline').removeClass('d-none');
+    }
+    else {
+      // Clicked Done
+      $(this).addClass('btn-link');
+      $(this).removeClass('btn-primary btn-sm');
+      $(this).children('small').text('Edit');
+      editingTags = false;
+      $('#player-tags').removeClass('d-none');
+      $('#player-tagline').addClass('d-none');
+
+      // Update database
+      var categoryId = $('#player-tagline').data('categoryId');
+      var submissionId = $('#player-tagline').data('submissionId');
+      var url = '/api/media/updateTag/' + categoryId + '/' + submissionId + '/';
+      var tagline = $('#player-tagline').val();
+
+      $.ajax({
+        url: url,
+        method: 'POST',
+        dataType: 'json',
+        headers: { 'X-CSRFToken': '{{ csrf_token }}' },
+        dataType: 'json',
+        data: JSON.stringify({tagline: tagline}),
+        contentType: 'application/json; charset=utf-8',
+        success: function(response) {
+          // console.log(response);
+          if('error' in response) {
+            //
+          }
+          else {
+            $('#player-tags').html(getTagsFormatted(response.tagline.split(',')));
+            $('#player-tagline').val(response.tagline);
+          }
+        }
+      });
+    }
+  });
+</script>

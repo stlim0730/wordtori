@@ -16,20 +16,19 @@ class Submission(models.Model):
   yearsInNeighborhoodTo = models.CharField(max_length=4, null=True, blank=True)
   yearOfBirth = models.CharField(max_length=4, null=True, blank=True)
   placeOfBirth = models.CharField(max_length=100, null=True, blank=True)
-  latitude = models.DecimalField(max_digits=9, decimal_places=6, null=True)
-  longitude = models.DecimalField(max_digits=9, decimal_places=6, null=True)
+  latitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True, default=None)
+  longitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True, default=None)
   occupations = models.CharField(max_length=200, null=True, blank=True)
   photo = models.BinaryField(max_length=5 * 1024 * 1024, null=True, blank=True)
   category= models.ForeignKey('Category', on_delete=models.CASCADE)
   consented = models.BooleanField(default=False)
   note = models.TextField(null=True, blank=True)
   contact = models.CharField(max_length=100, null=True, blank=True)
-  tagline = models.CharField(max_length=200, null=True, blank=True)
+  tagline = models.CharField(max_length=300, null=True, blank=True)
   
   blobContent = models.BinaryField(null=True, blank=True, max_length=200 * 1024 * 1024)
   url = models.URLField(max_length=300, null=True, blank=True)
   description = models.TextField(null=True, blank=True)
-  # TODO: tags = None
 
   # Generated fields
   submissionId = models.AutoField(primary_key=True)

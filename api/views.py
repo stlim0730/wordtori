@@ -49,8 +49,8 @@ def upload(request):
     photoMimeType = request.FILES['photo'].content_type
   categoryId = 1#request.data['categoryId']
   note = request.data['note']
-  tagline = ''#request.data['tags']
-  tags = []#request.data['tags']
+  tagline = request.data['tags']
+  tags = request.data['tags']
   if submissionMode == 'upload':
     if not file:
       # File size limit exceeded or File not attached
@@ -205,6 +205,9 @@ def play(request, category, submission):
       'placeOfBirth': submission.placeOfBirth,
       'occupations': submission.occupations,
       'description': submission.description,
+      'categoryId': submission.category.categoryId,
+      'submissionId': submission.submissionId,
+      'tagline': submission.tagline,
       'tags': [t.name for t in submission.tags],
       'submissionDate': submission.submissionDate,
       'mediaType': submission.mediaType,
@@ -240,6 +243,14 @@ def getSubIdsBySearchPerCat(category, keyword):
     search=SearchVector('name', 'description')
   ).filter(search=keyword)
   return [s.submissionId for s in submissions]
+
+@api_view(['POST'])
+def updateTag(request, category, submission):
+  s = Submission.objects.get(submissionId=submission)
+  s.tagline = request.data['tagline']
+  s.save()
+  Tag.objects.update_tags(s, s.tagline)
+  return Response({'tagline': s.tagline})
 
 @api_view(['GET'])
 def searchFilter(request, category, keyword):
