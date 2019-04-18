@@ -247,10 +247,12 @@ def getSubIdsBySearchPerCat(category, keyword):
 @api_view(['POST'])
 def updateTag(request, category, submission):
   s = Submission.objects.get(submissionId=submission)
-  s.tagline = request.data['tagline']
+  tags = request.data['tagline'].split(',')
+  tags = list(set([t.strip() for t in tags]))
+  s.tagline = ','.join(tags)
   s.save()
   Tag.objects.update_tags(s, s.tagline)
-  return Response({'tagline': s.tagline})
+  return Response({'tagline': s.tagline, 'tags': tags})
 
 @api_view(['GET'])
 def searchFilter(request, category, keyword):
