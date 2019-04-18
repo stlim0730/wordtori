@@ -35,7 +35,7 @@
     "htmlContent": null,
     "label": "Map",
     "oldLabel": "map",
-    "pageId": 7,
+    "pageId": 4,
     "pageOrder": 4,
     "usePageSettings": false
   },
@@ -45,14 +45,14 @@
     "htmlContent": null,
     "label": "Events",
     "oldLabel": "events",
-    "pageId": 4,
+    "pageId": 5,
     "pageOrder": 5,
     "usePageSettings": false
   },
   {
     "emphasized": false,
     "hiddenOnMenu": true,
-    "htmlContent": "<div class=\"container\">\r\n  <div class=\"row my-3\">\r\n    <div class=\"col-md-8 offset-md-2 my-2\">\r\n      <p style=\"text-align: center\">\r\n        <img src=\"/static/img/sky.jpeg\" style=\"max-width: 100%\" />\r\n      </p>\r\n    </div>\r\n  </div>\r\n  \r\n  <p class=\"lead offset-md-2\">\r\n    GROUND RULES\r\n  </p>\r\n\r\n  <div class=\"row my-3\">\r\n    <div class=\"col-4 offset-md-2\">\r\n      <div class=\"my-1\">\r\n        Speak from the first person or from personal experience, no names can be named except your own or a character in the film itself\r\n      </div>\r\n      <div class=\"my-1\">\r\n        No expletives, hate speech, or sexually explicit content\r\n      </div>\r\n      <div class=\"my-1\">\r\n        Can be any form that meets the above guidelines: narrative, poem, dance, etc.\r\n      </div>\r\n    </div>\r\n    <div class=\"col-4\">\r\n      <div class=\"my-1\">\r\n        All ages (parents must give consent for children under 18)\r\n      </div>\r\n      <div class=\"my-1\">\r\n        All submissions that meet the rules and guidelines above will be published online\r\n      </div>\r\n      <div class=\"my-1\">\r\n        Feel free to record a response on your smartphone and submit it\r\n      </div>\r\n    </div>\r\n  </div>\r\n\r\n  <p style=\"text-align: center\">\r\n    <img src=\"/static/img/kiddabbing.jpeg\" style=\"max-width: 100%\" />\r\n  </p>\r\n  <p class=\"lead offset-md-2\">\r\n    FYI\r\n  </p>\r\n\r\n  <div class=\"row my-3\">\r\n    <div class=\"col-4 offset-md-2\">\r\n      <div class=\"my-1\">\r\n        The Word To RI project is organized by volunteers acting in their personal capacity. The project is not endorsed, sponsored and/or owned by any legal entity, existing or planned.\r\n      </div>\r\n    </div>\r\n    <div class=\"col-4\">\r\n      <div class=\"my-1\">\r\n        We cannot begin to hope without addressing our feelings of injustice and social alienation. In this way, hope and injustice are two sides of the same coin - you can\u2019t have one without the other. The Word To RI collective seeks to catalyze discussions that relate to these themes on Roosevelt Island.\r\n      </div>\r\n    </div>\r\n  </div>\r\n\r\n  <a href=\"javascript: history.go(-1)\" class=\"btn btn-block btn-outline-primary\">Go Back</a>\r\n</div>",
+    "htmlContent": "<div class=\"container\">\n  <div class=\"row my-3\">\n    <div class=\"col-md-8 offset-md-2 my-2\">\n      <p style=\"text-align: center\">\n        <img src=\"/static/img/sky.jpeg\" style=\"max-width: 100%\" />\n      </p>\n    </div>\n  </div>\n  \n  <p class=\"lead offset-md-2\">\n    GROUND RULES\n  </p>\n\n  <div class=\"row my-3\">\n    <div class=\"col-4 offset-md-2\">\n      <div class=\"my-1\">\n        Speak from the first person or from personal experience, no names can be named except your own or a character in the film itself\n      </div>\n      <div class=\"my-1\">\n        No expletives, hate speech, or sexually explicit content\n      </div>\n      <div class=\"my-1\">\n        Can be any form that meets the above guidelines: narrative, poem, dance, etc.\n      </div>\n    </div>\n    <div class=\"col-4\">\n      <div class=\"my-1\">\n        All ages (parents must give consent for children under 18)\n      </div>\n      <div class=\"my-1\">\n        All submissions that meet the rules and guidelines above will be published online\n      </div>\n      <div class=\"my-1\">\n        Feel free to record a response on your smartphone and submit it\n      </div>\n    </div>\n  </div>\n\n  <p style=\"text-align: center\">\n    <img src=\"/static/img/kiddabbing.jpeg\" style=\"max-width: 100%\" />\n  </p>\n  <p class=\"lead offset-md-2\">\n    FYI\n  </p>\n\n  <div class=\"row my-3\">\n    <div class=\"col-4 offset-md-2\">\n      <div class=\"my-1\">\n        The Word To RI project is organized by volunteers acting in their personal capacity. The project is not endorsed, sponsored and/or owned by any legal entity, existing or planned.\n      </div>\n    </div>\n    <div class=\"col-4\">\n      <div class=\"my-1\">\n        We cannot begin to hope without addressing our feelings of injustice and social alienation. In this way, hope and injustice are two sides of the same coin - you can\u2019t have one without the other. The Word To RI collective seeks to catalyze discussions that relate to these themes on Roosevelt Island.\n      </div>\n    </div>\n  </div>\n\n  <a href=\"javascript: history.go(-1)\" class=\"btn btn-block btn-outline-primary\">Go Back</a>\n</div>",
     "label": "Groundrules",
     "oldLabel": "groundrules",
     "pageId": 6,
@@ -65,7 +65,7 @@
     "htmlContent": null,
     "label": "Speak",
     "oldLabel": "speak",
-    "pageId": 5,
+    "pageId": 7,
     "pageOrder": 6,
     "usePageSettings": false
   }
