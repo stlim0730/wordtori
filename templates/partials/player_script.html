@@ -75,16 +75,39 @@
       $('#player-submissionDate').parent('div').addClass('d-none');
     res.mediaType && (res.mediaHash || (res.mediaType && res.blobContent)) ?
       $('#player-content-frame').html(getMediaEmbed(res.mediaType, res.mediaHash, res.blobContent)) : null;
-    console.log(res.categoryId, res.submissionId);
+    // console.log(res.categoryId, res.submissionId);
     $('#player-tagline').data('categoryId', res.categoryId);
     $('#player-tagline').data('submissionId', res.submissionId);
+
+    // Filter by tag feature
+    $('a.tag').on('click', function(e) {
+      // e.preventDefault();
+      // var tag = $(this).text();
+      // var url = '/api/media/filter/tag/' + tag;
+
+      // $.ajax({
+      //   url: url,
+      //   method: 'GET',
+      //   dataType: 'json',
+      //   contentType: 'application/json; charset=utf-8',
+      //   success: function(response) {
+      //     console.log(response);
+      //     if('error' in response) {
+      //       //
+      //     }
+      //     else {
+            
+      //     }
+      //   }
+      // });
+    });
   }
 
   var getTagsFormatted = function(tags) {
     var res = '';
     for(i in tags) {
       var tag = tags[i];
-      res += '<span class="badge badge-primary">' + tag + '</span> &nbsp;';
+      res += '<a href="/what/' + tag + '" class="tag"><span class="badge badge-primary">' + tag + '</span></a> &nbsp;';
     }
     return res;
   };

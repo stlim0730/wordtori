@@ -5,9 +5,10 @@ from django.core import serializers
 from django.db.models import Q
 from api.forms import SubmissionForm
 from api.models import Submission, Category, Event, TermsOfConsent, Map
+# from api.views import getSubIdsByTagPerCat
 # from api.serializers import SubmissionSerializer
 from pages.models import Title, Page
-from tagging.models import Tag
+from tagging.models import Tag, TaggedItem
 import json
 import base64
 from django.contrib import messages
@@ -46,6 +47,11 @@ def getSubmissionsPerCat(category):
     if submission.mediaType == 'image':
       submission.blobContent = base64.b64encode(submission.blobContent).decode('utf-8')
   return submissions
+
+def getSubIdsByTagPerCat(category, tag):
+  submissions = getSubmissionsPerCat(category)
+  submissions = TaggedItem.objects.get_by_model(submissions, [tag])
+  return [s.submissionId for s in submissions]
 
 def getAllEvents():
   events = Event.objects.filter(hidden=False).order_by('-date', 'time')
@@ -88,9 +94,18 @@ def getSubmissionContext(slug=None):
     'tags': sorted(list(set(tags)))
   }
 
-def what(request, slug=None):
+def what(request, tag=None):
   context = getSubmissionContext()
   context['active'] = 'what'
+  filtered = []
+  if tag:
+    categories = getAllCategories()
+    for cat in categories:
+      filtered.extend(getSubIdsByTagPerCat(cat.slug, tag))
+  context = getSubmissionContext()
+  context['active'] = 'what'
+  context['filtered'] = filtered
+  context['tag'] = tag
   return render(request, 'what.html', context)
 
 def staticPage(request):

@@ -6,7 +6,7 @@ from django.core.mail import send_mail
 from .forms import SubmissionForm
 from .models import Submission, Category, AdminEmail
 from django.shortcuts import render, redirect
-from tagging.models import Tag, TaggedItem
+from tagging.models import Tag
 import re
 import urllib.request
 import urllib.parse as urlparse
@@ -219,23 +219,29 @@ def play(request, category, submission):
       'error': 'Submission not found.'
     })
 
-def getSubIdsByTagPerCat(category, tag):
-  submissions = getSubmissionsPerCat(category)
-  submissions = TaggedItem.objects.get_by_model(submissions, [tag])
-  return [s.submissionId for s in submissions]
+# @api_view(['GET'])
+# def filterBytag(request, tag):
+#   res = []
+#   categories = getAllCategories()
+#   for cat in categories:
+#     res.extend(getSubIdsByTagPerCat(cat.slug, tag))
+#   context = getSubmissionContext()
+#   context['active'] = 'what'
+#   context['filtered'] = res
+#   return render(request, 'what.html', context)
 
-@api_view(['GET'])
-def tagFilter(request, category, tag):
-  res = []
-  if category == '--all--':
-    categories = getAllCategories()
-    for cat in categories:
-      res.extend(getSubIdsByTagPerCat(cat.slug, tag))
-  else:
-    res = getSubIdsByTagPerCat(category, tag)
-  return Response({
-    'submissionIds': res
-  })
+# @api_view(['GET'])
+# def tagFilter(request, category, tag):
+#   res = []
+#   if category == '--all--':
+#     categories = getAllCategories()
+#     for cat in categories:
+#       res.extend(getSubIdsByTagPerCat(cat.slug, tag))
+#   else:
+#     res = getSubIdsByTagPerCat(category, tag)
+#   return Response({
+#     'submissionIds': res
+#   })
 
 def getSubIdsBySearchPerCat(category, keyword):
   submissions = getSubmissionsPerCat(category)

@@ -16,12 +16,20 @@
     {% for category in categories %}
       {% if submissions|dict_key:category.slug|length > 0 %}
         <div class="col-12">
+
+          {% if filtered|length > 0 %}
+            <div>
+              <p class="lead">
+                Submissions tagged with <span class="badge badge-primary">{{tag}}</span> <a href="/what" class="btn btn-link">See unfiltered results</a>
+              </p>
+            </div>
+          {% endif %}
           <!-- <h2 class="mt-4">{{category.name}}</h2> -->
           <!-- <p class="lead">{{category.description}}</p> -->
         </div>
       {% endif %}
       {% for submission in submissions|dict_key:category.slug %}
-        {% include "partials/submission.html" with category=category submission=submission %}
+        {% include "partials/submission.html" with category=category submission=submission filtered=filtered %}
       {% endfor %}
     {% endfor %}
   </div>
