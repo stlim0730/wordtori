@@ -1,6 +1,7 @@
 from rest_framework import serializers
 import base64
 from django.utils import timezone
+import json
 
 class CategorySerializer(serializers.BaseSerializer):
   def to_representation(self, obj):
@@ -14,28 +15,40 @@ class CategorySerializer(serializers.BaseSerializer):
 class SubmissionSerializer(serializers.BaseSerializer):
   def to_representation(self, obj):
     return {
-      'categoryId': obj.category.categoryId,
-      'consented': obj.consented,
-      'description': obj.description if obj.description else None,
-      'mediaHash': obj.mediaHash if obj.mediaHash else None,
-      'mediaType': obj.mediaType if obj.mediaType else None,
-      'name': obj.name if obj.name else None,
-      'note': obj.note if obj.note else None,
-      'occupations': obj.occupations if obj.occupations else None,
+      'respondent_name': obj.respondent_name if obj.respondent_name else None,
+      'interviewer_name': obj.interviewer_name if obj.interviewer_name else None,
+      'interview_date':  '{}-{:02d}-{:02d}'.format(
+        obj.interview_date.year if obj.interview_date else timezone.now().year,
+        obj.interview_date.month if obj.interview_date else timezone.now().month,
+        obj.interview_date.day if obj.interview_date else timezone.now().day
+      ),
+      'interview_time':  '{}:{:02d}:{:02d}'.format(
+        obj.interview_time.hour if obj.interview_time else timezone.now().hour,
+        obj.interview_time.minute if obj.interview_time else timezone.now().minute,
+        obj.interview_time.second if obj.interview_time else timezone.now().second
+      ),
+      'interview_location': obj.interview_location if obj.interview_location else None,
+      'hometown': obj.hometown if obj.hometown else None,
+      'url': str(obj.url),
+      'transcript': json.dumps(obj.transcript, indent=2) if obj.transcript else None,
+      'summary': obj.summary if obj.summary else None,
+      'latitude': obj.latitude if obj.latitude else None,
+      'longitude': obj.longitude if obj.longitude else None,
       'photo': base64.b64encode(obj.photo).decode('utf-8') if obj.photo else None,
-      'photoMimeType': 'image/jpeg',
-      'placeOfBirth': obj.placeOfBirth if obj.placeOfBirth else None,
-      'published': obj.published,
+      'contact': obj.contact if obj.contact else None,
+      'tagline': obj.tagline if obj.tagline else None,
+      'consented': obj.consented if obj.consented else None,
+      'categoryId': obj.category.categoryId,
+      'submissionId': obj.submissionId,
       'submissionDate': '{}-{:02d}-{:02d}'.format(
         obj.submissionDate.year if obj.submissionDate else timezone.now().year,
         obj.submissionDate.month if obj.submissionDate else timezone.now().month,
         obj.submissionDate.day if obj.submissionDate else timezone.now().day
       ),
-      'submissionId': obj.submissionId,
-      'url': None,
-      'yearOfBirth': obj.yearOfBirth if obj.yearOfBirth else None,
-      'yearsInNeighborhoodFrom': obj.yearsInNeighborhoodFrom if obj.yearsInNeighborhoodFrom else None,
-      'yearsInNeighborhoodTo': obj.yearsInNeighborhoodTo if obj.yearsInNeighborhoodTo else None
+      'photoMimeType': 'image/jpeg',
+      'mediaType': obj.mediaType if obj.mediaType else None,
+      'mediaHash': obj.mediaHash if obj.mediaHash else None,
+      'published': obj.published
     }
 
 class TermsOfConsentsSerializer(serializers.BaseSerializer):

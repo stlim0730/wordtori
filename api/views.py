@@ -13,6 +13,7 @@ import urllib.parse as urlparse
 from pages.views import getAllCategories, getSubmissionsPerCat, getMenu, getTitle
 from django.db.models import Q
 from .serializers import *
+import json
 import base64
 from django.contrib.postgres.search import SearchVector
 from django.utils import timezone
@@ -188,31 +189,36 @@ def upload(request):
       fail_silently=True,
     )
   return render(request, 'speak.html', context=context)
-
+  
 @api_view(['GET'])
 def play(request, category, submission):
   submission = Submission.objects.filter(category__categoryId=category, submissionId=submission)
   if len(submission) == 1:
     submission = submission[0]
-    blobContent = None
-    if submission.mediaType == 'image':
-      blobContent = base64.b64encode(submission.blobContent).decode('utf-8')
+    # blobContent = None
+    # if submission.mediaType == 'image':
+    #   blobContent = base64.b64encode(submission.blobContent).decode('utf-8')
     return Response({
-      'name': submission.name,
-      'yearsInNeighborhoodFrom': submission.yearsInNeighborhoodFrom,
-      'yearsInNeighborhoodTo': submission.yearsInNeighborhoodTo,
-      'yearOfBirth': submission.yearOfBirth,
-      'placeOfBirth': submission.placeOfBirth,
-      'occupations': submission.occupations,
-      'description': submission.description,
+      'respondent_name': submission.respondent_name,
+      'interviewer_name': submission.interviewer_name,
+      'interview_date': submission.interview_date,
+      'interview_time': submission.interview_time,
+      'interview_location': submission.interview_location,
+      'hometown': submission.hometown,
+      'transcript': json.dumps(submission.transcript),
+      'summary': submission.summary,
+      'latitude': submission.latitude,
+      'longitude': submission.longitude,
+      'photo': base64.b64encode(submission.photo).decode('utf-8'),
       'categoryId': submission.category.categoryId,
-      'submissionId': submission.submissionId,
+      'contact': submission.contact,
       'tagline': submission.tagline,
-      'tags': [t.name for t in submission.tags],
+      'submissionId': submission.submissionId,
       'submissionDate': submission.submissionDate,
       'mediaType': submission.mediaType,
       'mediaHash': submission.mediaHash,
-      'blobContent': blobContent
+      'tagline': submission.tagline,
+      'tags': [t.name for t in submission.tags]
     })
   else:
     return Response({

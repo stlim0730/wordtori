@@ -48,66 +48,64 @@
   }
 
   var setPlayer = function(res) {
-    res.name ?
-      $('#player-name').text(res.name) :
-      $('#player-name').text('Unknown User');
-    res.yearsInNeighborhoodFrom && res.yearsInNeighborhoodTo ?
-      $('#player-yearsInNeighborhood').text(res.yearsInNeighborhoodFrom + '-' + res.yearsInNeighborhoodTo) :
-      $('#player-yearsInNeighborhood').parent('div').addClass('d-none');
-    res.yearOfBirth ?
-      $('#player-yearOfBirth').text(res.yearOfBirth) :
-      $('#player-yearOfBirth').parent('div').addClass('d-none');
-    res.placeOfBirth ?
-      $('#player-placeOfBirth').text(res.placeOfBirth) :
-      $('#player-placeOfBirth').parent('div').addClass('d-none');
-    res.occupations ?
-      $('#player-occupations').text(res.occupations) :
-      $('#player-occupations').parent('div').addClass('d-none');
-    res.description ?
-      $('#player-description').text(res.description) :
-      $('#player-description').parent('div').addClass('d-none');
+    var fields = [
+      'interviewer_name', 'respondent_name', 'interview_date', 'interview_time',
+      'interview_location', 'hometown', 'summary', 'contact', 'submissionDate'
+    ];
+    for(var key in fields) {
+      res[fields[key]] ?
+      $('#player-' + fields[key]).text(res[fields[key]]) :
+      $('#player-' + fields[key]).parent('div').addClass('d-none');
+    }
+    // res.interviewer_name ?
+    //   $('#player-interviewer_name').text(res.interviewer_name) :
+    //   $('#player-interviewer_name').text('Unknown User');
+    // res.respondent_name ?
+    //   $('#player-respondent_name').text(res.respondent_name) :
+    //   $('#player-respondent_name').parent('div').addClass('d-none');
+    // res.interview_date ?
+    //   $('#player-interview_date').text(res.interview_date) :
+    //   $('#player-interview_date').parent('div').addClass('d-none');
+    // res.occupations ?
+    //   $('#player-occupations').text(res.occupations) :
+    //   $('#player-occupations').parent('div').addClass('d-none');
+    // res.description ?
+    //   $('#player-description').text(res.description) :
+    //   $('#player-description').parent('div').addClass('d-none');
+    res.transcript ?
+      $('#player-transcript').html(getTranscriptFormatted(JSON.parse(res.transcript))) : null;
     res.tags.length > 0 ?
       $('#player-tags').html(getTagsFormatted(res.tags))
       && $('#player-tagline').val(res.tagline) :
       /*$('#player-tags').parent('div').addClass('d-none')*/ null;
-    res.submissionDate ?
-      $('#player-submissionDate').text(res.submissionDate) :
-      $('#player-submissionDate').parent('div').addClass('d-none');
+    // res.submissionDate ?
+    //   $('#player-submissionDate').text(res.submissionDate) :
+    //   $('#player-submissionDate').parent('div').addClass('d-none');
     res.mediaType && (res.mediaHash || (res.mediaType && res.blobContent)) ?
       $('#player-content-frame').html(getMediaEmbed(res.mediaType, res.mediaHash, res.blobContent)) : null;
-    // console.log(res.categoryId, res.submissionId);
+    res.photo ?
+      $('#player-photo').attr('src', 'data:image/png;base64,' + res.photo) : null;
+    
     $('#player-tagline').data('categoryId', res.categoryId);
     $('#player-tagline').data('submissionId', res.submissionId);
+  }
 
-    // Filter by tag feature
-    $('a.tag').on('click', function(e) {
-      // e.preventDefault();
-      // var tag = $(this).text();
-      // var url = '/api/media/filter/tag/' + tag;
-
-      // $.ajax({
-      //   url: url,
-      //   method: 'GET',
-      //   dataType: 'json',
-      //   contentType: 'application/json; charset=utf-8',
-      //   success: function(response) {
-      //     console.log(response);
-      //     if('error' in response) {
-      //       //
-      //     }
-      //     else {
-            
-      //     }
-      //   }
-      // });
-    });
+  var getTranscriptFormatted = function(transcript) {
+    var res = '';
+    for(var index in transcript) {
+      var line = transcript[index];
+      for(var timestamp in line) {
+        res += '<p><span class="badge badge-secondary">' + timestamp + '</span>&emsp;' + line[timestamp] + '</p>'
+      }
+    }
+    return res
   }
 
   var getTagsFormatted = function(tags) {
     var res = '';
     for(i in tags) {
       var tag = tags[i];
-      res += '<a href="/what/' + tag + '" class="tag"><span class="badge badge-primary">' + tag + '</span></a> &nbsp;';
+      res += '<a href="/home/' + tag + '" class="tag"><span class="badge badge-primary">' + tag + '</span></a> &nbsp;';
     }
     return res;
   };

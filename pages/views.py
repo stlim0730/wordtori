@@ -6,7 +6,6 @@ from django.db.models import Q
 from api.forms import SubmissionForm
 from api.models import Submission, Category, Event, TermsOfConsent, Map
 # from api.views import getSubIdsByTagPerCat
-# from api.serializers import SubmissionSerializer
 from pages.models import Title, Page
 from tagging.models import Tag, TaggedItem
 import json
@@ -41,9 +40,9 @@ def getSubmissionsPerCat(category):
     Q(mediaHash__isnull=False) | Q(mediaType='image'),
     # Q(mediaType='youtube') | Q(mediaType='soundcloud'),
     category__slug=category, published=True, consented=True
-  ).order_by('-submissionDate', 'name')
+  ).order_by('-submissionDate', 'interviewer_name')
   for submission in submissions:
-    submission.photo = base64.b64encode(submission.photo).decode('utf-8')
+    submission.photo = base64.b64encode(submission.photo).decode('utf-8') if submission.photo else ''
     if submission.mediaType == 'image':
       submission.blobContent = base64.b64encode(submission.blobContent).decode('utf-8')
   return submissions
@@ -96,14 +95,14 @@ def getSubmissionContext(slug=None):
 
 def what(request, tag=None):
   context = getSubmissionContext()
-  context['active'] = 'what'
+  context['active'] = 'home'
   filtered = []
   if tag:
     categories = getAllCategories()
     for cat in categories:
       filtered.extend(getSubIdsByTagPerCat(cat.slug, tag))
   context = getSubmissionContext()
-  context['active'] = 'what'
+  context['active'] = 'home'
   context['filtered'] = filtered
   context['tag'] = tag
   return render(request, 'what.html', context)
@@ -134,7 +133,7 @@ def map(request, slug=None):
       context['submissionsForMap'].append({
         'categoryId': s.category.categoryId,
         'submissionId': s.submissionId,
-        'name': s.name,
+        'name': s.interviewer_name,
         'latitude': float(s.latitude) if s.latitude else None,
         'longitude': float(s.longitude) if s.longitude else None,
         'photo': s.photo
@@ -142,7 +141,7 @@ def map(request, slug=None):
       context['popups'].append({
         'categoryId': s.category.categoryId,
         'submissionId': s.submissionId,
-        'name': s.name,
+        'name': s.interviewer_name,
         'photo': s.photo
       })
   context['submissionsForMap'] = json.dumps(context['submissionsForMap'])

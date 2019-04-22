@@ -15,13 +15,17 @@ from django.utils import timezone
 
 class SubmissionAdmin(admin.ModelAdmin):
   model = Submission
-  list_display = ['submissionId', 'published', 'name', 'latitude', 'longitude', 'photoPreview', 'submissionDate', 'consented']
+  list_display = ['submissionId', 'published', 'interviewer_name', 'latitude', 'longitude', 'photoPreview', 'submissionDate', 'consented']
   readonly_fields = ['photoReview', 'contentReview', 'submissionDate']
   exclude = ['category', 'photoMimeType', 'mimeType', 'mediaHash', 'mediaType']
 
   def save_model(self, request, obj, form, change):
     super(SubmissionAdmin, self).save_model(request, obj, form, change)
     # Handle tags
+    tags = obj.tagline.split(',')
+    # if len(tags) > 0:
+    tags = list(set([t.strip() for t in tags]))
+    obj.tagline = ','.join(tags)
     Tag.objects.update_tags(obj, obj.tagline)
     # Handle blob content
     # if (obj.mediaType=='video' or obj.mediaType=='audio') or 'url' in form.changed_data:
@@ -69,8 +73,8 @@ class SubmissionAdmin(admin.ModelAdmin):
         messages.add_message(request, messages.ERROR, 'Submission failed! Please check the URL (Links from SoundCloud or YouTube are accepted).')
     else:
       obj.mediaHash = None
-    # When image is added or changed
-    if 'photoFile' in form.changed_data:
+    # Handle photo
+    if obj.photoFile:#'photoFile' in form.changed_data:
       photoFilePath = None
       if obj.photoFile:
         photoFilePath = os.path.join(settings.MEDIA_ROOT, str(obj.photoFile))
@@ -79,8 +83,8 @@ class SubmissionAdmin(admin.ModelAdmin):
           # obj.photoMimeType = obj.photoFile.content_type
       else:
         obj.photo = None
-      if photoFilePath:
-        os.remove(photoFilePath)
+      # if photoFilePath:
+      #   os.remove(photoFilePath)
     # Other generated Fields
     if not obj.submissionDate:
       obj.submissionDate = timezone.now()
@@ -91,7 +95,7 @@ class SubmissionAdmin(admin.ModelAdmin):
     photoFileExt = str(obj.photoFile).split('.')[-1]
     return '{id}_{name}.{ext}'.format(
       id = obj.submissionId,
-      name = slugify(obj.name),
+      name = slugify(obj.interviewer_name),
       ext = photoFileExt
     )
 
@@ -103,7 +107,7 @@ class SubmissionAdmin(admin.ModelAdmin):
     contentFileExt = obj.mimeType.split('/')[-1]
     return '{id}_{name}.{ext}'.format(
       id = obj.submissionId,
-      name = obj.name,
+      name = obj.interviewer_name,
       ext = contentFileExt
     )
 

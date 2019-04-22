@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.postgres.fields import JSONField
 import datetime
 from tagging.registry import register
 
@@ -11,29 +12,27 @@ class Submission(models.Model):
     ('youtube', 'YouTube')
   )
 
-  name = models.CharField(max_length=100)
-  yearsInNeighborhoodFrom = models.CharField(max_length=4, null=True, blank=True)
-  yearsInNeighborhoodTo = models.CharField(max_length=4, null=True, blank=True)
-  yearOfBirth = models.CharField(max_length=4, null=True, blank=True)
-  placeOfBirth = models.CharField(max_length=100, null=True, blank=True)
-  latitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True, default=None)
-  longitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True, default=None)
-  occupations = models.CharField(max_length=200, null=True, blank=True)
+  respondent_name = models.CharField(max_length=100, null=True, blank=True)
+  interviewer_name = models.CharField(max_length=100)
+  interview_date = models.DateField(null=True, blank=True)
+  interview_time = models.TimeField(null=True, blank=True)
+  interview_location = models.CharField(max_length=100, null=True, blank=True)
+  hometown = models.CharField(max_length=100, null=True, blank=True)
+  url = models.URLField(max_length=300, null=True, blank=True)
+  transcript = JSONField(null=True, blank=True, default=None)
+  summary = models.TextField(null=True, blank=True)
+  latitude = models.DecimalField(max_digits=9, decimal_places=7, null=True, blank=True, default=None)
+  longitude = models.DecimalField(max_digits=9, decimal_places=7, null=True, blank=True, default=None)
   photo = models.BinaryField(max_length=5 * 1024 * 1024, null=True, blank=True)
-  photoFile = models.ImageField(upload_to='photo', null=True, blank=True)
   category= models.ForeignKey('Category', on_delete=models.CASCADE, default=1)
-  consented = models.BooleanField(default=False)
-  note = models.TextField(null=True, blank=True)
   contact = models.CharField(max_length=100, null=True, blank=True)
   tagline = models.CharField(max_length=300, null=True, blank=True)
-  
-  blobContent = models.BinaryField(null=True, blank=True, max_length=200 * 1024 * 1024)
-  url = models.URLField(max_length=300, null=True, blank=True)
-  description = models.TextField(null=True, blank=True)
+  consented = models.BooleanField(default=False)
 
   # Generated fields
   submissionId = models.AutoField(primary_key=True)
   submissionDate = models.DateField(null=True, blank=True)
+  photoFile = models.ImageField(upload_to='photo', null=True, blank=True)
   photoMimeType = models.CharField(max_length=len('image/jpeg'), null=True, blank=True)
   mimeType = models.CharField(max_length=len('video/webm'), null=True, blank=True, default='')
   mediaType = models.CharField(max_length=len('soundcloud'), choices=MEDIA_TYPE_CHOICES)
@@ -41,7 +40,7 @@ class Submission(models.Model):
   published = models.BooleanField(default=False)
 
   def __str__(self):
-    return 'Submission: ' + self.name + ' (' + str(self.submissionId) + ')'
+    return 'Submission: ' + self.interviewer_name + ' (' + str(self.submissionId) + ')'
 
 # Django Tagging
 register(Submission)

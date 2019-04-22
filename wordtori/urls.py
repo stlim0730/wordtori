@@ -5,8 +5,9 @@ from pages import views
 
 urlpatterns = [
   path('admin/', admin.site.urls),
-  path('what/', views.what),
-  path('what/<tag>', views.what), # url(r'^see/(?P<slug>.*)$', views.see, name='see'),
+  path('home/', views.what),
+  path('home/<tag>', views.what), # url(r'^see/(?P<slug>.*)$', views.see, name='see'),
+  path('about/', views.staticPage),
   path('why/', views.staticPage), # url(r'^why$', views.staticPage, name='staticPage'),
   path('how/', views.staticPage), # url(r'^how$', views.staticPage, name='staticPage'),
   path('groundrules/', views.staticPage),

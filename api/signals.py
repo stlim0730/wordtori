@@ -64,39 +64,39 @@ def backupAll(key):
       cwd=settings.BASE_DIR
     )
     subprocess.run(
-      shlex.split('git push origin master'), cwd=settings.BASE_DIR
+      shlex.split('git push origin meaning-of-home'), cwd=settings.BASE_DIR
     )
     shutil.rmtree(configPath, ignore_errors=True)
     shutil.rmtree(credPath, ignore_errors=True)
 
-@receiver(post_save, sender=Submission)
-def submissionUpdated(sender, instance, created, **kwargs):
-  backupAll('submissions')
+# @receiver(post_save, sender=Submission)
+# def submissionUpdated(sender, instance, created, **kwargs):
+#   backupAll('submissions')
 
-@receiver(post_save, sender=Category)
-def categoryUpdated(sender, instance, created, **kwargs):
-  backupAll('categories')
+# @receiver(post_save, sender=Category)
+# def categoryUpdated(sender, instance, created, **kwargs):
+#   backupAll('categories')
 
-@receiver(post_save, sender=Event)
-def eventUpdated(sender, instance, created, **kwargs):
-  backupAll('events')
+# @receiver(post_save, sender=Event)
+# def eventUpdated(sender, instance, created, **kwargs):
+#   backupAll('events')
 
-@receiver(post_save, sender=TermsOfConsent)
-def tocUpdated(sender, instance, created, **kwargs):
-  backupAll('termsOfConsents')
+# @receiver(post_save, sender=TermsOfConsent)
+# def tocUpdated(sender, instance, created, **kwargs):
+#   backupAll('termsOfConsents')
 
-@receiver(post_delete, sender=Submission)
-def submissionRemoved(sender, instance, **kwargs):
-  backupAll('submissions')
+# @receiver(post_delete, sender=Submission)
+# def submissionRemoved(sender, instance, **kwargs):
+#   backupAll('submissions')
 
-@receiver(post_delete, sender=Category)
-def categoryRemoved(sender, instance, **kwargs):
-  backupAll('categories')
+# @receiver(post_delete, sender=Category)
+# def categoryRemoved(sender, instance, **kwargs):
+#   backupAll('categories')
 
-@receiver(post_delete, sender=Event)
-def eventRemoved(sender, instance, **kwargs):
-  backupAll('events')
+# @receiver(post_delete, sender=Event)
+# def eventRemoved(sender, instance, **kwargs):
+#   backupAll('events')
 
-@receiver(post_delete, sender=TermsOfConsent)
-def tocRemoved(sender, instance, **kwargs):
-  backupAll('termsOfConsents')
+# @receiver(post_delete, sender=TermsOfConsent)
+# def tocRemoved(sender, instance, **kwargs):
+#   backupAll('termsOfConsents')
