@@ -11,78 +11,84 @@ import urllib.parse as urlparse
 from django.conf import settings
 from slugify import slugify
 from django.contrib import messages
+from django.utils import timezone
 
 class SubmissionAdmin(admin.ModelAdmin):
   model = Submission
-  list_display = ['submissionId', 'published', 'name', 'latitude', 'longitude', 'submissionDate']
-  readonly_fields = ['mediaType', 'mediaHash', 'photoReview', 'photoMimeType', 'mimeType', 'contentReview', 'consented', 'submissionDate']
+  list_display = ['submissionId', 'published', 'name', 'latitude', 'longitude', 'photoPreview', 'submissionDate', 'consented']
+  readonly_fields = ['photoReview', 'contentReview', 'submissionDate']
+  exclude = ['category', 'photoMimeType', 'mimeType', 'mediaHash', 'mediaType']
 
   def save_model(self, request, obj, form, change):
     super(SubmissionAdmin, self).save_model(request, obj, form, change)
     # Handle tags
     Tag.objects.update_tags(obj, obj.tagline)
     # Handle blob content
-    if (obj.mediaType=='video' or obj.mediaType=='audio') and 'url' in form.changed_data:
+    # if (obj.mediaType=='video' or obj.mediaType=='audio') or 'url' in form.changed_data:
       # 
       # This block of code is copied from api.view -- Keep them consistent
       # 
-      if obj.url:
-        youTubeShareRegex = r'^https://youtu\.be/.+$'
-        youTubePageRegex = r'^https://www.youtube.com/watch\?.*'
-        soundCloudRegex = r'^https://soundcloud\.com/.+/.+$'
-        mediaType = None
-        mediaHash = None
-        if re.match(youTubeShareRegex, obj.url):
-          obj.mediaType = 'youtube'
-          obj.mediaHash = obj.url.split('/')[-1]
-          obj.blobContent = None
-          obj.save()
-          os.remove(self.getPhotoFilePath(obj))
-          os.remove(self.getContentFilePath(obj))
-        elif re.match(youTubePageRegex, obj.url):
-          obj.mediaType = 'youtube'
-          parsed = urlparse.urlparse(obj.url)
-          obj.mediaHash = urlparse.parse_qs(parsed.query)['v'][0]
-          obj.blobContent = None
-          obj.save()
-          os.remove(self.getPhotoFilePath(obj))
-          os.remove(self.getContentFilePath(obj))
-        elif re.match(soundCloudRegex, obj.url):
-          scRes = urllib.request.urlopen(obj.url)
-          if scRes.status == 200:
-            scCont = scRes.read().decode('utf-8')
-            match = re.search(r'content=\"soundcloud://sounds:([0-9]+)\"', scCont)
-            if match:
-              obj.mediaType = 'soundcloud'
-              obj.mediaHash = match.group(1)
-              obj.blobContent = None
-              obj.save()
-              os.remove(self.getPhotoFilePath(obj))
-              os.remove(self.getContentFilePath(obj))
-            else:
-              # The SoundCloud page is not reachable
-              messages.add_message(request, messages.ERROR, 'Submission failed! Couldn\'t identify the content.')
+    if obj.url:# and obj.url in form.changed_data:
+      youTubeShareRegex = r'^https://youtu\.be/.+$'
+      youTubePageRegex = r'^https://www.youtube.com/watch\?.*'
+      soundCloudRegex = r'^https://soundcloud\.com/.+/.+$'
+      if re.match(youTubeShareRegex, obj.url):
+        obj.mediaType = 'youtube'
+        obj.mediaHash = obj.url.split('/')[-1]
+        obj.blobContent = None
+        # os.remove(self.getPhotoFilePath(obj))
+        # os.remove(self.getContentFilePath(obj))
+      elif re.match(youTubePageRegex, obj.url):
+        obj.mediaType = 'youtube'
+        parsed = urlparse.urlparse(obj.url)
+        obj.mediaHash = urlparse.parse_qs(parsed.query)['v'][0]
+        obj.blobContent = None
+        # obj.save()
+        # os.remove(self.getPhotoFilePath(obj))
+        # os.remove(self.getContentFilePath(obj))
+      elif re.match(soundCloudRegex, obj.url):
+        scRes = urllib.request.urlopen(obj.url)
+        if scRes.status == 200:
+          scCont = scRes.read().decode('utf-8')
+          match = re.search(r'content=\"soundcloud://sounds:([0-9]+)\"', scCont)
+          if match:
+            obj.mediaType = 'soundcloud'
+            obj.mediaHash = match.group(1)
+            obj.blobContent = None
+            # obj.save()
+            # os.remove(self.getPhotoFilePath(obj))
+            # os.remove(self.getContentFilePath(obj))
           else:
             # The SoundCloud page is not reachable
-            messages.add_message(request, messages.ERROR, 'Submission failed! The page doesn\'t exist.')
+            messages.add_message(request, messages.ERROR, 'Submission failed! Couldn\'t identify the content.')
         else:
-          # URL submission doesn't match the expected formats
-          messages.add_message(request, messages.ERROR, 'Submission failed! Please check the URL (Links from SoundCloud or YouTube are accepted).')
+          # The SoundCloud page is not reachable
+          messages.add_message(request, messages.ERROR, 'Submission failed! The page doesn\'t exist.')
       else:
-        obj.mediaHash = None
-        obj.save()
-        
-  #     imageFilePath = None
-  #     if obj.imageFile:
-  #       imageFilePath = os.path.join(settings.MEDIA_ROOT, str(obj.imageFile))
-  #       with open(imageFilePath, 'rb') as fi:
-  #         obj.image = fi.read()
-  #     super(EventAdmin, self).save_model(request, obj, form, change)
-  #     if imageFilePath:
-  #       os.remove(imageFilePath)
+        # URL submission doesn't match the expected formats
+        messages.add_message(request, messages.ERROR, 'Submission failed! Please check the URL (Links from SoundCloud or YouTube are accepted).')
+    else:
+      obj.mediaHash = None
+    # When image is added or changed
+    if 'photoFile' in form.changed_data:
+      photoFilePath = None
+      if obj.photoFile:
+        photoFilePath = os.path.join(settings.MEDIA_ROOT, str(obj.photoFile))
+        with open(photoFilePath, 'rb') as fi:
+          obj.photo = fi.read()
+          # obj.photoMimeType = obj.photoFile.content_type
+      else:
+        obj.photo = None
+      if photoFilePath:
+        os.remove(photoFilePath)
+    # Other generated Fields
+    if not obj.submissionDate:
+      obj.submissionDate = timezone.now()
+    obj.save()
 
   def getPhotoFileName(self, obj):
-    photoFileExt = obj.photoMimeType.split('/')[-1]
+    # photoFileExt = obj.photoMimeType.split('/')[-1]
+    photoFileExt = str(obj.photoFile).split('.')[-1]
     return '{id}_{name}.{ext}'.format(
       id = obj.submissionId,
       name = slugify(obj.name),
@@ -106,12 +112,25 @@ class SubmissionAdmin(admin.ModelAdmin):
     return os.path.join(settings.MEDIA_ROOT, 'content', contentFileName)
 
   def photoReview(self, obj):
+    if not obj.photo:
+      return mark_safe('&nbsp;')
     photoFileName = self.getPhotoFileName(obj)
     photoFilePath = self.getPhotoFilePath(obj)
     with open(photoFilePath, 'wb') as fo:
       fo.write(obj.photo)
       return mark_safe('\
         <img src="/media/photo/{fileName}" style="max-width: 500px" />'.format(fileName = photoFileName)
+      )
+
+  def photoPreview(self, obj):
+    if not obj.photo:
+      return mark_safe('&nbsp;')
+    photoFileName = self.getPhotoFileName(obj)
+    photoFilePath = self.getPhotoFilePath(obj)
+    with open(photoFilePath, 'wb') as fo:
+      fo.write(obj.photo)
+      return mark_safe('\
+        <img src="/media/photo/{fileName}" style="max-width: 100px; max-height: 100px" />'.format(fileName = photoFileName)
       )
 
   def contentReview(self, obj):
@@ -138,6 +157,7 @@ class SubmissionAdmin(admin.ModelAdmin):
           src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/{hash}&color=%23ff5500&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=true">\
         </iframe>'.format(hash = obj.mediaHash)
       )
+    return None
 
 class CategoryAdmin(admin.ModelAdmin):
   model = Category

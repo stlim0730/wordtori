@@ -1,5 +1,6 @@
 from rest_framework import serializers
 import base64
+from django.utils import timezone
 
 class CategorySerializer(serializers.BaseSerializer):
   def to_representation(self, obj):
@@ -26,9 +27,9 @@ class SubmissionSerializer(serializers.BaseSerializer):
       'placeOfBirth': obj.placeOfBirth if obj.placeOfBirth else None,
       'published': obj.published,
       'submissionDate': '{}-{:02d}-{:02d}'.format(
-        obj.submissionDate.year,
-        obj.submissionDate.month,
-        obj.submissionDate.day
+        obj.submissionDate.year if obj.submissionDate else timezone.now().year,
+        obj.submissionDate.month if obj.submissionDate else timezone.now().month,
+        obj.submissionDate.day if obj.submissionDate else timezone.now().day
       ),
       'submissionId': obj.submissionId,
       'url': None,
