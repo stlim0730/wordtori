@@ -5,7 +5,7 @@
     "htmlContent": null,
     "label": "Home",
     "oldLabel": "home",
-    "pageId": 2,
+    "pageId": 1,
     "pageOrder": 1,
     "usePageSettings": false
   },
@@ -15,7 +15,7 @@
     "htmlContent": null,
     "label": "Map",
     "oldLabel": "map",
-    "pageId": 3,
+    "pageId": 2,
     "pageOrder": 2,
     "usePageSettings": false
   },
@@ -25,7 +25,7 @@
     "htmlContent": "<div class=\"container\">\n  <div class=\"row\">\n    <div class=\"col-md-6 my-4\">\n      <h2>Why We Doing This</h2>\n      <p>\n        Word To RI was born out of the conviction that we, the current residents of Roosevelt Island, must acknowledge the ground we occupy and the histories of the people who came before us. Only by doing this can we begin imagining our future. We live on Minnahanock, the name given to this narrow strip of land in the East River by the Canarsie Indians who preceded the Dutch colonists. Our Island\u2019s story of colonization begins with Europeans exchanging a fistful of beads for the right to rename it Hog\u2019s Island.\n      </p>\n      <p>\n        The story of our Island continues as a story of colonization. Then institutionalization and isolation through prisons and quarantine centers, into the liberal ideals that informed the late 20th century makeover of Roosevelt Island into what was intended as an economically, racially, and ethnically diverse town that integrated people with disabilities.\n      </p>\n      <p>\n        The Island has entered a critical juncture as Former Mayor Michael Bloomberg, Eric Schmidt (Former Alphabet CEO) and Technion President Peretz Lavie are championing a vision of the Island as a Silicon Valley rival. How do we process that this vision is predicated on an erosion of affordable housing that began two decades prior (with the addition of market rate development and the expiration of Mitchell Llama)?\n      </p>\n      <p>\n        Technology is a value neutral tool. We shouldn\u2019t be afraid of modernity but we need to reckon with the moral implications of erecting a beacon of translational computer science on the cruel displacement of public hospital residents. We cannot disentangle the loss of more than a third of the Island\u2019s physically disabled persons and Black American families from our history of colonization.\n      </p>\n      <p>\n        We have a civic responsibility to be part of the conversation. We must be part of the visioning, part of the determining what comes next. Roosevelt Island is a small community but the changes taking place here mirror changes occurring all over the country. We are a microcosm of America and we will also have a disproportionate impact on the rest of country when we speak from the depths of our origins to contest the vision of the future put forward by politicians and technology executives.\n      </p>\n    </div>\n    <div class=\"col-md-6\">\n      <p>\n        <img src=\"/static/img/map1.jpg\" style=\"height: 100vh\"/>\n      </p>\n    </div>\n  </div>\n</div>\n",
     "label": "About",
     "oldLabel": "about",
-    "pageId": 4,
+    "pageId": 3,
     "pageOrder": 3,
     "usePageSettings": true
   }

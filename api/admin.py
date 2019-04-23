@@ -22,7 +22,7 @@ class SubmissionAdmin(admin.ModelAdmin):
   def save_model(self, request, obj, form, change):
     super(SubmissionAdmin, self).save_model(request, obj, form, change)
     # Handle tags
-    tags = obj.tagline.split(',')
+    tags = obj.tagline.split(',') if obj.tagline else []
     # if len(tags) > 0:
     tags = list(set([t.strip() for t in tags]))
     obj.tagline = ','.join(tags)
