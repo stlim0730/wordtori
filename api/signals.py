@@ -36,38 +36,38 @@ def backupAll(key):
   # git push origin <branch>
   # stdin: <GitHub_ID>
   # stdin: <GitHub_password>
-  if not settings.DEBUG and settings.GITHUB_ACCOUNT and settings.GITHUB_PASSWORD and settings.EMAIL_ADDRESS:
-    configPath = os.path.join(str(Path.home()), '.gitconfig')
-    credPath = os.path.join(str(Path.home()), '.git-credentials')
-    with open(configPath, 'w') as conf:
-      conf.write('[credential]\n    helper = store')
-    with open(credPath, 'w') as cred:
-      cred.write('https://{}:{}@github.com'.format(settings.GITHUB_ACCOUNT, settings.GITHUB_PASSWORD))
-    subprocess.run(
-      shlex.split('git config user.email "{}"'.format(settings.EMAIL_ADDRESS)),
-      cwd=settings.BASE_DIR
-    )
-    subprocess.run(
-      shlex.split('git config user.name "{}"'.format(settings.GITHUB_ACCOUNT)),
-      cwd=settings.BASE_DIR
-    )
-    subprocess.run(
-      shlex.split('git add {}'.format(fileName)),
-      cwd=settings.BASE_DIR
-    )
-    subprocess.run(
-      shlex.split('git add {}'.format('api/management/commands/*.html')),
-      cwd=settings.BASE_DIR
-    )
-    subprocess.run(
-      shlex.split('git commit -m "{}"'.format('auto-update data for {} model instances'.format(key))),
-      cwd=settings.BASE_DIR
-    )
-    subprocess.run(
-      shlex.split('git push origin meaning-of-home'), cwd=settings.BASE_DIR
-    )
-    shutil.rmtree(configPath, ignore_errors=True)
-    shutil.rmtree(credPath, ignore_errors=True)
+  # if not settings.DEBUG and settings.GITHUB_ACCOUNT and settings.GITHUB_PASSWORD and settings.EMAIL_ADDRESS:
+  #   configPath = os.path.join(str(Path.home()), '.gitconfig')
+  #   credPath = os.path.join(str(Path.home()), '.git-credentials')
+  #   with open(configPath, 'w') as conf:
+  #     conf.write('[credential]\n    helper = store')
+  #   with open(credPath, 'w') as cred:
+  #     cred.write('https://{}:{}@github.com'.format(settings.GITHUB_ACCOUNT, settings.GITHUB_PASSWORD))
+  #   subprocess.run(
+  #     shlex.split('git config user.email "{}"'.format(settings.EMAIL_ADDRESS)),
+  #     cwd=settings.BASE_DIR
+  #   )
+  #   subprocess.run(
+  #     shlex.split('git config user.name "{}"'.format(settings.GITHUB_ACCOUNT)),
+  #     cwd=settings.BASE_DIR
+  #   )
+  #   subprocess.run(
+  #     shlex.split('git add {}'.format(fileName)),
+  #     cwd=settings.BASE_DIR
+  #   )
+  #   subprocess.run(
+  #     shlex.split('git add {}'.format('api/management/commands/*.html')),
+  #     cwd=settings.BASE_DIR
+  #   )
+  #   subprocess.run(
+  #     shlex.split('git commit -m "{}"'.format('auto-update data for {} model instances'.format(key))),
+  #     cwd=settings.BASE_DIR
+  #   )
+  #   subprocess.run(
+  #     shlex.split('git push origin meaning-of-home'), cwd=settings.BASE_DIR
+  #   )
+  #   shutil.rmtree(configPath, ignore_errors=True)
+  #   shutil.rmtree(credPath, ignore_errors=True)
 
 # @receiver(post_save, sender=Submission)
 # def submissionUpdated(sender, instance, created, **kwargs):
