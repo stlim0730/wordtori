@@ -2,12 +2,12 @@
 
 ## Instructions for Developers
 
-1. Install all the prerequisites below
+### 1. Install all the prerequisites below
   - [Virtual Box](https://www.virtualbox.org/): tested on 2.2.4
   - [Vagrant](https://www.vagrantup.com/): tested on 6.0
   - [Git](https://git-scm.com/downloads): tested on 2.20.1
 
-2. Clone the repository
+### 2. Clone the repository
 
 ```
 git clone https://github.com/stlim0730/wordtori.git
@@ -22,7 +22,7 @@ git clone https://github.com/stlim0730/wordtori.git meaningofhome
 
 This command doesn't create a new directory.
 
-3. Choose an app instance
+### 3. Choose an app instance
 
 Word2RI manages multiple instances of the app using Git branches, where each app instance has its own variations of contents and configurations. One branch may represent an instance of the app (Note that there can be normal feature branches for development purpose, which isn't a representative branch for an app instance). You can lookup what branches are available in the remote repository (GitHub) using the following command.
 
@@ -44,10 +44,33 @@ git branch --all
 git checkout meaning-of-home
 ```
 
-4. Create a virtual machine
+### 4. Create (turn on) a virtual machine
 
-Word2RI runs on Ubuntu 16.04 (code name: ubuntu/xenial64). Provisional commands and configurations for virtual machine are in `deployment/provision_vagrant.sh`. `Vagrantfile` specifies the provision script to run when a virtual machine is created. Create a virtual machine with the following command in the repository root (`wordtori`) directory.
+Word2RI runs on Ubuntu 16.04 (code name: ubuntu/xenial64). Provisional commands and configurations for virtual machine are in `deployment/provision_vagrant.sh`. `Vagrantfile` specifies the provision script to run when a virtual machine is created. Create a virtual machine with the following command in the repository root (where you cloned it) directory.
 
 ```
-vagrant 
+vagrant up
+```
+
+You may use the shell of the virtual machine by ssh command.
+
+```
+vagrant ssh
+```
+
+### 5. Making changes in the code
+_IN PROGRESS_
+
+### 6. Teardown (turn off) the virtual machine
+
+When you finished working on the virtual machine, you may turn it off. There are three types of teardown process: destroy, halt, and suspend (This document only explains destroy and suspend). Destroy removes all traces of the virtual machine from your system and free all the resources used. When you `vagrant up` later, it goes through all the provision process, which takes time. It's useful when you want to reset the virtual machine or reinstall prerequisite packages by going through the provisional steps. Run the command below _after you exited the virtual machine's shell_ (vagrant is installed on your system, not the virtual machine).
+
+```
+vagrant destroy
+```
+
+The second type of teardown process is suspend. It's similar to _sleep_ that preserves the current state of the virtual machine so that you can pick up where you left off. `vagrant up` will quickly restore the state of the virtual machine.
+
+```
+vagrant suspend
 ```
