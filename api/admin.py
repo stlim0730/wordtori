@@ -47,7 +47,6 @@ class SubmissionAdmin(admin.ModelAdmin):
         parsed = urlparse.urlparse(obj.url)
         obj.mediaHash = urlparse.parse_qs(parsed.query)['v'][0]
         obj.blobContent = None
-        # obj.save()
         # os.remove(self.getPhotoFilePath(obj))
         # os.remove(self.getContentFilePath(obj))
       elif re.match(soundCloudRegex, obj.url):
@@ -64,10 +63,10 @@ class SubmissionAdmin(admin.ModelAdmin):
             # os.remove(self.getContentFilePath(obj))
           else:
             # The SoundCloud page is not reachable
-            messages.add_message(request, messages.ERROR, 'Submission failed! Couldn\'t identify the content.')
+            messages.add_message(request, messages.ERROR, 'Submission failed! Couldn\'t identify the SoundCloud content.')
         else:
           # The SoundCloud page is not reachable
-          messages.add_message(request, messages.ERROR, 'Submission failed! The page doesn\'t exist.')
+          messages.add_message(request, messages.ERROR, 'Submission failed! The SoundCloud page doesn\'t exist.')
       else:
         # URL submission doesn't match the expected formats
         messages.add_message(request, messages.ERROR, 'Submission failed! Please check the URL (Links from SoundCloud or YouTube are accepted).')
@@ -81,10 +80,11 @@ class SubmissionAdmin(admin.ModelAdmin):
         with open(photoFilePath, 'rb') as fi:
           obj.photo = fi.read()
           # obj.photoMimeType = obj.photoFile.content_type
-      else:
-        obj.photo = None
+    else:
+      obj.photo = None
       # if photoFilePath:
       #   os.remove(photoFilePath)
+
     # Other generated Fields
     if not obj.submissionDate:
       obj.submissionDate = timezone.now()

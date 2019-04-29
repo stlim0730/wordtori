@@ -9,7 +9,9 @@ from api.models import Submission, Category, Event, TermsOfConsent, Map
 from pages.models import Title, Page
 from tagging.models import Tag, TaggedItem
 import json
+import os
 import base64
+from django.conf import settings
 from django.contrib import messages
 from django.template.defaultfilters import register
 
@@ -35,6 +37,14 @@ def getMapConfig():
 def getAllCategories():
   return Category.objects.filter(hidden=False)
 
+def getPhotoPlaceholder(sId=0):
+  path = '{}/home{}.png'.format(os.path.join(settings.STATIC_ROOT, 'img'), sId % 6)
+  image = None
+  with open(path, 'rb') as fi:
+    image = fi.read()
+  res = base64.b64encode(image).decode('utf-8')
+  return res
+
 def getSubmissionsPerCat(category):
   submissions = Submission.objects.filter(
     Q(mediaHash__isnull=False) | Q(mediaType='image'),
@@ -42,7 +52,7 @@ def getSubmissionsPerCat(category):
     category__slug=category, published=True, consented=True
   ).order_by('-submissionDate', 'interviewer_name')
   for submission in submissions:
-    submission.photo = base64.b64encode(submission.photo).decode('utf-8') if submission.photo else ''
+    submission.photo = base64.b64encode(submission.photo).decode('utf-8') if submission.photo else getPhotoPlaceholder(submission.submissionId)
     if submission.mediaType == 'image':
       submission.blobContent = base64.b64encode(submission.blobContent).decode('utf-8')
   return submissions
