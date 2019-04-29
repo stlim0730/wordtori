@@ -24,7 +24,7 @@ This command doesn't create a new directory.
 
 ### 3. Configure local settings
 
-For security reasons, The app doesn't store credentials in this project repository. Instead, you should create `wordtori/local_settings.py` containing a few environmental variables for development environment (likewise, you may safely manage settings for production environment separately). The format is as follows. You may add other settings variables here for the local settings.
+For security reasons, The app doesn't store credentials in this project repository. Instead, you should create `wordtori/local_settings.py` (same path as `settings.py`) containing a few environmental variables for development environment (likewise, you may safely manage settings for production environment separately). The format is as follows. You may add other settings variables here for the local settings.
 
 ```
 # wordtori/local_settings.py
