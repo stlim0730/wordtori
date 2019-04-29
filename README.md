@@ -131,7 +131,7 @@ If you want to simply reload the server to apply changes you don't see on the br
 touch reload.ini
 ```
 
-`uwsgi` module running on Nginx listens to the "touch" on `reload.ini` to reload the app.
+`uwsgi` module running on Nginx that listens to the "touch" on `reload.ini` to reload the app.
 
 ### 7. Teardown (turn off) the virtual machine
 
