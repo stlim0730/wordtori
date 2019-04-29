@@ -95,6 +95,13 @@ You may use the shell of the virtual machine by ssh command.
 vagrant ssh
 ```
 
+The first thing you may want to do is make admin account for Django. For security reasons, Django doesn't allow you to do this in scripted way, but in interactive way. Run the following command in the repository root.
+
+```
+cd /wordtori
+python3 manage.py createsuperuser
+```
+
 ### 6. Making changes in the code
 _IN PROGRESS_
 
