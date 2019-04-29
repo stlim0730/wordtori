@@ -107,7 +107,7 @@ You now can use Django admin tool at [http://localhost:8888/admin](http://localh
 ### 6. Making changes in the code
 _IN PROGRESS_
 
-Once you made changes, there are a few commands to run to apply the changes before you run the updated version of the app. In case you modified things related to database, schema, models, you need to migrate database to a new version.
+Once you made changes, there are a few commands to run to apply the changes before you run the updated version of the app. In case you modified things related to database, models (schema), you need to migrate database to a new version.
 
 ```
 python3 manage.py makemigrations
