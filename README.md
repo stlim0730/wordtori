@@ -98,7 +98,7 @@ vagrant ssh
 The first thing you may want to do is make admin account for Django. For security reasons, Django doesn't allow you to do this in scripted way, but in interactive way. Run the following command in the repository root.
 
 ```
-cd /wordtori
+cd /wordtori #(or /meaningofhome)
 python3 manage.py createsuperuser
 ```
 
