@@ -125,7 +125,7 @@ When you made changes in static assets (HTML, css, JavaScript, images, etc.), Yo
 python3 manage.py collectstatic
 ```
 
-If you want to simply reload the server to apply changes you don't see on the browser, run the shorcut below.
+If you want to reload the server to apply changes in Django code, run the shorcut below.
 
 ```
 touch reload.ini
