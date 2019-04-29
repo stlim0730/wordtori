@@ -89,7 +89,7 @@ Word2RI runs on Ubuntu 16.04 (code name: ubuntu/xenial64). Provisional commands 
 vagrant up
 ```
 
-You may use the shell of the virtual machine by ssh command.
+Now, your local instance of the app is running at [http://localhost:8888](http://localhost:8888), where the port number is specified in `Vagrantfile`. You may use the shell of the virtual machine by ssh command.
 
 ```
 vagrant ssh
@@ -101,6 +101,8 @@ The first thing you may want to do is make admin account for Django. For securit
 cd /wordtori
 python3 manage.py createsuperuser
 ```
+
+You now can use Django admin tool at [http://localhost:8888/admin](http://localhost:8888/admin)
 
 ### 6. Making changes in the code
 _IN PROGRESS_
