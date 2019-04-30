@@ -16,8 +16,8 @@ from django.utils import timezone
 class SubmissionAdmin(admin.ModelAdmin):
   model = Submission
   list_display = ['submissionId', 'published', 'interviewer_name', 'latitude', 'longitude', 'photoPreview', 'submissionDate', 'consented']
-  readonly_fields = ['photoReview', 'contentReview', 'submissionDate']
-  exclude = ['category', 'photoMimeType', 'mimeType', 'mediaHash', 'mediaType']
+  readonly_fields = ['photoReview', 'contentReview', 'submissionDate', 'mediaHash', 'mediaType']
+  exclude = ['category', 'photoMimeType', 'mimeType']
 
   def save_model(self, request, obj, form, change):
     super(SubmissionAdmin, self).save_model(request, obj, form, change)
@@ -39,15 +39,14 @@ class SubmissionAdmin(admin.ModelAdmin):
       if re.match(youTubeShareRegex, obj.url):
         obj.mediaType = 'youtube'
         obj.mediaHash = obj.url.split('/')[-1]
-        obj.blobContent = None
+        # obj.blobContent = None
         # os.remove(self.getPhotoFilePath(obj))
         # os.remove(self.getContentFilePath(obj))
       elif re.match(youTubePageRegex, obj.url):
         obj.mediaType = 'youtube'
         parsed = urlparse.urlparse(obj.url)
         obj.mediaHash = urlparse.parse_qs(parsed.query)['v'][0]
-        obj.blobContent = None
-        # obj.save()
+        # obj.blobContent = None
         # os.remove(self.getPhotoFilePath(obj))
         # os.remove(self.getContentFilePath(obj))
       elif re.match(soundCloudRegex, obj.url):
@@ -58,16 +57,16 @@ class SubmissionAdmin(admin.ModelAdmin):
           if match:
             obj.mediaType = 'soundcloud'
             obj.mediaHash = match.group(1)
-            obj.blobContent = None
+            # obj.blobContent = None
             # obj.save()
             # os.remove(self.getPhotoFilePath(obj))
             # os.remove(self.getContentFilePath(obj))
           else:
             # The SoundCloud page is not reachable
-            messages.add_message(request, messages.ERROR, 'Submission failed! Couldn\'t identify the content.')
+            messages.add_message(request, messages.ERROR, 'Submission failed! Couldn\'t identify the SoundCloud content.')
         else:
           # The SoundCloud page is not reachable
-          messages.add_message(request, messages.ERROR, 'Submission failed! The page doesn\'t exist.')
+          messages.add_message(request, messages.ERROR, 'Submission failed! The SoundCloud page doesn\'t exist.')
       else:
         # URL submission doesn't match the expected formats
         messages.add_message(request, messages.ERROR, 'Submission failed! Please check the URL (Links from SoundCloud or YouTube are accepted).')
@@ -81,10 +80,11 @@ class SubmissionAdmin(admin.ModelAdmin):
         with open(photoFilePath, 'rb') as fi:
           obj.photo = fi.read()
           # obj.photoMimeType = obj.photoFile.content_type
-      else:
-        obj.photo = None
+    else:
+      obj.photo = None
       # if photoFilePath:
       #   os.remove(photoFilePath)
+
     # Other generated Fields
     if not obj.submissionDate:
       obj.submissionDate = timezone.now()
@@ -138,23 +138,23 @@ class SubmissionAdmin(admin.ModelAdmin):
       )
 
   def contentReview(self, obj):
-    if obj.blobContent:# and obj.mimeType:
-      # Uploaded media
-      contentFileName = self.getContentFileName(obj)
-      contentFilePath = self.getContentFilePath(obj)
-      with open(contentFilePath, 'wb') as fo:
-        fo.write(obj.blobContent)
-        return mark_safe('\
-          <a href="/media/content/{fileName}" target="_blank">Download to review</a>'.format(fileName = contentFileName)
-        )
-    elif obj.mediaType == 'youtube' and obj.mediaHash:
+    # if obj.blobContent:# and obj.mimeType:
+    #   # Uploaded media
+    #   contentFileName = self.getContentFileName(obj)
+    #   contentFilePath = self.getContentFilePath(obj)
+    #   with open(contentFilePath, 'wb') as fo:
+    #     fo.write(obj.blobContent)
+    #     return mark_safe('\
+    #       <a href="/media/content/{fileName}" target="_blank">Download to review</a>'.format(fileName = contentFileName)
+    #     )
+    if obj.mediaType == 'youtube' and obj.mediaHash:
       return mark_safe('\
         <iframe width="533" height="300"\
           src="https://www.youtube.com/embed/{hash}"\
           frameborder="0" allow="autoplay; encrypted-media" allowfullscreen>\
         </iframe>'.format(hash = obj.mediaHash)
       )
-    elif obj.mediaType == 'soundcloud':
+    elif obj.mediaType == 'soundcloud' and obj.mediaHash:
       return mark_safe('\
         <iframe \
           height="300" scrolling="no" frameborder="no" allow="autoplay"\

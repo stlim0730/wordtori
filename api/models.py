@@ -66,9 +66,9 @@ class AdminEmail(models.Model):
    return 'Email: ' + self.email
 
 class Map(models.Model):
-  viewCenterLat = models.DecimalField(max_digits=9, decimal_places=6, null=True)
-  viewCenterLong = models.DecimalField(max_digits=9, decimal_places=6, null=True)
-  viewCenterZoom = models.IntegerField(null=True)
+  viewCenterLat = models.DecimalField(max_digits=9, decimal_places=7, null=True, blank=True, default=None)
+  viewCenterLong = models.DecimalField(max_digits=9, decimal_places=7, null=True, blank=True, default=None)
+  viewCenterZoom = models.IntegerField(null=True, blank=True, default=None)
 
   def __str__(self):
    return 'Center latitude: ' + str(self.viewCenterLat)\

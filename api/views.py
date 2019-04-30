@@ -10,7 +10,7 @@ from tagging.models import Tag
 import re
 import urllib.request
 import urllib.parse as urlparse
-from pages.views import getAllCategories, getSubmissionsPerCat, getMenu, getTitle
+from pages.views import getAllCategories, getSubmissionsPerCat, getMenu, getTitle, getPhotoPlaceholder
 from django.db.models import Q
 from .serializers import *
 import json
@@ -208,7 +208,7 @@ def play(request, category, submission):
       'summary': submission.summary,
       'latitude': submission.latitude,
       'longitude': submission.longitude,
-      'photo': base64.b64encode(submission.photo).decode('utf-8'),
+      'photo': base64.b64encode(submission.photo).decode('utf-8') if submission.photo else getPhotoPlaceholder(submission.submissionId),
       'categoryId': submission.category.categoryId,
       'tagline': submission.tagline,
       'submissionId': submission.submissionId,
