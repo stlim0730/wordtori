@@ -17,7 +17,7 @@ class Submission(models.Model):
   interview_date = models.DateField(null=True, blank=True)
   interview_time = models.TimeField(null=True, blank=True)
   interview_location = models.CharField(max_length=100, null=True, blank=True)
-  hometown = models.CharField(max_length=100, null=True, blank=True)
+  # hometown = models.CharField(max_length=100, null=True, blank=True)
   url = models.URLField(max_length=300, null=True, blank=True)
   transcript = JSONField(null=True, blank=True, default=None)
   summary = models.TextField(null=True, blank=True)
@@ -25,7 +25,7 @@ class Submission(models.Model):
   longitude = models.DecimalField(max_digits=9, decimal_places=7, null=True, blank=True, default=None)
   photo = models.BinaryField(max_length=5 * 1024 * 1024, null=True, blank=True)
   category= models.ForeignKey('Category', on_delete=models.CASCADE, default=1)
-  contact = models.CharField(max_length=100, null=True, blank=True)
+  # contact = models.CharField(max_length=100, null=True, blank=True)
   tagline = models.CharField(max_length=300, null=True, blank=True)
   consented = models.BooleanField(default=False)
 

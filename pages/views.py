@@ -133,7 +133,7 @@ def map(request, slug=None):
       context['submissionsForMap'].append({
         'categoryId': s.category.categoryId,
         'submissionId': s.submissionId,
-        'name': s.interviewer_name,
+        'name': s.respondent_name,
         'latitude': float(s.latitude) if s.latitude else None,
         'longitude': float(s.longitude) if s.longitude else None,
         'photo': s.photo
@@ -141,7 +141,7 @@ def map(request, slug=None):
       context['popups'].append({
         'categoryId': s.category.categoryId,
         'submissionId': s.submissionId,
-        'name': s.interviewer_name,
+        'name': s.respondent_name,
         'photo': s.photo
       })
   context['submissionsForMap'] = json.dumps(context['submissionsForMap'])

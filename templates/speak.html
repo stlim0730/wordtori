@@ -21,13 +21,6 @@
             {{ form.name }}
           </div>
 
-          <!-- contact -->
-          <div class="form-group">
-            {{ form.contact.errors }}
-            <label for="{{ form.contact.id_for_label }}">Contact Information</label>
-            {{ form.contact }}
-          </div>
-
           <!-- yearsInNeighborhoodFrom / yearsInNeighborhoodFrom -->
           <div class="form-group">
             {{ form.yearsInNeighborhoodFrom.errors }}
@@ -51,16 +44,6 @@
             {{ form.placeOfBirth.errors }}
             <label for="{{ form.placeOfBirth.id_for_label }}">Place of Birth</label>
             {{ form.placeOfBirth }}
-          </div>
-
-          <div class="form-group">
-            {{ form.latitude.errors }}
-            {{ form.longitude.errors }}
-            <label for="{{ form.latitude.id_for_label }}">Hometown</label>
-            <div class="form-inline">
-              {{ form.latitude }}
-              {{ form.longitude }}
-            </div>
           </div>
 
           <!-- occupations -->
