@@ -102,7 +102,9 @@ cd /wordtori #(or /meaningofhome)
 python3 manage.py createsuperuser
 ```
 
-You now can use Django admin tool at [http://localhost:8888/admin](http://localhost:8888/admin)
+You now can use Django admin tool at [http://localhost:8888/admin](http://localhost:8888/admin).
+
+If you want to add non-superuser staff account (e.g., teacher and student accounts used for meaningofhome), use the same command on the production server and configure the account on admin UI. Note that they are superusers without any limitations by default, so you should configure the permission on admin UI.
 
 ### 6. Making changes in the code
 _IN PROGRESS_
