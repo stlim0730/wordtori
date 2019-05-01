@@ -133,7 +133,37 @@ touch reload.ini
 
 `uwsgi` module running on Nginx listens to the "touch" on `reload.ini` to reload the app.
 
-### 7. Teardown (turn off) the virtual machine
+### 7. Deploy the updates
+
+If you're deploying master branch, first merge the feature branches you completed into master branch on GitHub. If not, merge is not necessary.
+
+Once the branch you want to deploy is ready, ssh into the production server with root account. Ask the repository owner on the credentials.
+
+```
+ssh root@wordtori.com
+```
+
+And then, move to the local repository. Note that the server is currently running two instances of the app.
+
+```
+cd /wordtori
+# or
+cd /meaningofhome
+```
+
+Make sure you're on the right branch to update and pull the branch.
+
+```
+git branch --all
+git checkout master
+# or
+git checkout meaning-of-home
+git pull
+```
+
+To apply the changes, follow the section 6.
+
+### 8. Teardown (turn off) the virtual machine
 
 When you finished working on the virtual machine, you may turn it off. There are three types of teardown process: destroy, halt, and suspend (This document only explains destroy and suspend). Destroy removes all traces of the virtual machine from your system and free all the resources used. When you `vagrant up` later, it goes through all the provision process, which takes time. It's useful when you want to reset the virtual machine or reinstall prerequisite packages by going through the provisional steps. Run the command below _after you exited the virtual machine's shell_ (vagrant is installed on your system, not the virtual machine).
 
