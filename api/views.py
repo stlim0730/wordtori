@@ -199,13 +199,14 @@ def play(request, category, submission):
     # if submission.mediaType == 'image':
     #   blobContent = base64.b64encode(submission.blobContent).decode('utf-8')
     return Response({
-      'respondent_name': submission.respondent_name,
+      'narrator_name': submission.narrator_name,
       'interviewer_name': submission.interviewer_name,
       'interview_date': submission.interview_date,
       'interview_time': submission.interview_time,
       'interview_location': submission.interview_location,
       'transcript': json.dumps(submission.transcript),
       'summary': submission.summary,
+      'hometown': submission.hometown,
       'latitude': submission.latitude,
       'longitude': submission.longitude,
       'photo': base64.b64encode(submission.photo).decode('utf-8') if submission.photo else getPhotoPlaceholder(submission.submissionId),

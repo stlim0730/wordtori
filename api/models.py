@@ -12,15 +12,15 @@ class Submission(models.Model):
     ('youtube', 'YouTube')
   )
 
-  respondent_name = models.CharField(max_length=100, null=True, blank=True)
+  narrator_name = models.CharField(max_length=100, null=True, blank=True)
   interviewer_name = models.CharField(max_length=100)
   interview_date = models.DateField(null=True, blank=True)
   interview_time = models.TimeField(null=True, blank=True)
   interview_location = models.CharField(max_length=100, null=True, blank=True)
-  # hometown = models.CharField(max_length=100, null=True, blank=True)
   url = models.URLField(max_length=300, null=True, blank=True)
-  transcript = JSONField(null=True, blank=True, default=None)
   summary = models.TextField(null=True, blank=True)
+  transcript = JSONField(null=True, blank=True, default=None)
+  hometown = models.CharField(max_length=100, null=True, blank=True)
   latitude = models.DecimalField(max_digits=9, decimal_places=7, null=True, blank=True, default=None)
   longitude = models.DecimalField(max_digits=9, decimal_places=7, null=True, blank=True, default=None)
   photo = models.BinaryField(max_length=5 * 1024 * 1024, null=True, blank=True)
@@ -85,10 +85,12 @@ class Event(models.Model):
   link1 = models.URLField(max_length=300, null=True, blank=True)
   link2 = models.URLField(max_length=300, null=True, blank=True)
   videoURL = models.URLField(max_length=300, null=True, blank=True)
-  mediaHash = models.CharField(max_length=30, null=True, blank=True, default='')
   image = models.BinaryField(max_length=10 * 1024 * 1024, null=True)
+  
+  # Generated fields
   imageFile = models.ImageField(upload_to='events', null=True, blank=True)
   imageMimeType = models.CharField(max_length=len('image/jpeg'), null=True, blank=True, default='')
+  mediaHash = models.CharField(max_length=30, null=True, blank=True, default='')
   hidden = models.BooleanField(default=False)
 
   def __str__(self):

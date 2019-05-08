@@ -15,7 +15,7 @@ class CategorySerializer(serializers.BaseSerializer):
 class SubmissionSerializer(serializers.BaseSerializer):
   def to_representation(self, obj):
     return {
-      'respondent_name': obj.respondent_name if obj.respondent_name else None,
+      'narrator_name': obj.narrator_name if obj.narrator_name else None,
       'interviewer_name': obj.interviewer_name if obj.interviewer_name else None,
       'interview_date':  '{}-{:02d}-{:02d}'.format(
         obj.interview_date.year if obj.interview_date else timezone.now().year,
@@ -31,6 +31,7 @@ class SubmissionSerializer(serializers.BaseSerializer):
       'url': str(obj.url),
       'transcript': json.dumps(obj.transcript, indent=2) if obj.transcript else None,
       'summary': obj.summary if obj.summary else None,
+      'hometown': obj.hometown if obj.hometown else None,
       'latitude': obj.latitude if obj.latitude else None,
       'longitude': obj.longitude if obj.longitude else None,
       'photo': base64.b64encode(obj.photo).decode('utf-8') if obj.photo else None,

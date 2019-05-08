@@ -106,3 +106,10 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+# local
+api/migrations/
+media/
+pages/migrations/
+static/rest_framework/
+vagrant

@@ -3,7 +3,7 @@
 <div class="container" id="player">
   <div class="row">
     <div class="col my-4">
-      <img id="player-photo" style="max-height: 100px; max-width: 100px" />&emsp;<span class="player-fields h2" id="player-respondent_name"></span>
+      <img id="player-photo" style="max-height: 100px; max-width: 100px" />&emsp;<span class="player-fields h2" id="player-hometown"></span>
     </div>
     <button type="button" class="player_close btn btn-link" style="text-decoration: none">
       <span class="display-3">&times;</span>
@@ -14,6 +14,10 @@
     </div>
   </div>
   <div class="row mt-5">
+    <div class="col-md-3">
+      <h6>Narrator</h6>
+      <div id="player-narrator_name" class="player-fields lead mb-4"></div>
+    </div>
     <div class="col-md-3">
       <h6>Interviewer</h6>
       <div id="player-interviewer_name" class="player-fields lead mb-4"></div>
@@ -29,10 +33,6 @@
     <div class="col-md-6">
       <h6>Summary</h6>
       <div id="player-summary" class="player-fields mb-4"></div>
-    </div>
-    <div class="col-md-6">
-      <h6>Transcript</h6>
-      <div id="player-transcript" class="player-fields mb-4"></div>
     </div>
     <div class="col-md-3">
       <h6>Tags<button class="btn btn-link ml-4" id="tag-edit-button"><small>Edit</small></button></h6>
