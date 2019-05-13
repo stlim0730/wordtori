@@ -22,7 +22,7 @@ class Submission(models.Model):
   transcript = JSONField(null=True, blank=True, default=None)
   hometown = models.CharField(max_length=100, null=True, blank=True)
   latitude = models.DecimalField(max_digits=9, decimal_places=7, null=True, blank=True, default=None)
-  longitude = models.DecimalField(max_digits=9, decimal_places=7, null=True, blank=True, default=None)
+  longitude = models.DecimalField(max_digits=10, decimal_places=7, null=True, blank=True, default=None)
   photo = models.BinaryField(max_length=5 * 1024 * 1024, null=True, blank=True)
   category= models.ForeignKey('Category', on_delete=models.CASCADE, default=1)
   # contact = models.CharField(max_length=100, null=True, blank=True)
