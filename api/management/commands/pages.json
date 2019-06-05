@@ -10,16 +10,6 @@
     "usePageSettings": true
   },
   {
-    "emphasized": false,
-    "hiddenOnMenu": false,
-    "htmlContent": null,
-    "label": "Events",
-    "oldLabel": "events",
-    "pageId": 4,
-    "pageOrder": 4,
-    "usePageSettings": false
-  },
-  {
     "emphasized": true,
     "hiddenOnMenu": true,
     "htmlContent": null,
@@ -68,5 +58,15 @@
     "pageId": 3,
     "pageOrder": 3,
     "usePageSettings": true
+  },
+  {
+    "emphasized": false,
+    "hiddenOnMenu": false,
+    "htmlContent": null,
+    "label": "When",
+    "oldLabel": "events",
+    "pageId": 4,
+    "pageOrder": 4,
+    "usePageSettings": false
   }
 ]
