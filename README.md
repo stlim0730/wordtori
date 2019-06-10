@@ -178,3 +178,20 @@ The second type of teardown process is suspend. It's similar to _sleep_ that pre
 ```
 vagrant suspend
 ```
+
+### 9. Create a new instance on a production server
+
+Deploying a new instance of the app on an actual server is almost same as creating an instance on the virtual machine using Vagrant (Just make sure the server is running the same version of the OS as the box Vagrant is running). Follow the list below to create a new instance on a production server.
+
+- `ssh` into the host. You'll need the *root* privilege.
+- Create a directory under the root directory (/).
+- Clone the repository with the new directory specified (see the section 2).
+- Configure local settings for this instance on the server (see the section 3). The essential settings include:
+  - Create `local_settings.py` with Django `SECRET_KEY` and `DATABASES`
+  - Author content data to prepopulate. `api/management/commands` has `prepopulate.py` that reads `json` and `html` files and create Django objects in the database. This data will be used when the provision script runs `python3 manage.py prepopulate` below.
+- Customize the code (including the model schema, view, and templates) if you need.
+- Install dependencies following the provision script.
+  - `deployment/provision_vagrant.sh` has a long shell script that you ran to spin up the virtual machine.
+  - Create a copy of the file and modify `PROJECT_NAME` variable to point the right path of the local repository.
+- Run the shell commands under *root* privilege.
+  - This step will migrate the Django database and prepopulate the content using the dataset you authored above.
