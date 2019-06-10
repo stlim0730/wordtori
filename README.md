@@ -190,8 +190,13 @@ Deploying a new instance of the app on an actual server is almost same as creati
   - Create `local_settings.py` with Django `SECRET_KEY` and `DATABASES`
   - Author content data to prepopulate. `api/management/commands` has `prepopulate.py` that reads `json` and `html` files and create Django objects in the database. This data will be used when the provision script runs `python3 manage.py prepopulate` below.
 - Customize the code (including the model schema, view, and templates) if you need.
-- Install dependencies following the provision script.
+- Install dependencies and configure server settings using the provision script.
   - `deployment/provision_vagrant.sh` has a long shell script that you ran to spin up the virtual machine.
   - Create a copy of the file and modify `PROJECT_NAME` variable to point the right path of the local repository.
+  - Create a copy of `deployment/nginx_conf_vagrant` and author this config file.
+  - Edit `Install Nginx` section of the new copy of provision script, to point the new nginx config file.
 - Run the shell commands under *root* privilege.
   - This step will migrate the Django database and prepopulate the content using the dataset you authored above.
+- Once you confirm the application server works, setup the SSL certificate for HTTPS connections.
+  - Go to [Certbot](https://certbot.eff.org/) and follow the instructions. This app is currently using Nginx and Ubuntu 16.04 (xenial).
+  - The Certbot website gives you a few lines of shell script to setup the certificate. Simply running the script does the job.
