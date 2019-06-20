@@ -40,7 +40,7 @@ def getSubmissionsPerCat(category):
     Q(mediaHash__isnull=False) | Q(mediaType='image'),
     # Q(mediaType='youtube') | Q(mediaType='soundcloud'),
     category__slug=category, published=True, consented=True
-  ).order_by('-submissionDate', 'name')
+  ).order_by('-promoted', '-submissionDate', 'name')
   for submission in submissions:
     submission.photo = base64.b64encode(submission.photo).decode('utf-8')
     if submission.mediaType == 'image':
