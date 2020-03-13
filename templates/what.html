@@ -20,7 +20,7 @@
           <!-- <p class="lead">{{category.description}}</p> -->
         </div>
       {% endif %}
-      {% for submission in submissions|dict_key:category.slug %}
+      {% for submission in submissions|dict_key:category.slug|dictsortreversed:"sortOrder" %}
         {% include "partials/submission.html" with category=category submission=submission %}
       {% endfor %}
     {% endfor %}

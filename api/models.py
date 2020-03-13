@@ -12,6 +12,7 @@ class Submission(models.Model):
   )
 
   name = models.CharField(max_length=100)
+  sortOrder = models.IntegerField(default=-1)
   yearsInNeighborhoodFrom = models.CharField(max_length=4, null=True, blank=True)
   yearsInNeighborhoodTo = models.CharField(max_length=4, null=True, blank=True)
   yearOfBirth = models.CharField(max_length=4, null=True, blank=True)
@@ -38,7 +39,6 @@ class Submission(models.Model):
   mediaType = models.CharField(max_length=len('soundcloud'), choices=MEDIA_TYPE_CHOICES)
   mediaHash = models.CharField(max_length=30, null=True, blank=True, default='')
   published = models.BooleanField(default=False)
-  promoted = models.BooleanField(default=False)
 
   def __str__(self):
     return 'Submission: ' + self.name + ' (' + str(self.submissionId) + ')'
