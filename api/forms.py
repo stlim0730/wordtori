@@ -64,6 +64,24 @@ class SubmissionForm(forms.ModelForm):
       }
     )
   )
+  latitude = forms.DecimalField(
+    required=False,
+    widget=forms.NumberInput(
+      attrs={
+        'class': 'form-control',
+        'placeholder': 'Latitude'
+      }
+    )
+  )
+  longitude = forms.DecimalField(
+    required=False,
+    widget=forms.NumberInput(
+      attrs={
+        'class': 'form-control',
+        'placeholder': 'Longitude'
+      }
+    )
+  )
   occupations = forms.CharField(
     required=False,
     max_length=200,
